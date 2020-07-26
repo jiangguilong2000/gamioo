@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':gamioo-core')
+    implementation 'com.alibaba:fastjson:1.2.57'
+
+    testImplementation 'com.vdurmont:emoji-java:5.1.1'
+    testImplementation project(':gamioo-benchmark')
+}

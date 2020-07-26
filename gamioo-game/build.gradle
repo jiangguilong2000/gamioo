@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':gamioo-core')
+    implementation project(':gamioo-network')
+    implementation 'com.alibaba:fastjson:1.2.57'
+
+    testImplementation project(':gamioo-benchmark')
+    testImplementation project(':gamioo-orm')
+    testImplementation "com.alibaba:druid:1.0.27"
+    testImplementation "mysql:mysql-connector-java:5.1.40"
+}
