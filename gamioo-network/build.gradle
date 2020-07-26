@@ -1,8 +1,8 @@
 dependencies {
-    compile project(':gamioo-core');
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.47.Final';
-
+   // implementation project(':gamioo-core');
+    
     implementation 'com.alibaba:fastjson:1.2.57';
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.47.Final';
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.6.0';
-    testImplementation project(':gamioo-benchmark');
+  //  testImplementation project(':gamioo-benchmark');
 }

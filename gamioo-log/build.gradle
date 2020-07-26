@@ -1,3 +1,3 @@
 dependencies {
-    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0';
 }

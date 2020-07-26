@@ -1,5 +1,5 @@
 dependencies {
-	implementation project(':gamioo-game')
+	implementation project(':gamioo-game');
 	
-	testImplementation project(':gamioo-benchmark')
+	testImplementation project(':gamioo-benchmark');
 }

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':gamioo-game');
+    implementation project(':gamioo-game');
     implementation project(':gamioo-network');
     testImplementation project(':gamioo-benchmark');
 }
