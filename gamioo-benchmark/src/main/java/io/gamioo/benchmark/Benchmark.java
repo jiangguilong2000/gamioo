@@ -50,7 +50,7 @@ public class Benchmark {
         
         Instant endTime = Instant.now();
         long interval = Duration.between(startTime, endTime).toMillis();
-        String  result=MessageFormat.format("{0} - {1} ms", name,String.valueOf(interval));
+        String  result=MessageFormat.format("{0} - total= {1} ms,speed= {2} ms", name,String.valueOf(interval),String.valueOf(interval*1f/times));
         System.out.println(result);
     }
 }
