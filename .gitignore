@@ -4,3 +4,9 @@
 # Ignore Gradle build output directory
 build
 /.project
+/gamioo-log/.project
+/gamioo-log/.classpath
+/gamioo-ioc/.project
+/gamioo-ioc/.classpath
+/gamioo-game/.classpath
+/gamioo-game/.project
