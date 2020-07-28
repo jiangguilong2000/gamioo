@@ -1,7 +1,12 @@
 dependencies {
     implementation project(':gamioo-asm');
     implementation project(':gamioo-log');
-
+    
+    api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.+';
+	api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.+';
+	api group: 'org.apache.commons', name: 'commons-lang3', version: '3.+';
     testImplementation project(':gamioo-benchmark');
-    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1';
+   
+    
+
 }

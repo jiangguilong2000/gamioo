@@ -1,0 +1,40 @@
+{code {
+  flag: 1
+  id: 1
+}
+tableId: 936940
+ownerId: 143566
+createId: 143566
+roomTemplateId: 4
+configTemplateId: 1101
+entryDTO {
+  key: 1
+  value: 3
+}
+entryDTO {
+  key: 201
+  value: 0
+}
+entryDTO {
+  key: 202
+  value: 0
+}
+entryDTO {
+  key: 204
+  value: 1
+}
+entryDTO {
+  key: 4
+  value: 6
+}
+entryDTO {
+  key: 203
+  value: 0
+}
+clubId: 0
+status: 0
+sitDownPosition: 0
+kingBormPokerDTO {
+  id: 143566
+}
+}

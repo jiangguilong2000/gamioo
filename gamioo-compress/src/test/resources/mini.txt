@@ -1,0 +1,10 @@
+{code {
+  flag: 1
+  id: 1
+}
+tableId: 936940
+ownerId: 143566
+createId: 143566
+roomTemplateId: 4
+configTemplateId: 1101
+}

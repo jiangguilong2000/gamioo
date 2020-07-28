@@ -54,8 +54,8 @@ subprojects {
     }
     
 		task sourcesJar(type: Jar) {
-		    classifier = 'sources'
-		    from sourceSets.main.allJava
+		    classifier = 'sources';
+		    from sourceSets.main.allJava;
 		}
     
 	
@@ -163,8 +163,12 @@ subprojects {
 
 
     dependencies {
-		testImplementation 'junit:junit:4.12';
+		testImplementation 'org.junit.jupiter:junit-jupiter:5.+';
     }
+    
+    test {
+    	useJUnitPlatform();
+	}
     
 }
 

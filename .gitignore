@@ -10,3 +10,6 @@ build
 /gamioo-ioc/.classpath
 /gamioo-game/.classpath
 /gamioo-game/.project
+/gamioo-compress/.classpath
+/gamioo-compress/.project
+/gamioo-compress/.settings/*.prefs

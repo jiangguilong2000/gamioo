@@ -14,7 +14,7 @@
 package io.gamioo.benchmark;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 测试用例.
