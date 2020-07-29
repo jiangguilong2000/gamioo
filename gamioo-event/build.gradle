@@ -3,5 +3,5 @@ dependencies {
     implementation project(':gamioo-log');
 
     testImplementation project(':gamioo-benchmark');
-    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1';
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
 }

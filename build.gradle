@@ -15,7 +15,7 @@ subprojects {
 	apply plugin: 'signing';
 	
 	group = 'io.gamioo';
-	version = '1.0.2';
+	version = '1.0.3';
 //	version = '0.0.1-SNAPSHOT';
 
 	
@@ -111,12 +111,13 @@ subprojects {
 					        from components.java;
 					        artifact sourcesJar;
             				artifact javadocJar;
- 
+ 							suppressAllPomMetadataWarnings();//屏蔽所有编译时的WARNING
             			          pom  {
 						                name=project.name;
 						        		description='This is a game server framework.';
 						        		url='https://gamioo.io';
 						                packaging='jar';
+						                
 						
 						        		scm {
 						          			connection='scm:git@github.com:jiangguilong2000/gamioo.git';
@@ -163,7 +164,7 @@ subprojects {
 
 
     dependencies {
-		testImplementation 'org.junit.jupiter:junit-jupiter:5.+';
+		testImplementation 'org.junit.jupiter:junit-jupiter:5.7.+';
     }
     
     test {
