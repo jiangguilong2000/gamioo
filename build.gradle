@@ -15,7 +15,7 @@ subprojects {
 	apply plugin: 'signing';
 	
 	group = 'io.gamioo';
-	version = '1.0.3';
+	version = '0.0.8';
 //	version = '0.0.1-SNAPSHOT';
 
 	
@@ -164,7 +164,7 @@ subprojects {
 
 
     dependencies {
-		testImplementation 'org.junit.jupiter:junit-jupiter:5.7.+';
+		testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0-M1';
     }
     
     test {
