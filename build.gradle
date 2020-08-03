@@ -117,8 +117,7 @@ subprojects {
 						        		description='This is a game server framework.';
 						        		url='https://gamioo.io';
 						                packaging='jar';
-						                
-						
+
 						        		scm {
 						          			connection='scm:git@github.com:jiangguilong2000/gamioo.git';
 						          			developerConnection='scm:git@github.com:jiangguilong2000/gamioo.git';
