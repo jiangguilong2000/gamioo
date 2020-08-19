@@ -13,3 +13,6 @@ build
 /gamioo-compress/.classpath
 /gamioo-compress/.project
 /gamioo-compress/.settings/*.prefs
+/gamioo-cache/.classpath
+/gamioo-cache/.project
+/gamioo-cache/.settings/org.eclipse.buildship.core.prefs
