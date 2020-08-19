@@ -28,11 +28,11 @@ subprojects {
         options.encoding = 'UTF-8'
     }
     
-
-//		task "create-dirs" << {
-//		    sourceSets*.java.srcDirs*.each { it.mkdirs() }
-//		    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-//		}
+		/**创建java和resource目录*/
+		task createDirs {
+		    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+		    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+		}
 
 
 	jar {

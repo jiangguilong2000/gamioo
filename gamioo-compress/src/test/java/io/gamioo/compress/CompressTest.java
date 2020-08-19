@@ -2,12 +2,12 @@ package io.gamioo.compress;
 
 import java.io.File;
 import java.net.URL;
-import java.text.MessageFormat;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +15,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.commons.util.StringUtils;
 
 import com.github.luben.zstd.Zstd;
 
@@ -26,20 +23,20 @@ import io.gamioo.benchmark.Benchmark;
 @DisplayName("压缩测试")
 @TestMethodOrder (MethodOrderer.OrderAnnotation.class)
 public class CompressTest {
-	private static Benchmark benchmark;
+	private static final Logger logger = LogManager.getLogger(CompressTest.class);
+	private final Benchmark benchmark=new Benchmark(10000);
 	private static byte[] array;
 	private static byte[] compressArray;
 
 	@BeforeAll
 	public static void beforeAll() throws Exception {
-		benchmark = new Benchmark(10000);
 		try {
 			// 获取URL
 			URL url = CompressTest.class.getClassLoader().getResource("mini.txt");
 			// 通过url获取File的绝对路径
 			File file = new File(url.getFile());
 			array = FileUtils.readFileToByteArray(file);
-			System.out.printf("data size=%5d\n",array.length);
+			logger.debug("data size={}",array.length);
 
 //					 try (InputStream stream = EmojiLoader.class.getResourceAsStream(PATH)) {
 //						 
@@ -59,8 +56,7 @@ public class CompressTest {
 	
 	@AfterEach
 	public void afterEach() throws Exception {
-		String result=MessageFormat.format("array size={0},compress array size={1},Compression Ratio={2}", array.length,compressArray.length,array.length*1f/compressArray.length);
-		System.out.println(result);
+		logger.debug("array size={},compress array size={},Compression Ratio={}", array.length,compressArray.length,array.length*1f/compressArray.length);
 	}
 	
 //	@ParameterizedTest

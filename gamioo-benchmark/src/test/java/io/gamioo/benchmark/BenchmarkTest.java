@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  */
 public class BenchmarkTest {
-    private final Benchmark benchmark = new Benchmark(100000);
+	private final Benchmark benchmark = new Benchmark(100000);
 
     @Test
     public void test() throws Exception {
-        benchmark.run("random function test", () -> RandomUtils.nextInt(0, 1000));
+    	benchmark.run("random function test", () -> RandomUtils.nextInt(0, 1000));
     }
 }
