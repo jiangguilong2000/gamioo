@@ -3,7 +3,10 @@ package io.gamioo.core.exception;
 import io.gamioo.core.util.StringUtil;
 
 /**
- * 
+ * 框架异常类
+ *
+ * @author Allen Jiang
+ * @since 1.0
  */
 public class ServiceException extends RuntimeException {
 
