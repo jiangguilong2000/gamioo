@@ -86,7 +86,7 @@ public class StringUtil {
 	
 	/**
 	 * 解析字符串中所有数字，注意：这里只是把数字字符串切割出来了，转换成数字时注意边界
-	 * @param content
+	 * @param content 需要解析的字符串
 	 * @return 所有数字字符串集合
 	 */
 	public static ArrayList<String> incisionNumber(String content){
@@ -104,8 +104,8 @@ public class StringUtil {
 	
 	/**
 	 * 判断字符串是否是同一个字符。kkk全是k;22222全是2
-	 * @param arg
-	 * @return
+	 * @param arg  需要解析的字符串
+	 * @return 返回判断结果
 	 */
 	public static boolean isSameChar(String arg){
 		boolean flag = true;
@@ -125,7 +125,7 @@ public class StringUtil {
 	/**
 	 * 判断一个数字是否是连续的数字，例如，12345和54321就是连续的
 	 * @param str 要判断的数字字符串
-	 * @return
+	 * @return 返回结果
 	 */
 	public static boolean strNumberIsContinue(String str){
 		if(StringUtil.isEmpty(str)){
@@ -145,8 +145,8 @@ public class StringUtil {
 	
 	/**
 	 * 获取字符串中去重后剩下多少个字符
-	 * @param str
-	 * @return
+	 * @param str  需要解析的字符串
+	 * @return 返回去重后的字符串
 	 */
 	public static int getStringCharCount(String str){
 		if(StringUtil.isEmpty(str)){

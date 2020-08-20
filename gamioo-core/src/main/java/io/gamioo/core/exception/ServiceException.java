@@ -24,7 +24,7 @@ public class ServiceException extends RuntimeException {
 	}
 	/**
 	 * 
-	 * @param message
+	 * @param message  异常信息
 	 */
 	public ServiceException(String message) {
 		super(message);

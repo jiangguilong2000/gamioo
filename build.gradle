@@ -14,7 +14,7 @@ subprojects {
 	apply plugin: 'signing';
 	
 	group = 'io.gamioo';
-	version = '0.0.8';
+	version = '0.2.9';
 //	version = '0.0.1-SNAPSHOT';
 
 	
@@ -179,9 +179,9 @@ allprojects {
 	
 repositories {
 		//阿里云的国内镜像
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google'};
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' };
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'};
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'};
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' };
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'};
 }
 
 }
