@@ -1,25 +1,15 @@
 package io.gamioo.cache;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.CacheBuilder;
+import io.gamioo.benchmark.Benchmark;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.cache.CacheBuilder;
-
-import io.gamioo.benchmark.Benchmark;
 
 @DisplayName("第三方缓存测试")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

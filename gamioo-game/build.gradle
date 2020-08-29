@@ -1,6 +1,7 @@
 dependencies {
  //   implementation project(':gamioo-core');
     implementation project(':gamioo-network');
+    implementation group: 'com.github.luben', name: 'zstd-jni', version: '1.4.5-6';
   //  implementation 'com.alibaba:fastjson:1.2.57';
 
   //  testImplementation project(':gamioo-benchmark');

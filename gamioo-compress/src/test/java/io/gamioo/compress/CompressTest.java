@@ -1,24 +1,14 @@
 package io.gamioo.compress;
 
-import java.io.File;
-import java.net.URL;
-
+import com.github.luben.zstd.Zstd;
+import io.gamioo.benchmark.Benchmark;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
-import com.github.luben.zstd.Zstd;
-
-import io.gamioo.benchmark.Benchmark;
+import java.io.File;
+import java.net.URL;
 
 @DisplayName("压缩测试")
 @TestMethodOrder (MethodOrderer.OrderAnnotation.class)

@@ -16,3 +16,8 @@ build
 /gamioo-cache/.classpath
 /gamioo-cache/.project
 /gamioo-cache/.settings/org.eclipse.buildship.core.prefs
+/测试结果 -BeanFactoryTest.html
+/gamioo-beans/.settings/*.prefs
+/.idea
+/gamioo-beans/.project
+/gamioo-beans/.classpath

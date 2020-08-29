@@ -1,11 +1,11 @@
 package io.gamioo.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class StringUtil {
 	private static final char DELIM_START = '{';

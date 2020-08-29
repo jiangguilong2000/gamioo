@@ -1,13 +1,14 @@
 package io.gamioo.compress;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+
+import io.gamioo.core.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
-
-import io.gamioo.core.exception.ServiceException;
 public class ZlibUtil
 {
 	private static final Logger logger = LogManager.getLogger(ZlibUtil.class);
