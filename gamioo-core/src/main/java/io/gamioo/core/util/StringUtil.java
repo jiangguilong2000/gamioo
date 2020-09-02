@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class StringUtil {
+	private static final String FOLDER_SEPARATOR = "/";
 	private static final char DELIM_START = '{';
 	private static final char DELIM_STOP = '}';
 	private static final int GB = 1024 * 1024 * 1024;// 定义GB的计算常量
@@ -179,6 +180,63 @@ public class StringUtil {
 			set.add(b);
 		}
 		return set.size();
+	}
+
+	public static boolean hasLength(String str) {
+		return hasLength((CharSequence) str);
+	}
+
+	public static boolean hasLength(CharSequence str) {
+		return (str != null && str.length() > 0);
+	}
+
+	public static boolean hasText(CharSequence str) {
+		if (!hasLength(str)) {
+			return false;
+		}
+		int strLen = str.length();
+		for (int i = 0; i < strLen; i++) {
+			if (!Character.isWhitespace(str.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check whether the given {@code String} contains actual <em>text</em>.
+	 * <p>More specifically, this method returns {@code true} if the
+	 * {@code String} is not {@code null}, its length is greater than 0,
+	 * and it contains at least one non-whitespace character.
+	 * @param str the {@code String} to check (may be {@code null})
+	 * @return {@code true} if the {@code String} is not {@code null}, its
+	 * length is greater than 0, and it does not contain whitespace only
+	 * @see #hasText(CharSequence)
+	 */
+	public static boolean hasText(String str) {
+		return hasText((CharSequence) str);
+	}
+
+	/**
+	 * Apply the given relative path to the given path,
+	 * assuming standard Java folder separation (i.e. "/" separators).
+	 * @param path the path to start from (usually a full file path)
+	 * @param relativePath the relative path to apply
+	 * (relative to the full file path above)
+	 * @return the full file path that results from applying the relative path
+	 */
+	public static String applyRelativePath(String path, String relativePath) {
+		int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+		if (separatorIndex != -1) {
+			String newPath = path.substring(0, separatorIndex);
+			if (!relativePath.startsWith(FOLDER_SEPARATOR)) {
+				newPath += FOLDER_SEPARATOR;
+			}
+			return newPath + relativePath;
+		}
+		else {
+			return relativePath;
+		}
 	}
 
 	public static void main(String[] args) {

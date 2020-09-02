@@ -1,6 +1,0 @@
-dependencies {
-    testImplementation project(':gamioo-benchmark');
-    implementation project(':gamioo-log');
-    implementation project(':gamioo-core');
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
-}

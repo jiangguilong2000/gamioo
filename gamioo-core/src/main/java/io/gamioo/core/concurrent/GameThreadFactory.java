@@ -20,7 +20,7 @@ public class GameThreadFactory implements ThreadFactory {
 		return thread;
 	}
 
-	final ThreadGroup group;
+	final Group group;
 
 	public GameThreadFactory(String name) {
 		SecurityManager securitymanager = System.getSecurityManager();

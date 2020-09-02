@@ -26,6 +26,10 @@ public class ServiceException extends RuntimeException {
 	 * 
 	 * @param message  异常信息
 	 */
+	public ServiceException(Throwable cause,String message,Object... params){
+		super(StringUtil.format(message, params),cause);
+	}
+
 	public ServiceException(String message) {
 		super(message);
 	}
