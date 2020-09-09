@@ -49,7 +49,7 @@ public enum Group {
     PlayerThreadGroup,
 
     /**
-     * 一种串行执行队列处理线程.
+     * 一种串行执行队列处理线程.只会有一根线程来处理，
      */
     QueueThreadGroup;
 }

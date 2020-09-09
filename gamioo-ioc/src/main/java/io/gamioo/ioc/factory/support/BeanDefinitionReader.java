@@ -19,7 +19,7 @@ package io.gamioo.ioc.factory.support;
 import java.io.IOException;
 
 /**
- * some description
+ * 读取器，从XML或者注解
  *
  * @author Allen Jiang
  * @since 1.0.0

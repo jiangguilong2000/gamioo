@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.io;
+package io.gamioo.ioc.config;
 
-
-import java.io.IOException;
-import java.util.List;
+import io.gamioo.core.exception.BeansException;
 
 /**
  * some description
@@ -26,14 +24,7 @@ import java.util.List;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface ResourceLoader {
-
-    public String getLocation();
-
-    List<Resource> getResourceList(String location) throws IOException;
-
-  //  Resource getResource(String location);
-
-
+public interface BeanPostProcessor {
+    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;
+    Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;
 }
-

@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.stereotype;
+package io.gamioo.ioc.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * some description
- *
- * @author Allen Jiang
- * @since 1.0.0
- */
-@Target({ElementType.ANNOTATION_TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Mapping {
 
+@Target({ ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Scheduled {
+	int type();
 }

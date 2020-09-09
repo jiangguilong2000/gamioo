@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.stereotype;
-
-import io.gamioo.core.http.RequestMethod;
+package io.gamioo.ioc.factory.annotation;
 
 import java.lang.annotation.*;
 
@@ -26,23 +24,15 @@ import java.lang.annotation.*;
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Mapping
-public @interface RequestMapping {
-    String name() default "";
+public @interface Autowired {
 
-    String value() default "";
     /**
-     * The HTTP request methods to map to, narrowing the primary mapping:
-     * GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE, TRACE.
-     * <p><b>Supported at the type level as well as at the method level!</b>
-     * When used at the type level, all method-level mappings inherit
-     * this HTTP method restriction (i.e. the type-level restriction
-     * gets checked before the handler method is even resolved).
-     * <p>Supported for Servlet environments as well as Portlet 2.0 environments.
+     * Declares whether the annotated dependency is required.
+     * <p>Defaults to {@code true}.
      */
-    RequestMethod[] method() default {};
+    boolean required() default true;
 
 }

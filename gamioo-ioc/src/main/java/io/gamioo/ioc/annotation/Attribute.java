@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.io;
+package io.gamioo.ioc.annotation;
 
-
-import java.io.IOException;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * some description
@@ -26,14 +27,8 @@ import java.util.List;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface ResourceLoader {
-
-    public String getLocation();
-
-    List<Resource> getResourceList(String location) throws IOException;
-
-  //  Resource getResource(String location);
-
-
+@Target({ ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Attribute {
+    String value();
 }
-

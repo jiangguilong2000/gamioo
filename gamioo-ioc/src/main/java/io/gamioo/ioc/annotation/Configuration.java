@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.stereotype;
+package io.gamioo.ioc.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.gamioo.ioc.stereotype.Component;
+
+import java.lang.annotation.*;
+
+
 
 /**
- * some description
+ * 用来标识一个配置文件类.
+ * <p>
+ * 可与{@link Attribute}来实现注入配置参数. <br>
+ * 这种类也是只在启动时有用，相当于启动配置文件的作用.
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
+@Component
+@Documented
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {}
+public @interface Configuration {
+    String value();
+}

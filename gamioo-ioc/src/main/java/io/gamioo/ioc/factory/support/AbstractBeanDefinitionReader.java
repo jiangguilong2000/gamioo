@@ -17,6 +17,7 @@
 package io.gamioo.ioc.factory.support;
 
 
+import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.io.ResourceLoader;
 
 import java.util.HashMap;
@@ -34,12 +35,26 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
     private ResourceLoader resourceLoader;
 
-    public AbstractBeanDefinitionReader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+    private BeanFactory beanFactory;
+
+    public AbstractBeanDefinitionReader(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
+
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     public Map<String, AbstractBeanDefinition> getRegistry() {
         return registry;
+    }
+
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     public ResourceLoader getResourceLoader() {

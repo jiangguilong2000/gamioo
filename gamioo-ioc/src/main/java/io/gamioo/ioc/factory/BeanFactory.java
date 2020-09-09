@@ -27,7 +27,9 @@ import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
  */
 
 public interface BeanFactory {
+
+
     public <T> T getBean(Class<T> requiredType);
 
-    void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition) throws Exception;
+    void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition);
 }

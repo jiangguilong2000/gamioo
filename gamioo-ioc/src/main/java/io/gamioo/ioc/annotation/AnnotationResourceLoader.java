@@ -38,7 +38,7 @@ import java.util.jar.JarFile;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class AnnotationResourceLoader implements ResourceLoader {
+public abstract class AnnotationResourceLoader implements ResourceLoader {
     private static final Logger logger = LogManager.getLogger(AnnotationResourceLoader.class);
     private static final String CLASS_SUFFIX = ".class";
     private static final String PACKAGE_INFO_CLASS = "package-info.class";

@@ -16,8 +16,11 @@
 
 package io.gamioo.ioc.factory.support;
 
+import io.gamioo.ioc.config.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,8 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0.0
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
-
-    private final Map<String, AbstractBeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
+    private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
+    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
 
 
 
@@ -38,12 +41,19 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return (T)beanDefinitionMap.get(StringUtils.uncapitalize(requiredType.getSimpleName())).getBean();
     }
 
-    public void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition) throws Exception {
+
+    public void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition) {
         // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）
         //测试用例指定要获取的beanClassName
-        Object bean = doCreateBean(beanDefinition);//beanDefinition.getBeanClass().newInstance()
-        beanDefinition.setBean(bean);
-        beanDefinitionMap.put(name, beanDefinition);
+        Object bean = null;//beanDefinition.getBeanClass().newInstance()
+        try {
+            bean = doCreateBean(beanDefinition);
+            beanDefinition.setBean(bean);
+            beanDefinitionMap.put(name, beanDefinition);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
     }
 
     abstract Object doCreateBean(AbstractBeanDefinition beanDefinition) throws Exception;

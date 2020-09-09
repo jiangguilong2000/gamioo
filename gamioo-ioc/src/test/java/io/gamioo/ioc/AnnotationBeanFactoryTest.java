@@ -16,15 +16,10 @@
 
 package io.gamioo.ioc;
 
-import io.gamioo.ioc.annotation.AnnotationBeanDefinitionReader;
-import io.gamioo.ioc.annotation.AnnotationResourceLoader;
-import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
-import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
+import io.gamioo.ioc.context.AnnotationConfigApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
-
-import java.util.Map;
 
 
 /**
@@ -39,15 +34,14 @@ import java.util.Map;
 public class AnnotationBeanFactoryTest {
     private static final Logger logger = LogManager.getLogger(AnnotationBeanFactoryTest.class);
     //private final Benchmark benchmark=new Benchmark(10000);
-    private static AnnotationBeanDefinitionReader reader;
+    private static AnnotationConfigApplicationContext context;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
 
 
         //初始化......
-        reader = new AnnotationBeanDefinitionReader(new AnnotationResourceLoader());
-        reader.scanPackage(AnnotationBeanFactoryTest.class.getPackage().getName(), "io.gamioo");
+        context=new AnnotationConfigApplicationContext(AnnotationBeanFactoryTest.class.getPackage().getName());
 
     }
 
@@ -55,13 +49,12 @@ public class AnnotationBeanFactoryTest {
     @Order(1)
     @DisplayName("IOC2测试")
     public void test() throws Exception {
-        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : reader.getRegistry().entrySet()) {
-            beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
-        }
+
+
+
 //        //初始化完毕，获取想要的bean
-//        HelloWorldService helloWorldService = beanFactory.getBean(HelloWorldService.class);
-//        logger.debug("content={}", helloWorldService.helloWorld());
+        HelloWorldService helloWorldService = context.getBean(HelloWorldService.class);
+        logger.debug("content={}", helloWorldService.helloWorld());
 
     }
 

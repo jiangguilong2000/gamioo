@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.io;
+package io.gamioo.ioc.annotation;
 
-
-import java.io.IOException;
-import java.util.List;
+import java.lang.annotation.*;
 
 /**
- * some description
+ * 申明一个IOC容器接管的JavaBean.
+ * <p>
+ * 只有当在{@link Configuration}注解所标识的类中才会生效.
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface ResourceLoader {
-
-    public String getLocation();
-
-    List<Resource> getResourceList(String location) throws IOException;
-
-  //  Resource getResource(String location);
-
-
+@Documented
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Bean {
+    String value();
 }
-

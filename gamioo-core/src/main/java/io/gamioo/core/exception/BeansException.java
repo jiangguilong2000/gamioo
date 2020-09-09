@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.stereotype;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package io.gamioo.core.exception;
 
 /**
  * some description
@@ -27,8 +22,8 @@ import java.lang.annotation.Target;
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Target({ ElementType.FIELD })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Attribute {
-    String value();
+public abstract class BeansException extends ServiceException {
+
+
+
 }

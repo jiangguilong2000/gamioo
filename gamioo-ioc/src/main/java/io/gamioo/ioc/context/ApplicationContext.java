@@ -16,6 +16,8 @@
 
 package io.gamioo.ioc.context;
 
+import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
+
 /**
  * some description
  *
@@ -24,5 +26,9 @@ package io.gamioo.ioc.context;
  */
 public interface ApplicationContext{
 
+ DefaultListableBeanFactory createBeanFactory();
 
+void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
+
+ public <T> T getBean(Class<T> requiredType);
 }

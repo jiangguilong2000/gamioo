@@ -26,6 +26,10 @@ import io.gamioo.ioc.PropertyValues;
  * @since 1.0.0
  */
 public interface BeanDefinition {
+
+    Object getBean();
+
+     void setBean(Object bean);
     String getBeanClassName();
 
     void setBeanClassName(String beanClassName);

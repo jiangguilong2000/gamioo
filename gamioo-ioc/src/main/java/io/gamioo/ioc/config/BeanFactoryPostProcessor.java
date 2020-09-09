@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.context;
+package io.gamioo.ioc.config;
 
 /**
- * some description
+ * 用于修改一些bean的定义和值
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class FileSystemApplicationContext implements  ApplicationContext{
-
-
+public interface BeanFactoryPostProcessor {
+   // void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws ServiceException;
 }

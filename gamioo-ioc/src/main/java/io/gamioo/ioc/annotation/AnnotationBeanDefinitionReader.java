@@ -18,16 +18,20 @@ package io.gamioo.ioc.annotation;
 
 import io.gamioo.core.util.AnnotationUtils;
 import io.gamioo.core.util.ClassUtils;
+import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
 import io.gamioo.ioc.factory.support.AbstractBeanDefinitionReader;
+import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 import io.gamioo.ioc.io.Resource;
 import io.gamioo.ioc.io.ResourceLoader;
 import io.gamioo.ioc.stereotype.Component;
-import io.gamioo.ioc.stereotype.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
 
 /**
  * some description
@@ -36,15 +40,32 @@ import java.util.List;
  * @since 1.0.0
  */
 public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader {
-
-    public AnnotationBeanDefinitionReader(ResourceLoader resourceLoader) {
-        super(resourceLoader);
+    private static final Logger logger = LogManager.getLogger(AnnotationBeanDefinitionReader.class);
+    public AnnotationBeanDefinitionReader(DefaultListableBeanFactory beanFactory) {
+        super(beanFactory);
     }
 
 
-    public  void scanPackage(String... packages) throws IOException {
+
+    public void loadBeanDefinitions(){
+
+        ResourceLoader resourceLoader=this.getResourceLoader();
+        //扫描资源
+        this.scanPackage(resourceLoader.getLocation(), "io.gamioo");
+        //实例化
+        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : this.getRegistry().entrySet()) {
+            this.getBeanFactory().registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
+        }
+
+    }
+
+    public  void scanPackage(String... packages)  {
         for (String e : packages) {
-            this.analysisResourceList(e);
+            try {
+                this.analysisResourceList(e);
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(),ex);
+            }
         }
     }
 
@@ -93,32 +114,32 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
             return;
         }
 
-        // 目标类上实际注解类型
-        Class<? extends Annotation> annotationType = annotation.annotationType();
-        // 配置类
-        if (annotationType == Configuration.class) {
-            configurations.add(new ConfigurationBeanDefinition(klass).init());
-        }
-        // 模板转化器.
-        else if (annotationType == TemplateConverter.class) {
-            ConvertManager.getInstance().register(klass, (TemplateConverter) annotation);
-        }
-        // 协议入口控制类
-        else if (annotationType == Controller.class) {
-            analytical(klass, (Controller) annotation);
-        }
-        // 协议入口控制类(模块化)
-        else if (annotationType == ModuleController.class) {
-            analytical(klass, (ModuleController) annotation);
-        }
-        // 静态组件
-        else if (annotationType == StaticComponent.class) {
-            staticComponents.add(new StaticComponentBeanDefinition(klass).init());
-        }
-        // 不是已定义的，那就扫描这个注解上有没有@Component
-        else {
-            beans.put(klass, new DefaultBeanDefinition(klass, annotation, annotationType).init());
-        }
+//        // 目标类上实际注解类型
+//        Class<? extends Annotation> annotationType = annotation.annotationType();
+//        // 配置类
+//        if (annotationType == Configuration.class) {
+//            configurations.add(new ConfigurationBeanDefinition(klass).init());
+//        }
+//        // 模板转化器.
+//        else if (annotationType == TemplateConverter.class) {
+//            ConvertManager.getInstance().register(klass, (TemplateConverter) annotation);
+//        }
+//        // 协议入口控制类
+//        else if (annotationType == Controller.class) {
+//            analytical(klass, (Controller) annotation);
+//        }
+//        // 协议入口控制类(模块化)
+//        else if (annotationType == ModuleController.class) {
+//            analytical(klass, (ModuleController) annotation);
+//        }
+//        // 静态组件
+//        else if (annotationType == StaticComponent.class) {
+//            staticComponents.add(new StaticComponentBeanDefinition(klass).init());
+//        }
+//        // 不是已定义的，那就扫描这个注解上有没有@Component
+//        else {
+//            beans.put(klass, new DefaultBeanDefinition(klass, annotation, annotationType).init());
+//        }
     }
 
 

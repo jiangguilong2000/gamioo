@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc;
+package io.gamioo.ioc.entity;
+
+import io.gamioo.ioc.annotation.Configuration;
+import io.gamioo.ioc.annotation.Value;
+
+import java.util.List;
 
 /**
  * some description
@@ -22,23 +27,39 @@ package io.gamioo.ioc;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class PropertyValue {
+@Configuration("game-config.xml")
+public class ServerConfig {
 
-    private final String name;
+    @Value("id")
+    private int id;
 
-    private final Object value;
+    @Value("name")
+    private String name;
+
+    @Value("cache")
+    private List<Cache> cacheList;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
     }
 
-    public Object getValue() {
-        return value;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public List<Cache> getCacheList() {
+        return cacheList;
+    }
 
-    public PropertyValue(String name, Object value) {
-        this.name = name;
-        this.value = value;
+    public void setCacheList(List<Cache> cacheList) {
+        this.cacheList = cacheList;
     }
 }

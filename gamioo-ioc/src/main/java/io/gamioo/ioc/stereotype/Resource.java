@@ -29,8 +29,5 @@ import java.lang.annotation.*;
 @Documented
 @Component
 public @interface Resource {
-
-
     String value() default "";
-
 }

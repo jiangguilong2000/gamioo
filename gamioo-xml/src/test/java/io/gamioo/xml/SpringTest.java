@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.io;
+package io.gamioo.xml;
 
 
-import java.io.IOException;
-import java.util.List;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * some description
@@ -26,14 +25,10 @@ import java.util.List;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface ResourceLoader {
-
-    public String getLocation();
-
-    List<Resource> getResourceList(String location) throws IOException;
-
-  //  Resource getResource(String location);
-
-
+public class SpringTest {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring-config.xml");
+        Fruit fruit=context.getBean(Fruit.class);
+        fruit.getName();
+    }
 }
-

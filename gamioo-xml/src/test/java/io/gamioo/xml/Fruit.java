@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.stereotype;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package io.gamioo.xml;
 
 /**
  * some description
@@ -27,12 +22,23 @@ import java.lang.annotation.Target;
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MessageMapping {
-    int code() default 0;
-    boolean cross() default false;//是否只跨服处理
-    boolean print() default true;//是否要打印
-    /** 是否要做登录验证 */
-    boolean login() default true;
+public class Fruit {
+    private int id;
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
