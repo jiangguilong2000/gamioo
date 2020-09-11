@@ -18,7 +18,6 @@ package io.gamioo.ioc.annotation;
 
 import io.gamioo.core.util.AnnotationUtils;
 import io.gamioo.core.util.ClassUtils;
-import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
 import io.gamioo.ioc.factory.support.AbstractBeanDefinitionReader;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 import io.gamioo.ioc.io.Resource;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.Map;
 
 /**
  * some description
@@ -52,10 +50,6 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
         ResourceLoader resourceLoader=this.getResourceLoader();
         //扫描资源
         this.scanPackage(resourceLoader.getLocation(), "io.gamioo");
-        //实例化
-        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : this.getRegistry().entrySet()) {
-            this.getBeanFactory().registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
-        }
 
     }
 
@@ -92,7 +86,7 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
     }
 
     /**
-     * 解析Class
+     * 解析Class，处理游戏定义
      *
      * @param klass Class
      */
@@ -113,6 +107,9 @@ public class AnnotationBeanDefinitionReader extends AbstractBeanDefinitionReader
         if (annotation == null) {
             return;
         }
+
+
+       // this.getBeanFactory().registerBeanDefinition();
 
 //        // 目标类上实际注解类型
 //        Class<? extends Annotation> annotationType = annotation.annotationType();

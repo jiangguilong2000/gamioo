@@ -16,6 +16,7 @@
 
 package io.gamioo.ioc.factory.support;
 
+import io.gamioo.ioc.beans.BeanWrapper;
 import io.gamioo.ioc.config.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -33,29 +34,55 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
-    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
+    protected final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
 
-
-
+    /** Cache of singleton objects: bean name --> bean instance */
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(128);
+    
+    @Override
     public <T> T getBean(Class<T> requiredType){
-        return (T)beanDefinitionMap.get(StringUtils.uncapitalize(requiredType.getSimpleName())).getBean();
+        return (T)singletonObjects.get(StringUtils.uncapitalize(requiredType.getSimpleName()));
     }
 
+    @Override
+    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+        beanDefinitionMap.put(beanName, beanDefinition);
+    }
 
-    public void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition) {
-        // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）
-        //测试用例指定要获取的beanClassName
-        Object bean = null;//beanDefinition.getBeanClass().newInstance()
-        try {
-            bean = doCreateBean(beanDefinition);
-            beanDefinition.setBean(bean);
-            beanDefinitionMap.put(name, beanDefinition);
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+    /**实例化单例*/
+    public void preInstantiateSingletons(){
+        //实例化
+        for (BeanDefinition e : beanDefinitionMap.values()) {
+            try {
+                BeanWrapper  wrapper = createBeanInstance(e);
+                populateBean(wrapper,e);
+                singletonObjects.put(e.getBeanClassName(),wrapper.getWrappedInstance());
+//                beanDefinitionMap.put(e.getBeanClassName(), e);
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(),ex);
+            }
+
         }
-
     }
 
-    abstract Object doCreateBean(AbstractBeanDefinition beanDefinition) throws Exception;
+
+//
+//    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+//        // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）
+//        //测试用例指定要获取的beanClassName
+//        Object bean = null;//beanDefinition.getBeanClass().newInstance()
+//        try {
+//            bean = doCreateBean(beanDefinition);
+//            beanDefinition.setBean(bean);
+//            beanDefinitionMap.put(name, beanDefinition);
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(),e);
+//        }
+//
+//    }
+
+    abstract BeanWrapper createBeanInstance(BeanDefinition beanDefinition) throws Exception;
+
+    abstract  void populateBean(BeanWrapper beanWrapper,BeanDefinition beanDefinition);
 
 }

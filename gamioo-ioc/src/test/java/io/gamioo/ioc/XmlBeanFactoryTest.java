@@ -16,15 +16,12 @@
 
 package io.gamioo.ioc;
 
-import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 import io.gamioo.ioc.factory.xml.XmlBeanDefinitionReader;
 import io.gamioo.ioc.factory.xml.XmlResourceLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
-
-import java.util.Map;
 
 
 /**
@@ -43,7 +40,6 @@ public class XmlBeanFactoryTest {
 
     @BeforeAll
     public  static void beforeAll() throws Exception {
-
         //初始化......
          xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new XmlResourceLoader());
         xmlBeanDefinitionReader.analysisResourceList("ioc.xml");
@@ -55,9 +51,9 @@ public class XmlBeanFactoryTest {
     @DisplayName("IOC2测试")
     public void test() throws Exception {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : xmlBeanDefinitionReader.getRegistry().entrySet()) {
-            beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
-        }
+//        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : beanFactory.entrySet()) {
+//            beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
+//        }
         //初始化完毕，获取想要的bean
         HelloWorldService helloWorldService =beanFactory.getBean(HelloWorldService.class);
         logger.debug("content={}",helloWorldService.helloWorld());

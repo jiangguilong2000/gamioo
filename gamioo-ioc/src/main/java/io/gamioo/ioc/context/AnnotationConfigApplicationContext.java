@@ -40,12 +40,26 @@ public class AnnotationConfigApplicationContext extends AnnotationResourceLoader
     /**TODO ...*/
     public void refresh(){
     //注入属性实例化等
-        this.refreshBeanFactory();
+        DefaultListableBeanFactory factory=this.refreshBeanFactory();
+        prepareBeanFactory(factory);
+        // Instantiate all remaining (non-lazy-init) singletons.
+        finishBeanFactoryInitialization(factory);
 
     }
-    public void refreshBeanFactory(){
+    public DefaultListableBeanFactory refreshBeanFactory(){
         DefaultListableBeanFactory factory=this.createBeanFactory();
         this.loadBeanDefinitions(factory);
+        return factory;
+    }
+
+    /**TODO ...做一些beanFactory的属性设置工作*/
+    protected void prepareBeanFactory(DefaultListableBeanFactory beanFactory) {
+
+    }
+
+    /**实例化操作*/
+    protected void finishBeanFactoryInitialization(DefaultListableBeanFactory beanFactory){
+        beanFactory.preInstantiateSingletons();
     }
 
     public String getLocation() {

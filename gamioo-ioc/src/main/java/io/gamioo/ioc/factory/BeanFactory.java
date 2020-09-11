@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.factory;
 
-import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
+import io.gamioo.ioc.config.BeanDefinition;
 
 
 /**
@@ -28,8 +28,11 @@ import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
 
 public interface BeanFactory {
 
+    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
 
     public <T> T getBean(Class<T> requiredType);
 
-    void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition);
+    void preInstantiateSingletons();
+
+//    void registerBeanDefinition(String name, AbstractBeanDefinition beanDefinition);
 }

@@ -17,7 +17,11 @@
 package io.gamioo.ioc.factory.support;
 
 
+import io.gamioo.core.util.ClassUtils;
 import io.gamioo.ioc.PropertyValue;
+import io.gamioo.ioc.beans.BeanWrapper;
+import io.gamioo.ioc.beans.BeanWrapperImpl;
+import io.gamioo.ioc.config.BeanDefinition;
 
 import java.lang.reflect.Field;
 
@@ -31,18 +35,42 @@ import java.lang.reflect.Field;
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
     @Override
-    Object doCreateBean(AbstractBeanDefinition beanDefinition) throws Exception {
-        Object bean = beanDefinition.getBeanClass().newInstance();
-        beanDefinition.setBean(bean);
-        applyPropertyValues(bean, beanDefinition);
-        return bean;
+    protected BeanWrapper createBeanInstance(BeanDefinition beanDefinition) {
+        return instantiateBean(beanDefinition);
     }
 
-    void applyPropertyValues(Object bean, AbstractBeanDefinition mdb) throws Exception {
-        for (PropertyValue propertyValue : mdb.getPropertyValues().getPropertyValues()) {
-            Field field = bean.getClass().getDeclaredField(propertyValue.getName());
+    /**初始化BEAN*/
+    protected BeanWrapper instantiateBean(BeanDefinition beanDefinition) {
+        Object object = ClassUtils.newInstance(beanDefinition.getBeanClass());
+        BeanWrapper ret = new BeanWrapperImpl(object);
+        return ret;
+    }
+
+    /**
+     * 填充bean
+     */
+    @Override
+    protected void populateBean(BeanWrapper beanWrapper,BeanDefinition beanDefinition) {
+        try {
+            applyPropertyValues(beanWrapper, beanDefinition);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    @Override
+//    Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
+//        Object bean = beanDefinition.getBeanClass().newInstance();
+//        beanDefinition.setBean(bean);
+//        applyPropertyValues(bean, beanDefinition);
+//        return bean;
+//    }
+
+    void applyPropertyValues(BeanWrapper beanWrapper, BeanDefinition beanDefinition) throws Exception {
+        for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
+            Field field =  beanDefinition.getBeanClass().getDeclaredField(propertyValue.getName());
             field.setAccessible(true);
-            field.set(bean, propertyValue.getValue());
+            field.set(beanWrapper.getWrappedInstance(), propertyValue.getValue());
         }
     }
 

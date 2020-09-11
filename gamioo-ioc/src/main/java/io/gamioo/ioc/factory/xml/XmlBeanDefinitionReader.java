@@ -43,7 +43,7 @@ import java.util.List;
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     public XmlBeanDefinitionReader(ResourceLoader resourceLoader) {
-        super(resourceLoader);
+        super(null);
     }
 
     public void analysisResourceList(String location) throws IOException {
@@ -90,7 +90,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         processProperty(ele, beanDefinition);
         beanDefinition.setBeanClassName(className);
-        getRegistry().put(name, beanDefinition);
+        this.getBeanFactory().registerBeanDefinition(name, beanDefinition);
+       // getRegistry().put(name, beanDefinition);
     }
 
     private void processProperty(Element ele, AbstractBeanDefinition beanDefinition) {

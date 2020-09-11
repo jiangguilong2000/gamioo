@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.config;
-
-
-import io.gamioo.ioc.PropertyValues;
+package io.gamioo.ioc.beans;
 
 /**
  * some description
@@ -25,27 +22,17 @@ import io.gamioo.ioc.PropertyValues;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface BeanDefinition {
-
-    String getBeanClassName();
-
-    void setBeanClassName(String beanClassName);
-
-    Class getBeanClass();
-
-    void setBeanClass(Class beanClass);
-
-    public PropertyValues getPropertyValues();
-
-    void setPropertyValues(PropertyValues propertyValues);
+public interface BeanWrapper {
     /**
-     * Return the name of the parent definition of this bean definition, if any.
+     * Return the bean instance wrapped by this object, if any.
+     * @return the bean instance, or {@code null} if none set
      */
-    String getParentName();
+    Object getWrappedInstance();
 
     /**
-     * Set the name of the parent definition of this bean definition, if any.
+     * Return the type of the wrapped JavaBean object.
+     * @return the type of the wrapped bean instance,
+     * or {@code null} if no wrapped object has been set
      */
-    void setParentName(String parentName);
-
+    Class<?> getWrappedClass();
 }

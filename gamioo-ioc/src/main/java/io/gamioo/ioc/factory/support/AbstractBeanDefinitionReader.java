@@ -20,9 +20,6 @@ package io.gamioo.ioc.factory.support;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.io.ResourceLoader;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * some description
  *
@@ -31,7 +28,7 @@ import java.util.Map;
  */
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader {
 
-    private Map<String, AbstractBeanDefinition> registry= new HashMap<String, AbstractBeanDefinition>();
+   // private Map<String, AbstractBeanDefinition> registry= new HashMap<String, AbstractBeanDefinition>();
 
     private ResourceLoader resourceLoader;
 
@@ -49,9 +46,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
         this.beanFactory = beanFactory;
     }
 
-    public Map<String, AbstractBeanDefinition> getRegistry() {
-        return registry;
-    }
+//    public Map<String, AbstractBeanDefinition> getRegistry() {
+//        return registry;
+//    }
 
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
