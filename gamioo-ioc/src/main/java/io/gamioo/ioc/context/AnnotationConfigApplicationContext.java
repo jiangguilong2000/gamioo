@@ -17,7 +17,6 @@
 package io.gamioo.ioc.context;
 
 import io.gamioo.ioc.annotation.AnnotationBeanDefinitionReader;
-import io.gamioo.ioc.annotation.AnnotationResourceLoader;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 
 /**
@@ -26,7 +25,7 @@ import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class AnnotationConfigApplicationContext extends AnnotationResourceLoader implements  ApplicationContext{
+public class AnnotationConfigApplicationContext  implements  ApplicationContext{
 
 
     private String location;
@@ -75,9 +74,7 @@ public class AnnotationConfigApplicationContext extends AnnotationResourceLoader
     public void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) {
         this.beanFactory=beanFactory;
         AnnotationBeanDefinitionReader reader = new AnnotationBeanDefinitionReader(beanFactory);
-        reader.setResourceLoader(this);
-
-        reader.loadBeanDefinitions();
+        reader.loadBeanDefinitions(location);
 
     }
 

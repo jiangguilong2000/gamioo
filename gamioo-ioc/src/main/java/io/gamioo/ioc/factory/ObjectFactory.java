@@ -14,47 +14,30 @@
  * limitations under the License.
  */
 
-package io.gamioo.xml;
+package io.gamioo.ioc.factory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import io.gamioo.core.exception.BeansException;
+
+
 
 /**
- * some description
+ * Defines a factory which can return an Object instance
+ * (possibly shared or independent) when invoked.
+ *
+ * <p>This interface is typically used to encapsulate a generic factory which
+ * returns a new instance (prototype) of some target object on each invocation.
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Component
-public class Fruit {
-	
-	@Autowired
-	private Pig pig;
-	
-    private int id;
-    private String name;
+public interface ObjectFactory<T> {
 
-    public Pig getPig() {
-		return pig;
-	}
+    /**
+     * Return an instance (possibly shared or independent)
+     * of the object managed by this factory.
+     * @return the resulting instance
+     * @throws BeansException in case of creation errors
+     */
+    T getObject() throws BeansException;
 
-	public void setPig(Pig pig) {
-		this.pig = pig;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

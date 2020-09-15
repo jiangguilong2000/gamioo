@@ -16,6 +16,7 @@
 
 package io.gamioo.ioc.factory;
 
+import io.gamioo.core.exception.BeansException;
 import io.gamioo.ioc.config.BeanDefinition;
 
 
@@ -31,6 +32,8 @@ public interface BeanFactory {
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
 
     public <T> T getBean(Class<T> requiredType);
+
+    public Object getBean(String name) throws BeansException;
 
     void preInstantiateSingletons();
 

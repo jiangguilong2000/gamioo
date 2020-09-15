@@ -16,8 +16,6 @@
 
 package io.gamioo.ioc.factory.support;
 
-import java.io.IOException;
-
 /**
  * 读取器，从XML或者注解
  *
@@ -25,5 +23,5 @@ import java.io.IOException;
  * @since 1.0.0
  */
 public interface BeanDefinitionReader {
-    void analysisResourceList(String location) throws IOException;
+    //void analysisResourceList(String location) throws IOException;
 }

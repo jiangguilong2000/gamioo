@@ -13,48 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.gamioo.xml;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package io.gamioo.core.exception;
 
 /**
- * some description
+ * 在找不到指定Public方法时抛出.
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Component
-public class Fruit {
-	
-	@Autowired
-	private Pig pig;
-	
-    private int id;
-    private String name;
+public class NoPublicMethodException extends RuntimeException {
+    private static final long serialVersionUID = -4256184544259394170L;
 
-    public Pig getPig() {
-		return pig;
-	}
-
-	public void setPig(Pig pig) {
-		this.pig = pig;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public NoPublicMethodException(String msg) {
+        super(msg);
     }
 }

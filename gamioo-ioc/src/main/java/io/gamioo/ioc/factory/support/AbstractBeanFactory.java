@@ -16,14 +16,19 @@
 
 package io.gamioo.ioc.factory.support;
 
+import io.gamioo.core.exception.BeansException;
 import io.gamioo.ioc.beans.BeanWrapper;
 import io.gamioo.ioc.config.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
+import io.gamioo.ioc.factory.ObjectFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,14 +39,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
+    /** Map of bean definition objects, keyed by bean name. */
     protected final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
+    /**
+     * Cache of singleton objects: bean name --> bean instance 一级缓存
+     */
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+    /**
+     * Cache of early singleton objects: bean name --> bean instance  二级缓存
+     */
+    private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
-    /** Cache of singleton objects: bean name --> bean instance */
-    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(128);
-    
+    /**
+     * Cache of singleton factories: bean name --> ObjectFactory 三级缓存
+     */
+    private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+
+    /** Set of registered singletons, containing the bean names in registration order. */
+    private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
+
+
     @Override
-    public <T> T getBean(Class<T> requiredType){
-        return (T)singletonObjects.get(StringUtils.uncapitalize(requiredType.getSimpleName()));
+    public <T> T getBean(Class<T> requiredType) {
+        return (T) singletonObjects.get(StringUtils.uncapitalize(requiredType.getSimpleName()));
     }
 
     @Override
@@ -49,24 +69,101 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         beanDefinitionMap.put(beanName, beanDefinition);
     }
 
-    /**实例化单例*/
-    public void preInstantiateSingletons(){
+    /**
+     * 实例化单例
+     */
+    @Override
+    public void preInstantiateSingletons() {
         //实例化
         for (BeanDefinition e : beanDefinitionMap.values()) {
             try {
-                BeanWrapper  wrapper = createBeanInstance(e);
-                populateBean(wrapper,e);
-                singletonObjects.put(e.getBeanClassName(),wrapper.getWrappedInstance());
-//                beanDefinitionMap.put(e.getBeanClassName(), e);
+              getBean(e.getBeanClassName());
+
+            //    singletonObjects.put(e.getBeanClassName(), wrapper.getWrappedInstance());
+                beanDefinitionMap.put(e.getBeanClassName(), e);
             } catch (Exception ex) {
-                logger.error(ex.getMessage(),ex);
+                logger.error(ex.getMessage(), ex);
             }
 
         }
     }
 
 
-//
+    @Override
+    public Object getBean(String name) throws BeansException {
+        return doGetBean(name);
+
+    }
+
+    protected <T> T doGetBean(String name) throws BeansException {
+        BeanDefinition beanDefinition = beanDefinitionMap.get(name);
+        // Eagerly check singleton cache for manually registered singletons.
+        Object sharedInstance = getSingleton(name);
+        if (sharedInstance == null) {
+            getSingleton(name, () -> {
+                return createBean(beanDefinition);
+            });
+        }
+        return null;
+    }
+
+
+    /**
+     * Add the given singleton factory for building the specified singleton
+     * if necessary.
+     * <p>To be called for eager registration of singletons, e.g. to be able to
+     * resolve circular references.
+     * @param beanName the name of the bean
+     * @param singletonFactory the factory for the singleton object
+     */
+    protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
+        synchronized (this.singletonObjects) {
+            if (!this.singletonObjects.containsKey(beanName)) {
+                this.singletonFactories.put(beanName, singletonFactory);
+                this.earlySingletonObjects.remove(beanName);
+                this.registeredSingletons.add(beanName);
+            }
+        }
+    }
+    /**
+     * 获取单例
+     */
+    protected Object getSingleton(String beanName) {
+        Object singletonObject = this.singletonObjects.get(beanName);
+        if (singletonObject == null) {
+            synchronized (this.singletonObjects) {
+                singletonObject = this.earlySingletonObjects.get(beanName);
+                if (singletonObject == null) {
+                    ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+                    if (singletonFactory != null) {
+
+
+                        singletonObject = singletonFactory.getObject();
+
+                        this.earlySingletonObjects.put(beanName, singletonObject);
+                        this.singletonFactories.remove(beanName);
+                    }
+                }
+            }
+        }
+        return singletonObject;
+    }
+
+
+    public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
+        synchronized (this.singletonObjects) {
+            Object singletonObject = this.singletonObjects.get(beanName);
+            if (singletonObject == null) {
+                singletonObject = singletonFactory.getObject();
+            }
+
+
+        }
+
+        return null;
+    }
+
+    //
 //    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
 //        // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）
 //        //测试用例指定要获取的beanClassName
@@ -80,9 +177,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 //        }
 //
 //    }
+    abstract Object createBean(BeanDefinition beanDefinition);
 
-    abstract BeanWrapper createBeanInstance(BeanDefinition beanDefinition) throws Exception;
+    abstract BeanWrapper createBeanInstance(BeanDefinition beanDefinition);
 
-    abstract  void populateBean(BeanWrapper beanWrapper,BeanDefinition beanDefinition);
+    abstract void populateBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition);
+
+    abstract void initializeBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition);
 
 }

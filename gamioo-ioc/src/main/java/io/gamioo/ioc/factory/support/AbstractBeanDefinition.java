@@ -28,6 +28,10 @@ import io.gamioo.ioc.config.BeanDefinition;
  * @since 1.0.0
  */
 public abstract class AbstractBeanDefinition implements BeanDefinition {
+    private String initMethodName;
+
+    private String destroyMethodName;
+
     private Object bean;// 对象实例
 
     private Class beanClass;//bean的类型
@@ -46,6 +50,22 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 
     public Class getBeanClass() {
         return beanClass;
+    }
+
+    public String getInitMethodName() {
+        return initMethodName;
+    }
+
+    public void setInitMethodName(String initMethodName) {
+        this.initMethodName = initMethodName;
+    }
+
+    public String getDestroyMethodName() {
+        return destroyMethodName;
+    }
+
+    public void setDestroyMethodName(String destroyMethodName) {
+        this.destroyMethodName = destroyMethodName;
     }
 
     public void setBeanClass(Class beanClass) {

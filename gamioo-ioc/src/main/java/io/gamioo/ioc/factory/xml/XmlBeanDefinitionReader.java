@@ -32,7 +32,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * some description
@@ -47,10 +46,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     }
 
     public void analysisResourceList(String location) throws IOException {
-        List<Resource> list = this.getResourceLoader().getResourceList(location);
-        for (Resource e : list) {
-            analysisResource(e);
-        }
+//        List<Resource> list = this.getResourceLoader().getResourceList(location);
+//        for (Resource e : list) {
+//            analysisResource(e);
+//        }
     }
 
     protected void analysisResource(Resource resource) throws IOException {

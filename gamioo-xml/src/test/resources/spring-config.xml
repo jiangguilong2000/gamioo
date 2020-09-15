@@ -14,8 +14,4 @@
 	<!-- 激活利用注解进行装配 -->
 	<context:annotation-config />
 	<context:component-scan base-package="io.gamioo.xml" />
-	<bean id="fruit" class="io.gamioo.xml.Fruit" >
-	<property name="id" value="1"></property>
-	<property name="name" value="Allen Jiang"></property>
-	</bean>
 </beans>

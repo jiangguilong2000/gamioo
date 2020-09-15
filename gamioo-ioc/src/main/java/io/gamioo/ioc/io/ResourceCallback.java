@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.xml;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package io.gamioo.ioc.io;
 
 /**
  * some description
@@ -25,36 +22,6 @@ import org.springframework.stereotype.Component;
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Component
-public class Fruit {
-	
-	@Autowired
-	private Pig pig;
-	
-    private int id;
-    private String name;
-
-    public Pig getPig() {
-		return pig;
-	}
-
-	public void setPig(Pig pig) {
-		this.pig = pig;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+public interface ResourceCallback {
+     void handle();
 }

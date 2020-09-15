@@ -28,7 +28,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class SpringTest {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring-config.xml");
-        Fruit fruit=context.getBean(Fruit.class);
-        fruit.getName();
+        Pig pig=context.getBean(Pig.class);
+        pig.getName();
     }
 }

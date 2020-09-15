@@ -28,9 +28,9 @@ import java.util.List;
  */
 public interface ResourceLoader {
 
-    public String getLocation();
+   // public String getLocation();
 
-    List<Resource> getResourceList(String location) throws IOException;
+     List<Resource> getResourceList(String location) throws IOException;
 
   //  Resource getResource(String location);
 

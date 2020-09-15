@@ -27,6 +27,14 @@ import io.gamioo.ioc.PropertyValues;
  */
 public interface BeanDefinition {
 
+    String getInitMethodName();
+
+    void setInitMethodName(String initMethodName);
+
+    String getDestroyMethodName();
+
+    void setDestroyMethodName(String destroyMethodName);
+
     String getBeanClassName();
 
     void setBeanClassName(String beanClassName);
@@ -38,6 +46,7 @@ public interface BeanDefinition {
     public PropertyValues getPropertyValues();
 
     void setPropertyValues(PropertyValues propertyValues);
+
     /**
      * Return the name of the parent definition of this bean definition, if any.
      */
