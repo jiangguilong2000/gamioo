@@ -17,17 +17,11 @@
 package io.gamioo.ioc.factory.support;
 
 
-import io.gamioo.core.exception.NoPublicMethodException;
-import io.gamioo.core.util.ClassUtils;
-import io.gamioo.ioc.PropertyValue;
-import io.gamioo.ioc.beans.BeanWrapper;
-import io.gamioo.ioc.beans.BeanWrapperImpl;
-import io.gamioo.ioc.config.BeanDefinition;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
+import io.gamioo.ioc.definition.BeanDefinition;
+import io.gamioo.ioc.definition.FieldDefinition;
+import io.gamioo.ioc.definition.MethodDefinition;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 
 /**
@@ -44,44 +38,49 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     Object doCreateBean(BeanDefinition beanDefinition) {
-        BeanWrapper wrapper = createBeanInstance(beanDefinition);
+       String beanName=beanDefinition.getName();
+        Object instance = createBeanInstance(beanDefinition);
         // Eagerly cache singletons to be able to resolve circular references
         // even when triggered by lifecycle interfaces like BeanFactoryAware.
-
-        //填充实例
-        populateBean(wrapper, beanDefinition);
+        boolean earlySingletonExposure = isSingletonCurrentlyInCreation(beanName);
+        if(earlySingletonExposure){
+            addSingletonFactory(beanName, () -> getEarlyBeanReference(instance));
+        }
+        //填充实例，这里完成了循环引用的问题
+        populateBean(instance, beanDefinition);
         //调用类的初始化方法
-        initializeBean(wrapper, beanDefinition);
-        return wrapper.getWrappedInstance();
+        initializeBean(instance, beanDefinition);
+        return instance;
 
     }
 
     @Override
-    protected BeanWrapper createBeanInstance(BeanDefinition beanDefinition) {
-        BeanWrapper instanceWrapper = instantiateBean(beanDefinition);
-        return instanceWrapper;
+    protected Object createBeanInstance(BeanDefinition beanDefinition) {
+        Object ret = instantiateBean(beanDefinition);
+        return ret;
     }
 
 
     /**
      * 初始化BEAN
      */
-    protected BeanWrapper instantiateBean(BeanDefinition beanDefinition) {
-        Object object = ClassUtils.newInstance(beanDefinition.getBeanClass());
-        BeanWrapper ret = new BeanWrapperImpl(object);
+    protected Object instantiateBean(BeanDefinition beanDefinition) {
+        Object ret = beanDefinition.newInstance();
         return ret;
     }
 
     /**
-     * 填充bean
+     * 填充bean，并做好互相填充的动作，是否需要在这里处理autowire的扫描呢？todo....
      */
     @Override
-    protected void populateBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition) {
-        try {
-            applyPropertyValues(beanWrapper, beanDefinition);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    protected void populateBean(Object instance, BeanDefinition beanDefinition) {
+
+            List<FieldDefinition> list = beanDefinition.getAutowiredFieldDefinition();
+
+            for (FieldDefinition e : list) {
+                Object field = this.getBean(e.getName());
+                e.inject(instance, field);
+            }
     }
 
 //    @Override
@@ -92,33 +91,28 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 //        return bean;
 //    }
 
-    void applyPropertyValues(BeanWrapper beanWrapper, BeanDefinition beanDefinition) throws Exception {
-        for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
-            Field field = beanDefinition.getBeanClass().getDeclaredField(propertyValue.getName());
-            field.setAccessible(true);
-            field.set(beanWrapper.getWrappedInstance(), propertyValue.getValue());
-        }
-    }
+//    void applyPropertyValues(BeanWrapper beanWrapper, BeanDefinition beanDefinition) throws Exception {
+//        for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
+//            Field field = beanDefinition.getBeanClass().getDeclaredField(propertyValue.getName());
+//            field.setAccessible(true);
+//            field.set(beanWrapper.getWrappedInstance(), propertyValue.getValue());
+//        }
+//    }
 
     @Override
-    protected void initializeBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition) {
+    protected void initializeBean(Object object, BeanDefinition beanDefinition) {
 
-        this.invokeInitMethods(beanWrapper, beanDefinition);
+        this.invokeInitMethods(object, beanDefinition);
     }
 
     /**
      * 调用PostConstruct方法
      */
-    private void invokeInitMethods(BeanWrapper beanWrapper, BeanDefinition beanDefinition) {
-        try {
-            String method = beanDefinition.getInitMethodName();
-            if (StringUtils.isNotEmpty(method)) {
-                MethodUtils.invokeMethod(beanWrapper.getWrappedInstance(), method);
+    private void invokeInitMethods(Object object, BeanDefinition beanDefinition) {
+            MethodDefinition method = beanDefinition.getInitMethodDefinition();
+            if (method!=null) {
+                method.invoke(object);
             }
-
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new NoPublicMethodException(e.getMessage());
-        }
     }
 
 }

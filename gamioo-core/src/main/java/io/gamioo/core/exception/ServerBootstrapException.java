@@ -24,6 +24,11 @@ package io.gamioo.core.exception;
  */
 public class ServerBootstrapException extends ServiceException{
 
+
+    public ServerBootstrapException(String message,Object... params) {
+        super(message, params);
+    }
+
     public ServerBootstrapException(String message, Throwable cause) {
         super(message, cause);
     }

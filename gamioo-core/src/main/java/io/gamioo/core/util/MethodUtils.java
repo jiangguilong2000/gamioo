@@ -58,7 +58,7 @@ public class MethodUtils {
      * @param klass 指定类
      * @return 指定类的方法集合.
      */
-    public static List<Method> getAllMethod(final Class<?> klass) {
+    public static List<Method> getMethodList(final Class<?> klass) {
         Set<Method> result = new HashSet<>();
         for (Class<?> target = klass; target != Object.class; target = target.getSuperclass()) {
             for (Method method : target.getDeclaredMethods()) {

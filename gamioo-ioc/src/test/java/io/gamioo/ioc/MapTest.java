@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.factory;
+package io.gamioo.ioc;
 
-import io.gamioo.core.exception.BeansException;
-import io.gamioo.ioc.definition.BeanDefinition;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * some description
@@ -26,15 +25,14 @@ import io.gamioo.ioc.definition.BeanDefinition;
  * @author Allen Jiang
  * @since 1.0.0
  */
-
-public interface BeanFactory {
-
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
-
-    public <T> T getBean(Class<T> requiredType);
-
-    public Object getBean(String name) throws BeansException;
-
-    void preInstantiateSingletons();
-
+public class MapTest {
+    public static void main(String[] args) {
+        Map<String,Object> map=new HashMap<>();
+       Object obj= map.computeIfAbsent("a",key->new Object());
+        System.out.println(obj);
+        Object d=map.putIfAbsent("d",new Object());
+        System.out.println(d);
+        map.computeIfAbsent("a",key->new Object());
+        System.out.println(map);
+    }
 }

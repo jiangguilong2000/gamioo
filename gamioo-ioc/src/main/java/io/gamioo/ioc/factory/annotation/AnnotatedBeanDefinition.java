@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.factory.annotation;
 
-import io.gamioo.ioc.config.BeanDefinition;
+import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.type.AnnotationMetadata;
 import io.gamioo.ioc.type.MethodMetadata;
 

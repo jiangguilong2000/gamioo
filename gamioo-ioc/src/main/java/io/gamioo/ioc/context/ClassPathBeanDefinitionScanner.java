@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.context.annotation;
+package io.gamioo.ioc.context;
 
 import io.gamioo.core.util.AnnotationUtils;
 import io.gamioo.core.util.Assert;
 import io.gamioo.core.util.ClassUtils;
 import io.gamioo.ioc.annotation.DefaultResourceLoader;
+import io.gamioo.ioc.definition.GenericBeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.io.Resource;
 import io.gamioo.ioc.stereotype.Component;
@@ -77,7 +78,7 @@ public class ClassPathBeanDefinitionScanner {
         String className = resource.getClassName();
         Class<?> clazz = ClassUtils.loadClass(className);
         //TODO ...
-        parseClass(clazz);
+        analysisClass(clazz);
 
     }
 
@@ -86,7 +87,7 @@ public class ClassPathBeanDefinitionScanner {
      *
      * @param klass Class
      */
-    private void parseClass(Class<?> klass) {
+    private void analysisClass(Class<?> klass) {
         // 接口、内部类、枚举、注解和匿名类 直接忽略
         if (klass.isInterface() || klass.isMemberClass() || klass.isEnum() || klass.isAnnotation() || klass.isAnonymousClass()) {
             return;
@@ -105,10 +106,11 @@ public class ClassPathBeanDefinitionScanner {
         }
 
 
-        //beanFactory.registerBeanDefinition();
 
-//        // 目标类上实际注解类型
-//        Class<? extends Annotation> annotationType = annotation.annotationType();
+            //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
+        beanFactory.registerBeanDefinition(klass.getSimpleName() ,new GenericBeanDefinition(klass,annotation));
+
+
 //        // 配置类
 //        if (annotationType == Configuration.class) {
 //            configurations.add(new ConfigurationBeanDefinition(klass).init());

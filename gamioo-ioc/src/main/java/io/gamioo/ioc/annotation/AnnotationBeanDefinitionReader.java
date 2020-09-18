@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.annotation;
 
-import io.gamioo.ioc.context.annotation.ClassPathBeanDefinitionScanner;
+import io.gamioo.ioc.context.ClassPathBeanDefinitionScanner;
 import io.gamioo.ioc.factory.support.AbstractBeanDefinitionReader;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 import org.apache.logging.log4j.LogManager;

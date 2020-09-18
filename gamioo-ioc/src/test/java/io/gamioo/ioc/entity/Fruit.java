@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.factory;
+package io.gamioo.ioc.entity;
 
-import io.gamioo.core.exception.BeansException;
-import io.gamioo.ioc.definition.BeanDefinition;
+import io.gamioo.ioc.factory.annotation.Autowired;
+import io.gamioo.ioc.stereotype.Component;
 
 
 /**
@@ -26,15 +26,36 @@ import io.gamioo.ioc.definition.BeanDefinition;
  * @author Allen Jiang
  * @since 1.0.0
  */
+@Component
+public class Fruit {
+	
+	@Autowired
+	private Pig pig;
+	
+    private int id;
+    private String name;
 
-public interface BeanFactory {
+    public Pig getPig() {
+		return pig;
+	}
 
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
+	public void setPig(Pig pig) {
+		this.pig = pig;
+	}
 
-    public <T> T getBean(Class<T> requiredType);
+	public int getId() {
+        return id;
+    }
 
-    public Object getBean(String name) throws BeansException;
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    void preInstantiateSingletons();
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

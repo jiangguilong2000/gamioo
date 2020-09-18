@@ -16,6 +16,8 @@
 
 package io.gamioo.ioc;
 
+import io.gamioo.ioc.stereotype.Service;
+
 /**
  * some description
  *
@@ -23,6 +25,7 @@ package io.gamioo.ioc;
  * @since 1.0.0
  */
 
+@Service
 public class HelloWorldServiceImpl implements HelloWorldService {
 
     private String text;

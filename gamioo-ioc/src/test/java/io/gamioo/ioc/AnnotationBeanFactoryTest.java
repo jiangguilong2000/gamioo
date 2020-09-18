@@ -16,7 +16,8 @@
 
 package io.gamioo.ioc;
 
-import io.gamioo.ioc.context.AnnotationConfigApplicationContext;
+import io.gamioo.ioc.context.ConfigApplicationContext;
+import io.gamioo.ioc.entity.Fruit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -34,14 +35,12 @@ import org.junit.jupiter.api.*;
 public class AnnotationBeanFactoryTest {
     private static final Logger logger = LogManager.getLogger(AnnotationBeanFactoryTest.class);
     //private final Benchmark benchmark=new Benchmark(10000);
-    private static AnnotationConfigApplicationContext context;
+    private static ConfigApplicationContext context;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-
-
         //初始化......
-        context=new AnnotationConfigApplicationContext(AnnotationBeanFactoryTest.class.getPackage().getName());
+        context=new ConfigApplicationContext(AnnotationBeanFactoryTest.class.getPackage().getName());
 
     }
 
@@ -53,8 +52,9 @@ public class AnnotationBeanFactoryTest {
 
 
 //        //初始化完毕，获取想要的bean
-        HelloWorldService helloWorldService = context.getBean(HelloWorldService.class);
-        logger.debug("content={}", helloWorldService.helloWorld());
+        Fruit helloWorldService = context.getBean(Fruit.class);
+        System.out.println(helloWorldService.getName());
+        logger.debug("content={}", "aaa");
 
     }
 

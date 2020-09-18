@@ -17,8 +17,11 @@
 package io.gamioo.ioc.factory.support;
 
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import io.gamioo.ioc.PropertyValues;
-import io.gamioo.ioc.config.BeanDefinition;
+import io.gamioo.ioc.definition.BeanDefinition;
+
+import java.lang.annotation.Annotation;
 
 
 /**
@@ -28,15 +31,20 @@ import io.gamioo.ioc.config.BeanDefinition;
  * @since 1.0.0
  */
 public abstract class AbstractBeanDefinition implements BeanDefinition {
+    private MethodAccess access;
+
     private String initMethodName;
 
     private String destroyMethodName;
 
     private Object bean;// 对象实例
 
-    private Class beanClass;//bean的类型
+    private Class<?> beanClass;//bean的类型
 
     private String beanClassName;//类名
+
+    private Annotation annotation;
+    private Class<? extends Annotation> annotationType;
 
     private PropertyValues propertyValues;
 
@@ -48,8 +56,24 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
         this.bean = bean;
     }
 
-    public Class getBeanClass() {
+    public Class<?> getBeanClass() {
         return beanClass;
+    }
+
+    public Annotation getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(Annotation annotation) {
+        this.annotation = annotation;
+    }
+
+    public Class<? extends Annotation> getAnnotationType() {
+        return annotationType;
+    }
+
+    public void setAnnotationType(Class<? extends Annotation> annotationType) {
+        this.annotationType = annotationType;
     }
 
     public String getInitMethodName() {

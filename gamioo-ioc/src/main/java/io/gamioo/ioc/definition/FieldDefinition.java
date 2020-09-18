@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.factory;
-
-import io.gamioo.core.exception.BeansException;
-import io.gamioo.ioc.definition.BeanDefinition;
-
+package io.gamioo.ioc.definition;
 
 /**
- * some description
+ * 一个字段定义
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
+public interface FieldDefinition extends  Definition{
+    /**
+     * 注入对象.
+     *
+     * @param instance 宿主对象
+     */
+    void inject(Object instance,Object value);
 
-public interface BeanFactory {
-
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
-
-    public <T> T getBean(Class<T> requiredType);
-
-    public Object getBean(String name) throws BeansException;
-
-    void preInstantiateSingletons();
 
 }

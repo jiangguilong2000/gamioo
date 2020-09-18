@@ -17,18 +17,14 @@
 package io.gamioo.ioc.factory.support;
 
 import io.gamioo.core.exception.BeansException;
-import io.gamioo.ioc.beans.BeanWrapper;
-import io.gamioo.ioc.config.BeanDefinition;
+import io.gamioo.core.util.StringUtil;
+import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.factory.ObjectFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,7 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
-    /** Map of bean definition objects, keyed by bean name. */
+    /**
+     * Map of bean definition objects, keyed by bean name.
+     */
     protected final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(128);
     /**
      * Cache of singleton objects: bean name --> bean instance 一级缓存
@@ -55,18 +53,26 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      */
     private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
-    /** Set of registered singletons, containing the bean names in registration order. */
+    /**
+     * Set of registered singletons, containing the bean names in registration order.
+     */
     private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
+    /**
+     * Names of beans that are currently in creation.
+     */
+    private final Set<String> singletonsCurrentlyInCreation =
+            Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> requiredType) {
-        return (T) singletonObjects.get(StringUtils.uncapitalize(requiredType.getSimpleName()));
+        return (T) singletonObjects.get(StringUtil.uncapitalize(requiredType.getSimpleName()));
     }
 
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        beanDefinitionMap.put(beanName, beanDefinition);
+        beanDefinitionMap.put(StringUtil.uncapitalize(beanName), beanDefinition);
     }
 
     /**
@@ -77,10 +83,10 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         //实例化
         for (BeanDefinition e : beanDefinitionMap.values()) {
             try {
-              getBean(e.getBeanClassName());
+                getBean(e.getName());
 
-            //    singletonObjects.put(e.getBeanClassName(), wrapper.getWrappedInstance());
-                beanDefinitionMap.put(e.getBeanClassName(), e);
+                //    singletonObjects.put(e.getBeanClassName(), wrapper.getWrappedInstance());
+                //     beanDefinitionMap.put(e.getName(), e);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
@@ -95,16 +101,39 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
     }
 
+
+    @SuppressWarnings("unchecked")
     protected <T> T doGetBean(String name) throws BeansException {
         BeanDefinition beanDefinition = beanDefinitionMap.get(name);
         // Eagerly check singleton cache for manually registered singletons.
         Object sharedInstance = getSingleton(name);
         if (sharedInstance == null) {
-            getSingleton(name, () -> {
-                return createBean(beanDefinition);
-            });
+            sharedInstance = this.getSingleton(name, () -> createBean(beanDefinition));
         }
-        return null;
+        return (T) sharedInstance;
+    }
+
+
+//    public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
+//        Assert.notNull(beanName, "Bean name must not be null");
+//        Assert.notNull(singletonObject, "Singleton object must not be null");
+//        synchronized (this.singletonObjects) {
+//            Object oldObject = this.singletonObjects.get(beanName);
+//            if (oldObject != null) {
+//                throw new IllegalStateException("Could not register object [" + singletonObject +
+//                        "] under bean name '" + beanName + "': there is already object [" + oldObject + "] bound");
+//            }
+//            addSingleton(beanName, singletonObject);
+//        }
+//    }
+
+    protected void addSingleton(String beanName, Object singletonObject) {
+        synchronized (this.singletonObjects) {
+            this.singletonObjects.put(beanName, singletonObject);
+            this.singletonFactories.remove(beanName);
+            this.earlySingletonObjects.remove(beanName);
+            this.registeredSingletons.add(beanName);
+        }
     }
 
 
@@ -113,7 +142,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      * if necessary.
      * <p>To be called for eager registration of singletons, e.g. to be able to
      * resolve circular references.
-     * @param beanName the name of the bean
+     *
+     * @param beanName         the name of the bean
      * @param singletonFactory the factory for the singleton object
      */
     protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
@@ -125,21 +155,19 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             }
         }
     }
+
     /**
      * 获取单例
      */
     protected Object getSingleton(String beanName) {
         Object singletonObject = this.singletonObjects.get(beanName);
-        if (singletonObject == null) {
+        if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
             synchronized (this.singletonObjects) {
                 singletonObject = this.earlySingletonObjects.get(beanName);
                 if (singletonObject == null) {
                     ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
                     if (singletonFactory != null) {
-
-
                         singletonObject = singletonFactory.getObject();
-
                         this.earlySingletonObjects.put(beanName, singletonObject);
                         this.singletonFactories.remove(beanName);
                     }
@@ -154,15 +182,72 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         synchronized (this.singletonObjects) {
             Object singletonObject = this.singletonObjects.get(beanName);
             if (singletonObject == null) {
+                beforeSingletonCreation(beanName);
                 singletonObject = singletonFactory.getObject();
+                afterSingletonCreation(beanName);
+                addSingleton(beanName, singletonObject);
             }
-
+            return singletonObject;
 
         }
 
-        return null;
     }
 
+    public void destroySingleton(String beanName) {
+        // Remove a registered singleton of the given name, if any.
+        removeSingleton(beanName);
+    }
+
+    /**
+     * Remove the bean with the given name from the singleton cache of this factory,
+     * to be able to clean up eager registration of a singleton if creation failed.
+     * @param beanName the name of the bean
+     */
+    protected void removeSingleton(String beanName) {
+        synchronized (this.singletonObjects) {
+            this.singletonObjects.remove(beanName);
+            this.singletonFactories.remove(beanName);
+            this.earlySingletonObjects.remove(beanName);
+            this.registeredSingletons.remove(beanName);
+        }
+    }
+    /**
+     * Return whether the specified singleton bean is currently in creation
+     * (within the entire factory).
+     *
+     * @param beanName the name of the bean
+     */
+    public boolean isSingletonCurrentlyInCreation(String beanName) {
+        return this.singletonsCurrentlyInCreation.contains(beanName);
+    }
+
+    /**
+     * Callback before singleton creation.
+     * <p>The default implementation register the singleton as currently in creation.
+     *
+     * @param beanName the name of the singleton about to be created
+     * @see #isSingletonCurrentlyInCreation
+     */
+    protected void beforeSingletonCreation(String beanName) {
+        this.singletonsCurrentlyInCreation.add(beanName);
+
+    }
+
+    /**
+     * Callback after singleton creation.
+     * <p>The default implementation marks the singleton as not in creation anymore.
+     *
+     * @param beanName the name of the singleton that has been created
+     * @see #isSingletonCurrentlyInCreation
+     */
+    protected void afterSingletonCreation(String beanName) {
+        this.singletonsCurrentlyInCreation.remove(beanName);
+    }
+
+
+    protected Object getEarlyBeanReference(Object bean) {
+        return bean;
+    }
     //
 //    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
 //        // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）
@@ -179,10 +264,10 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 //    }
     abstract Object createBean(BeanDefinition beanDefinition);
 
-    abstract BeanWrapper createBeanInstance(BeanDefinition beanDefinition);
+    abstract Object createBeanInstance(BeanDefinition beanDefinition);
 
-    abstract void populateBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition);
+    abstract void populateBean(Object instance, BeanDefinition beanDefinition);
 
-    abstract void initializeBean(BeanWrapper beanWrapper, BeanDefinition beanDefinition);
+    abstract void initializeBean(Object instance, BeanDefinition beanDefinition);
 
 }

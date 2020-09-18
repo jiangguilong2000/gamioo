@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.beans;
+package io.gamioo.ioc.wrapper;
 
 /**
  * some description
@@ -22,10 +22,10 @@ package io.gamioo.ioc.beans;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class BeanWrapperImpl implements BeanWrapper {
+public class BeanWrapper {
     private Object object;
 
-    public BeanWrapperImpl(Object object) {
+    public BeanWrapper(Object object) {
         this.object = object;
     }
 
@@ -34,7 +34,6 @@ public class BeanWrapperImpl implements BeanWrapper {
      *
      * @return the bean instance, or {@code null} if none set
      */
-    @Override
     public Object getWrappedInstance() {
         return this.object;
     }
@@ -45,7 +44,6 @@ public class BeanWrapperImpl implements BeanWrapper {
      * @return the type of the wrapped bean instance,
      * or {@code null} if no wrapped object has been set
      */
-    @Override
     public Class<?> getWrappedClass() {
         return (this.object != null ? this.object.getClass() : null);
     }

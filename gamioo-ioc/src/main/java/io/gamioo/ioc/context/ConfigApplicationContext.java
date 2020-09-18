@@ -25,13 +25,13 @@ import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class AnnotationConfigApplicationContext  implements  ApplicationContext{
+public class ConfigApplicationContext implements  ApplicationContext{
 
 
     private String location;
     private DefaultListableBeanFactory beanFactory;
 
-    public AnnotationConfigApplicationContext(String location){
+    public ConfigApplicationContext(String location){
         this.location=location;
         this.refresh();
     }

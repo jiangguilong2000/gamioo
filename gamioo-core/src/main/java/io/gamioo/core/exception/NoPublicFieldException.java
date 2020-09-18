@@ -11,26 +11,31 @@
  * 3.无论你对源代码做出任何修改和改进，版权都归Noark研发团队所有，我们保留所有权利;
  * 4.凡侵犯Noark版权等知识产权的，必依法追究其法律责任，特此郑重法律声明！
  */
-package io.gamioo.ioc.annotation;
-
-import java.lang.annotation.*;
+package io.gamioo.core.exception;
 
 /**
- * 注入配置文件中的属性.
+ * 在找不到指定Public属性时抛出.
  *
- * @author Allen Jiang
- * @since 1.0.0
+ * @author 小流氓[176543888@qq.com]
+ * @since 3.3.6
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+public class NoPublicFieldException extends ServiceException {
 
-public @interface Value {
+
+    public NoPublicFieldException(String message,Object... params) {
+        super(message, params);
+    }
+
+    public NoPublicFieldException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
     /**
-     * 属性配置文件中的配置键值.
-     *
-     * @return Key.
+     * @param cause
+     * @param message 异常信息
+     * @param params
      */
-    String value();
+    public NoPublicFieldException(Throwable cause, String message, Object... params) {
+        super(cause, message, params);
+    }
 }

@@ -17,6 +17,8 @@
 package io.gamioo.xml;
 
 
+import java.lang.reflect.Field;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -30,5 +32,11 @@ public class SpringTest {
         ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring-config.xml");
         Pig pig=context.getBean(Pig.class);
         pig.getName();
+
+        for(Field e:Pig.class.getFields()) {
+        	e.getName();
+        	e.getGenericType();
+        	e.getClass();
+        }
     }
 }

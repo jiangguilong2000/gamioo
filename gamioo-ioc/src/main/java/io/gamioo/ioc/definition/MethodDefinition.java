@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.beans;
+package io.gamioo.ioc.definition;
+
+import com.esotericsoftware.reflectasm.MethodAccess;
+
+import java.lang.reflect.Parameter;
 
 /**
  * some description
@@ -22,17 +26,22 @@ package io.gamioo.ioc.beans;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public interface BeanWrapper {
-    /**
-     * Return the bean instance wrapped by this object, if any.
-     * @return the bean instance, or {@code null} if none set
-     */
-    Object getWrappedInstance();
+public interface MethodDefinition extends  Definition{
+
 
     /**
-     * Return the type of the wrapped JavaBean object.
-     * @return the type of the wrapped bean instance,
-     * or {@code null} if no wrapped object has been set
+     * 获取此方法的访问入口.
+     *
+     * @return 访问入口
      */
-    Class<?> getWrappedClass();
+    MethodAccess getMethodAccess();
+
+    /**
+     * 获取参数列表
+     *
+     * @return 参数
+     */
+    Parameter[] getParameters();
+
+    Object invoke(Object instance,Object ...args);
 }

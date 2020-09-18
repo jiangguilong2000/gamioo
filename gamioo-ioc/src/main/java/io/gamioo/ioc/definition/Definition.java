@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package io.gamioo.ioc.factory.support;
+package io.gamioo.ioc.definition;
+
+import java.lang.annotation.Annotation;
 
 /**
  * some description
@@ -22,16 +24,20 @@ package io.gamioo.ioc.factory.support;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class GenericBeanDefinition extends  AbstractBeanDefinition{
-    private String parentName;
+public interface Definition {
 
-    @Override
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
-    }
+    Class<?> getClazz();
 
-    @Override
-    public String getParentName() {
-        return this.parentName;
-    }
+    String getName();
+
+    /**获取注解*/
+    Annotation[] getAnnotationList();
+
+    /**
+     * 获取此方法的访问入口所对应的Index.
+     *
+     * @return 访问入口所对应的Index.
+     */
+    int getIndex();
+
 }

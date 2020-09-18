@@ -21,7 +21,7 @@ import io.gamioo.ioc.PropertyValue;
 import io.gamioo.ioc.config.BeanReference;
 import io.gamioo.ioc.factory.support.AbstractBeanDefinition;
 import io.gamioo.ioc.factory.support.AbstractBeanDefinitionReader;
-import io.gamioo.ioc.factory.support.GenericBeanDefinition;
+import io.gamioo.ioc.definition.GenericBeanDefinition;
 import io.gamioo.ioc.io.Resource;
 import io.gamioo.ioc.io.ResourceLoader;
 import org.w3c.dom.Document;
@@ -86,9 +86,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     protected void processBeanDefinition(Element ele) {
         String name = ele.getAttribute("id");
         String className = ele.getAttribute("class");
-        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-        processProperty(ele, beanDefinition);
-        beanDefinition.setBeanClassName(className);
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition(null,null);
+       ///  beanDefinition.setBeanClassName(className);
         this.getBeanFactory().registerBeanDefinition(name, beanDefinition);
        // getRegistry().put(name, beanDefinition);
     }

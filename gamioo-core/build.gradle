@@ -4,7 +4,10 @@ dependencies {
     
     api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3';
 	api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3';
+    api group: 'com.esotericsoftware', name: 'reflectasm', version: '1.11.9';
 	api group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
+    api group: 'org.ow2.asm', name: 'asm', version: '8.0.1';
+
     testImplementation project(':gamioo-benchmark');
    
     
