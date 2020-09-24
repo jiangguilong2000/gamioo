@@ -115,10 +115,10 @@ public class Assert {
      * @param text    the String to check
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the text is empty
-     * @see StringUtil#hasLength
+     * @see StringUtils#hasLength
      */
     public static void hasLength(String text, String message) {
-        if (!StringUtil.hasLength(text)) {
+        if (!StringUtils.hasLength(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -130,7 +130,7 @@ public class Assert {
      *
      * @param text the String to check
      * @throws IllegalArgumentException if the text is empty
-     * @see StringUtil#hasLength
+     * @see StringUtils#hasLength
      */
     public static void hasLength(String text) {
         hasLength(text,
@@ -145,10 +145,10 @@ public class Assert {
      * @param text    the String to check
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the text does not contain valid text content
-     * @see StringUtil#hasText
+     * @see StringUtils#hasText
      */
     public static void hasText(String text, String message) {
-        if (!StringUtil.hasText(text)) {
+        if (!StringUtils.hasText(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -160,7 +160,7 @@ public class Assert {
      *
      * @param text the String to check
      * @throws IllegalArgumentException if the text does not contain valid text content
-     * @see StringUtil#hasText
+     * @see StringUtils#hasText
      */
     public static void hasText(String text) {
         hasText(text,
@@ -177,7 +177,7 @@ public class Assert {
      * @throws IllegalArgumentException if the text contains the substring
      */
     public static void doesNotContain(String textToSearch, String substring, String message) {
-        if (StringUtil.hasLength(textToSearch) && StringUtil.hasLength(substring) &&
+        if (StringUtils.hasLength(textToSearch) && StringUtils.hasLength(substring) &&
                 textToSearch.contains(substring)) {
             throw new IllegalArgumentException(message);
         }
@@ -340,7 +340,7 @@ public class Assert {
         notNull(type, "Type to check against must not be null");
         if (!type.isInstance(obj)) {
             throw new IllegalArgumentException(
-                    (StringUtil.hasLength(message) ? message + " " : "") +
+                    (StringUtils.hasLength(message) ? message + " " : "") +
                             "Object of class [" + (obj != null ? obj.getClass().getName() : "null") +
                             "] must be an instance of " + type);
         }
@@ -373,7 +373,7 @@ public class Assert {
     public static void isAssignable(Class<?> superType, Class<?> subType, String message) {
         notNull(superType, "Type to check against must not be null");
         if (subType == null || !superType.isAssignableFrom(subType)) {
-            throw new IllegalArgumentException((StringUtil.hasLength(message) ? message + " " : "")
+            throw new IllegalArgumentException((StringUtils.hasLength(message) ? message + " " : "")
                     + subType + " is not assignable to " + superType);
         }
     }

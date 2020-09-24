@@ -17,7 +17,7 @@
 package io.gamioo.ioc.factory.support;
 
 import io.gamioo.core.exception.BeansException;
-import io.gamioo.core.util.StringUtil;
+import io.gamioo.core.util.StringUtils;
 import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.factory.ObjectFactory;
@@ -67,12 +67,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getBean(Class<T> requiredType) {
-        return (T) singletonObjects.get(StringUtil.uncapitalize(requiredType.getSimpleName()));
+        return (T) singletonObjects.get(StringUtils.uncapitalized(requiredType.getSimpleName()));
     }
 
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        beanDefinitionMap.put(StringUtil.uncapitalize(beanName), beanDefinition);
+        beanDefinitionMap.put(StringUtils.uncapitalized(beanName), beanDefinition);
     }
 
     /**

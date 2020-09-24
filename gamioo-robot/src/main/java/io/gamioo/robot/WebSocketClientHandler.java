@@ -35,13 +35,13 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-       logger.debug("handlerAdded");
+      // logger.debug("handlerAdded");
         handshakeFuture = ctx.newPromise();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-       logger.debug("channelActive {}",this.id);
+      // logger.debug("channelActive {}",this.id);
         handshaker.handshake(ctx.channel());
         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
             sendMessage(ctx.channel(), CONTENT);
@@ -66,6 +66,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) {
+    	//   logger.debug("recv msg={}", msg);
         if (msg instanceof FullHttpResponse) {
             handleHttpRequest(ctx, (FullHttpResponse) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -160,10 +161,10 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     public void sendMessage(Channel channel, String content) {
         if (channel.isActive() && channel.isWritable()) {
       //    logger.debug("send content={}",content);
-          logger.debug("sendMessage");
-            WebSocketFrame frame = new TextWebSocketFrame(content);
+          logger.debug("send ping");
+       //     WebSocketFrame frame = new TextWebSocketFrame(content);
 
-         //   PingWebSocketFrame frame=new PingWebSocketFrame();
+         PingWebSocketFrame frame=new PingWebSocketFrame();
             channel.writeAndFlush(frame);
         }
 

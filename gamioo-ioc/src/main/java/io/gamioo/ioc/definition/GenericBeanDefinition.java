@@ -21,7 +21,7 @@ import com.esotericsoftware.reflectasm.MethodAccess;
 import io.gamioo.core.util.ClassUtils;
 import io.gamioo.core.util.FieldUtils;
 import io.gamioo.core.util.MethodUtils;
-import io.gamioo.core.util.StringUtil;
+import io.gamioo.core.util.StringUtils;
 import io.gamioo.ioc.annotation.Value;
 import io.gamioo.ioc.factory.annotation.Autowired;
 
@@ -170,7 +170,7 @@ public class GenericBeanDefinition implements BeanDefinition {
 
     @Override
     public String getName() {
-        return StringUtil.uncapitalize(this.beanClass.getSimpleName());
+        return StringUtils.uncapitalized(this.beanClass.getSimpleName());
     }
 
     /**

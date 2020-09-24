@@ -1,6 +1,6 @@
 package io.gamioo.core.exception;
 
-import io.gamioo.core.util.StringUtil;
+import io.gamioo.core.util.StringUtils;
 
 /**
  * 框架异常类
@@ -27,14 +27,14 @@ public class ServiceException extends RuntimeException {
 	 * @param message  异常信息
 	 */
 	public ServiceException(Throwable cause,String message,Object... params){
-		super(StringUtil.format(message, params),cause);
+		super(StringUtils.format(message, params),cause);
 	}
 
 	public ServiceException(String message) {
 		super(message);
 	}
 	public ServiceException(String message,Object... params){
-		super(StringUtil.format(message, params));
+		super(StringUtils.format(message, params));
 	}
 
 	public ServiceException(String message, Throwable cause) {
