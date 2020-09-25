@@ -44,7 +44,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
       // logger.debug("channelActive {}",this.id);
         handshaker.handshake(ctx.channel());
         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
-            sendMessage(ctx.channel(), CONTENT);
+            sendMessage(ctx.channel());
             //	logger.debug("send id={}", this.id);
         }, 30000, 50000, TimeUnit.MILLISECONDS);
         store.put(id, future);
@@ -158,7 +158,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         }
     }
 
-    public void sendMessage(Channel channel, String content) {
+    public void sendMessage(Channel channel) {
         if (channel.isActive() && channel.isWritable()) {
       //    logger.debug("send content={}",content);
           logger.debug("send ping");
