@@ -17,6 +17,7 @@
 package io.gamioo.robot;
 
 import io.gamioo.core.util.FileUtils;
+import io.gamioo.core.util.ThreadUtils;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Server;
 import io.gamioo.robot.entity.Target;
@@ -46,10 +47,18 @@ public class H5Robot {
         List<Proxy> array = robot.getServerList(Proxy.class, "cell.txt");
         int id = 1;
         for (Target target : targets) {
-            for (Proxy proxy : array) {
-                WebSocketClient client = new WebSocketClient(id++, proxy, target);
+            if(array.size()>0){
+                for (Proxy proxy : array) {
+                    WebSocketClient client = new WebSocketClient(id++, proxy, target);
+                    ThreadUtils.sleep(target.getInterval());
+                    client.connect();
+                }
+            }else{
+                WebSocketClient client = new WebSocketClient(id++, null, target);
+                ThreadUtils.sleep(target.getInterval());
                 client.connect();
             }
+
 
         }
 

@@ -89,10 +89,13 @@ public class WebSocketClient {
 				@Override
 				protected void initChannel(SocketChannel ch) throws SSLException {
 					ChannelPipeline p = ch.pipeline();
-					SocketAddress address = new InetSocketAddress(proxy.getIp(), proxy.getPort());
-					Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(address);
-					socks5ProxyHandler.setConnectTimeoutMillis(0);
-					p.addFirst("proxy", socks5ProxyHandler);
+					//代理存在就用代理，代理不存在就直连
+					if(proxy!=null){
+						SocketAddress address = new InetSocketAddress(proxy.getIp(), proxy.getPort());
+						Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(address);
+						socks5ProxyHandler.setConnectTimeoutMillis(0);
+						p.addFirst("proxy", socks5ProxyHandler);
+					}
 					if (!StringUtils.equals(target.getScheme(), HttpScheme.HTTP.name())) {
 						SslContext context = SslContextBuilder.forClient()
 								.trustManager(InsecureTrustManagerFactory.INSTANCE).build();
