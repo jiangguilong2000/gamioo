@@ -1,6 +1,5 @@
 package io.gamioo.robot;
 
-import io.gamioo.core.concurrent.GameThreadFactory;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
@@ -8,12 +7,8 @@ import io.netty.util.CharsetUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
-import java.util.concurrent.*;
-
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger logger = LogManager.getLogger(WebSocketClientHandler.class);
-    private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(8, new GameThreadFactory("robot"));
     //public static StringBuilder content=new StringBuilder();
     //public static String CONTENT = "hello soybean";
 
@@ -21,13 +16,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 			"\"");
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
-    private WebSocketClient client;
     private int id;
-    private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
 
-    public WebSocketClientHandler(int id,WebSocketClient client, WebSocketClientHandshaker handshaker) {
+
+    public WebSocketClientHandler(int id,WebSocketClientHandshaker handshaker) {
         this.id = id;
-        this.client=client;
         this.handshaker = handshaker;
     }
 
@@ -45,24 +38,14 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     public void channelActive(ChannelHandlerContext ctx) {
       // logger.debug("channelActive {}",this.id);
         handshaker.handshake(ctx.channel());
-        ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
-            sendMessage(ctx.channel());
-            //	logger.debug("send id={}", this.id);
-        }, 30000, 50000, TimeUnit.MILLISECONDS);
-        store.put(id, future);
+
+
 
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        ScheduledFuture<?> future=store.remove(this.id);
-        if(future!=null){
-            if (!future.isCancelled()) {
-               future.cancel(false);
-            }
-        }
         logger.info("连接断开 id={}", this.id);
-        client.connect();
     }
 
 
@@ -160,17 +143,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         }
     }
 
-    public void sendMessage(Channel channel) {
-        if (channel.isActive() && channel.isWritable()) {
-      //    logger.debug("send content={}",content);
-          logger.debug("send ping");
-       //     WebSocketFrame frame = new TextWebSocketFrame(content);
-
-         PingWebSocketFrame frame=new PingWebSocketFrame();
-            channel.writeAndFlush(frame);
-        }
-
-    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
