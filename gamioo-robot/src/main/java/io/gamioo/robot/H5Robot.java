@@ -24,6 +24,8 @@ import io.gamioo.robot.entity.Target;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -41,25 +43,29 @@ public class H5Robot {
 
 
     public static void main(String[] args)  {
-
         H5Robot robot = new H5Robot();
         List<Target> targets = robot.getServerList(Target.class, "target.txt");
         List<Proxy> array = robot.getServerList(Proxy.class, "cell.txt");
         int id = 1;
         for (Target target : targets) {
+            int size=array.size();
             if(array.size()>0){
-                for (Proxy proxy : array) {
-                    WebSocketClient client = new WebSocketClient(id++, proxy, target);
+                int max=(int)Math.ceil(target.getNumber()/size);
+                for(int i=0;i<max;i++){
+                    for (Proxy proxy : array) {
+                        WebSocketClient client = new WebSocketClient(id++, proxy, target);
+                        ThreadUtils.sleep(target.getInterval());
+                        client.connect();
+                    }
+                }
+
+            }else{
+                for(int i=0;i<target.getNumber();i++){
+                    WebSocketClient client = new WebSocketClient(id++, null, target);
                     ThreadUtils.sleep(target.getInterval());
                     client.connect();
                 }
-            }else{
-                WebSocketClient client = new WebSocketClient(id++, null, target);
-                ThreadUtils.sleep(target.getInterval());
-                client.connect();
             }
-
-
         }
 
 
@@ -67,19 +73,35 @@ public class H5Robot {
 
     }
 
+//    public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
+//        List<T> list = new ArrayList<>();
+//        File file = FileUtils.getFile(path);
+//        try {
+//            List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
+//            array.forEach(e -> {
+//                try {
+//                    T T = clazz.newInstance();
+//                    T.parse(e);
+//                    list.add(T);
+//                } catch (IllegalAccessException | InstantiationException ex) {
+//                    logger.error(ex.getMessage(), ex);
+//                }
+//            });
+//        } catch (IOException e) {
+//            logger.error(e.getMessage(), e);
+//        }
+//        return list;
+//    }
+
     public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
         List<T> list = new ArrayList<>();
         File file = FileUtils.getFile(path);
         try {
             List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
             array.forEach(e -> {
-                try {
-                    T T = clazz.newInstance();
-                    T.parse(e);
+                    T T = JSON.parseObject(e, clazz);
+                    T.parse();
                     list.add(T);
-                } catch (IllegalAccessException | InstantiationException ex) {
-                    logger.error(ex.getMessage(), ex);
-                }
             });
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

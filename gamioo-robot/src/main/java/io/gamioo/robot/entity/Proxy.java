@@ -17,7 +17,6 @@
 package io.gamioo.robot.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.gamioo.core.util.StringUtils;
 
 import java.util.Date;
 
@@ -40,10 +39,7 @@ public class Proxy extends  Server{
     @JSONField(name = "expire_time", format = "yyyy-MM-dd HH:mm:ss")
     private Date expireTime;
 
-    public void parse(String value)  {
-        String[] array = StringUtils.split(value, ":");
-        ip = array[0];
-        port = Integer.parseInt(array[1]);
+    public void parse()  {
     }
 
     public String getIp() {

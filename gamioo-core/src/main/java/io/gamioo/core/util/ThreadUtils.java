@@ -33,7 +33,9 @@ public class ThreadUtils {
      */
     public static void sleep(long millis) {
         try {
-            Thread.sleep(millis);
+            if(millis>0){
+                Thread.sleep(millis);
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -21,11 +21,13 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 			"\"");
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
+    private WebSocketClient client;
     private int id;
     private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
 
-    public WebSocketClientHandler(int id, WebSocketClientHandshaker handshaker) {
+    public WebSocketClientHandler(int id,WebSocketClient client, WebSocketClientHandshaker handshaker) {
         this.id = id;
+        this.client=client;
         this.handshaker = handshaker;
     }
 
@@ -59,8 +61,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                future.cancel(false);
             }
         }
-        logger.debug("channelInactive id={},remain={}", this.id, store.size());
-
+        logger.info("连接断开 id={}", this.id);
+        client.connect();
     }
 
 

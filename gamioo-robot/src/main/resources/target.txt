@@ -1,1 +1,1 @@
-http:47.97.67.129:5127:50
+{scheme:"http",ip:"47.97.67.129",port:5127,interval:50,number:10}

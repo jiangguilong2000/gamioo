@@ -83,7 +83,7 @@ public class WebSocketClient {
 	public void connect() {
 		URI uri = target.getUri();
 		try {
-			final WebSocketClientHandler handler = new WebSocketClientHandler(this.id, WebSocketClientHandshakerFactory
+			final WebSocketClientHandler handler = new WebSocketClientHandler(this.id, this,WebSocketClientHandshakerFactory
 					.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
 			bootstrap.handler(new ChannelInitializer<SocketChannel>() {
 				@Override
@@ -114,7 +114,7 @@ public class WebSocketClient {
 
 			socketChannel = bootstrap.connect(target.getIp(), target.getPort()).sync().channel();
 			handler.handshakeFuture().sync();
-			logger.debug("建立连接 id={},target={},proxy={}", id, target, proxy);
+			logger.info("建立连接 id={},target={},proxy={}", id, target, proxy);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

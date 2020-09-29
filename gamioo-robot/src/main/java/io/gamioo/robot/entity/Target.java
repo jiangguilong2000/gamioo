@@ -16,6 +16,7 @@
 
 package io.gamioo.robot.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.gamioo.core.util.StringUtils;
 import io.netty.handler.codec.http.HttpScheme;
 import org.apache.logging.log4j.LogManager;
@@ -35,19 +36,20 @@ public class Target extends Server {
     private static final Logger logger = LogManager.getLogger(Target.class);
     private final static String URI_HTTP = "ws://{0}:{1}/websocket";
     private final static String URI_HTTPS = "wss://{0}:{1}/websocket";
+    @JSONField(name = "scheme")
     private String scheme;
     private URI uri;
+    @JSONField(name = "ip")
     private String ip;
+    @JSONField(name = "port")
     private int port;
+    @JSONField(name = "interval")
     private int interval;
+    @JSONField(name = "number")
+    private int number;
 
 
-    public void parse(String value) {
-        String[] array = StringUtils.split(value, ":");
-        scheme = array[0];
-        ip = array[1];
-        port = Integer.parseInt(array[2]);
-        interval = Integer.parseInt(array[3]);
+    public void parse() {
         String url = MessageFormat.format(StringUtils.equals(HttpScheme.HTTP.name(), scheme) ? URI_HTTP : URI_HTTPS, ip, String.valueOf(port));
         try {
             uri = new URI(url);
@@ -59,10 +61,15 @@ public class Target extends Server {
             logger.error("Only WS(S) is supported");
             return;
         }
-
-
     }
 
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public URI getUri() {
         return uri;
