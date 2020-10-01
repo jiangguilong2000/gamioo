@@ -1,3 +1,5 @@
+version = '';
+
 dependencies {
     implementation project(':gamioo-core');
     implementation project(':gamioo-game');
@@ -11,6 +13,7 @@ dependencies {
 jar {
     manifest {
         attributes 'Main-Class':'io.gamioo.robot.H5Robot';
+        attributes 'Class-Path':' . '+configurations.runtimeClasspath.collect { "lib/${it.name}" }.join(' ');
     }
     destinationDirectory=file('../robot');
 }
@@ -26,3 +29,13 @@ task copyJar(type: Copy) {
 }
 
 task release(type: Copy, dependsOn: [build, clearJar, copyJar]);
+
+processResources {
+    exclude { "**/*.*" };
+//    from('src/main/resources') {
+//        include '*.properties';
+//    }
+
+  //
+  //  from('**/*.*') {into '../robot'};
+}

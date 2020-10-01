@@ -3,7 +3,7 @@
 <configuration status="warn" monitorInterval="1800" shutdownHook="disable"  >
 	<properties>
 		<property name="SERVER_NAME">robot</property>
-		<property name="LOG_HOME">/data/log/${SERVER_NAME}</property>
+		<property name="LOG_HOME">log</property>
 	</properties>
 	<appenders>
 		<!-- 定义控制台输出-->
