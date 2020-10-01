@@ -31,9 +31,7 @@ import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpScheme;
-import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
@@ -168,10 +166,12 @@ public class WebSocketClient {
             if (channel.isWritable()) {
                 //    logger.debug("send content={}",content);
                 logger.debug("send ping");
-                //     WebSocketFrame frame = new TextWebSocketFrame(content);
-                //	this.disconnect();
+                if(this.target.isText()){
+                    WebSocketFrame frame = new TextWebSocketFrame("1");
+                    channel.writeAndFlush(frame);
+                }
 
-                PingWebSocketFrame frame = new PingWebSocketFrame();
+                WebSocketFrame frame = new PingWebSocketFrame();
                 channel.writeAndFlush(frame);
             }
         } else {

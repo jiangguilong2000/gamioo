@@ -22,10 +22,7 @@ public class ServiceException extends RuntimeException {
 	public ServiceException(int code) {
 		super(String.valueOf(code));
 	}
-	/**
-	 * 
-	 * @param message  异常信息
-	 */
+
 	public ServiceException(Throwable cause,String message,Object... params){
 		super(StringUtils.format(message, params),cause);
 	}

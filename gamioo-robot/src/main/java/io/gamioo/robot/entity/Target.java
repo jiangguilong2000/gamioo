@@ -47,10 +47,16 @@ public class Target extends Server {
     private int interval;
     @JSONField(name = "number")
     private int number;
+    @JSONField(name = "url")
+    private String url;
+    @JSONField(name = "text")
+    private boolean text;
 
 
     public void parse() {
-        String url = MessageFormat.format(StringUtils.equals(HttpScheme.HTTP.name(), scheme) ? URI_HTTP : URI_HTTPS, ip, String.valueOf(port));
+        if(url==null){
+            url = MessageFormat.format(StringUtils.equals(HttpScheme.HTTP.name(), scheme) ? URI_HTTP : URI_HTTPS, ip, String.valueOf(port));
+        }
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
@@ -106,5 +112,21 @@ public class Target extends Server {
 
     public void setInterval(int interval) {
         this.interval = interval;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public boolean isText() {
+        return text;
+    }
+
+    public void setText(boolean text) {
+        this.text = text;
     }
 }

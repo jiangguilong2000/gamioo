@@ -33,11 +33,6 @@ public class ServerBootstrapException extends ServiceException{
         super(message, cause);
     }
 
-    /**
-     * @param cause
-     * @param message 异常信息
-     * @param params
-     */
     public ServerBootstrapException(Throwable cause, String message, Object... params) {
         super(cause, message, params);
     }

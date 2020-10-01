@@ -16,22 +16,15 @@
 
 package io.gamioo.core.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 
 /**
  * 文件操作工具类.
@@ -79,8 +72,6 @@ public class FileUtils {
      *
      * @param fileName 文件名称
      * @return 返回文件中的文本
-     * @throws IOException           If an I/O error occurs
-     * @throws FileNotFoundException 文件未找到会抛出此异常
      */
     public static File getFile(String fileName) {
             URL url =FileUtils.class.getClassLoader().getResource(fileName);

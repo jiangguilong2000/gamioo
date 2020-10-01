@@ -11,178 +11,173 @@
 subprojects {
     apply plugin: 'java-library';
     apply plugin: 'maven-publish';
-	apply plugin: 'signing';
-	
-	group = 'io.gamioo';
-	version = '0.2.9';
+    apply plugin: 'signing';
+
+    group = 'io.gamioo';
+    version = '0.2.9';
 //	version = '0.0.1-SNAPSHOT';
 
-	
-	sourceCompatibility = 1.8;  
-	targetCompatibility = 1.8;  
-	
-	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8';
-	
+
+    sourceCompatibility = 1.8;
+    targetCompatibility = 1.8;
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8';
+
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
-    
-		/**创建java和resource目录*/
-		task createDirs {
-		    sourceSets*.java.srcDirs*.each { it.mkdirs() }
-		    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-		}
+
+    /**创建java和resource目录*/
+    task createDirs {
+        sourceSets*.java.srcDirs*.each { it.mkdirs() }
+        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+    }
 
 
-	jar {
-	     	manifest.attributes provider: 'Allen Jiang'
-			manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-			manifest.attributes["Implementation-Title"] = project.name
-			manifest.attributes["Implementation-Version"] = project.version
-	}
+    jar {
+        manifest.attributes provider: 'Allen Jiang'
+        manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+        manifest.attributes["Implementation-Title"] = project.name
+        manifest.attributes["Implementation-Version"] = project.version
+    }
+
 
     javadoc {
-    	options{
-    		encoding "UTF-8";
-    		charSet 'UTF-8';
-    		author true;
-    		version true;
-    		header = project.name;
-    		links "http://docs.oracle.com/javase/8/docs/api/";
-    	}
+        options {
+            encoding "UTF-8";
+            charSet 'UTF-8';
+            author true;
+            version true;
+            header = project.name;
+            links "http://docs.oracle.com/javase/8/docs/api/";
+        }
     }
-    
-		task sourcesJar(type: Jar) {
-		    classifier = 'sources';
-		    from sourceSets.main.allJava;
-		}
-    
-	
-	task javadocJar(type: Jar) {
-	    from javadoc;
-	    classifier = 'javadoc';
-	}
-	
-	
- //   task generatePomFileForMavenCustomPublication {
- //       destination = file("$buildDir/poms/pom.xml");
- //   }
-    
-  //  build.dependsOn(generatePomFileForMavenCustomPublication);
-	
-	artifacts {
-		archives jar;  
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources';
+        from sourceSets.main.allJava;
+    }
+
+
+    task javadocJar(type: Jar) {
+        from javadoc;
+        classifier = 'javadoc';
+    }
+
+
+    //   task generatePomFileForMavenCustomPublication {
+    //       destination = file("$buildDir/poms/pom.xml");
+    //   }
+
+    //  build.dependsOn(generatePomFileForMavenCustomPublication);
+
+    artifacts {
+        archives jar;
         archives sourcesJar;
         archives javadocJar;
-    } 
+    }
 
 
-	
-    publishing  {
-	    repositories 
-		    {
-		        maven {
-				        if (project.version.endsWith('-SNAPSHOT')) {
-				        //快照版本的nexus仓库地址
-					        name 'snapshots';
-					        url 'https://oss.sonatype.org/content/repositories/snapshots/';
-				        } else {
-					         name 'releases';
-					         url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/';
-				         
-				        }
-				
-				        credentials {
-				        username = "${NEXUS_USERNAME}";
-                		password = "${NEXUS_PASSWORD}";
-				        }
-	    			}
-	        }
-        
+    publishing {
+        repositories
+                {
+                    maven {
+                        if (project.version.endsWith('-SNAPSHOT')) {
+                            //快照版本的nexus仓库地址
+                            name 'snapshots';
+                            url 'https://oss.sonatype.org/content/repositories/snapshots/';
+                        } else {
+                            name 'releases';
+                            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/';
+
+                        }
+
+                        credentials {
+                            username = "${NEXUS_USERNAME}";
+                            password = "${NEXUS_PASSWORD}";
+                        }
+                    }
+                }
+
         publications {
-				        mavenJava(MavenPublication) 
-				        {
-					         groupId project.group;
-						     artifactId project.name;
-						     version project.version;
+            mavenJava(MavenPublication)
+                    {
+                        groupId project.group;
+                        artifactId project.name;
+                        version project.version;
 
-						     //若是war包，就写components.web,若是jar包，就写components.java 
-					        from components.java;
-					        artifact sourcesJar;
-            				artifact javadocJar;
- 							suppressAllPomMetadataWarnings();//屏蔽所有编译时的WARNING
-            			          pom  {
-						                name=project.name;
-						        		description='This is a game server framework.';
-						        		url='https://gamioo.io';
-						                packaging='jar';
+                        //若是war包，就写components.web,若是jar包，就写components.java
+                        from components.java;
+                        artifact sourcesJar;
+                        artifact javadocJar;
+                        suppressAllPomMetadataWarnings();//屏蔽所有编译时的WARNING
+                        pom {
+                            name = project.name;
+                            description = 'This is a game server framework.';
+                            url = 'https://gamioo.io';
+                            packaging = 'jar';
 
-						        		scm {
-						          			connection='scm:git@github.com:jiangguilong2000/gamioo.git';
-						          			developerConnection='scm:git@github.com:jiangguilong2000/gamioo.git';
-						          			url='https://github.com/jiangguilong2000/gamioo/';
-						        		}
-						
-						        		licenses {
-						          			license {
-						            			name='Apache-2.0 License';
-						            			url='https://github.com/jiangguilong2000/gamioo/blob/master/LICENSE';
-						            			distribution='repo';
-						          			}
-						        		}
-						
-						        		developers {
-						          			developer {
-						            			id='jgl2000';
-							            		name='阿龙';
-							            		email='41157121@qq.com';
-							            		url='https://blog.game.io';
-						          			}
-						        		}
-	        						}
-            			
-            			
-            				
-		//		       	pom.withXml {
-		//				            asNode().appendNode('description','A demonstration of maven POM customization');
-		//				  }
-				        }
-				        
-				            
+                            scm {
+                                connection = 'scm:git@github.com:jiangguilong2000/gamioo.git';
+                                developerConnection = 'scm:git@github.com:jiangguilong2000/gamioo.git';
+                                url = 'https://github.com/jiangguilong2000/gamioo/';
+                            }
 
-    						
-    				}
+                            licenses {
+                                license {
+                                    name = 'Apache-2.0 License';
+                                    url = 'https://github.com/jiangguilong2000/gamioo/blob/master/LICENSE';
+                                    distribution = 'repo';
+                                }
+                            }
 
-	}
-	
-	signing {  
-    //sign configurations.archives; 
-    sign publishing.publications.mavenJava;
-	}  
+                            developers {
+                                developer {
+                                    id = 'jgl2000';
+                                    name = '阿龙';
+                                    email = '41157121@qq.com';
+                                    url = 'https://blog.gamioo.io';
+                                }
+                            }
+                        }
+
+
+                        //		       	pom.withXml {
+                        //				            asNode().appendNode('description','A demonstration of maven POM customization');
+                        //				  }
+                    }
+
+
+        }
+
+    }
+
+    signing {
+        //sign configurations.archives;
+        sign publishing.publications.mavenJava;
+    }
 
 
     dependencies {
-		testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0-M1';
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0-M1';
     }
-    
+
     test {
-    	useJUnitPlatform();
-	}
-    
+        useJUnitPlatform();
+    }
+
 }
 
-
-	
 
 allprojects {
 
-	
-repositories {
-		//阿里云的国内镜像
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'};
+
+    repositories {
+        //阿里云的国内镜像
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' };
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public' };
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'};
-}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' };
+    }
 
 }
 
