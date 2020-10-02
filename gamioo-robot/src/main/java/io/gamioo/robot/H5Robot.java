@@ -49,8 +49,6 @@ public class H5Robot {
         List<Proxy> array = robot.getServerList(Proxy.class, "cell.txt");
         int id = 1;
         for (Target target : targets) {
-            boolean connected = TelnetUtils.isConnected(target.getIp(), target.getPort());
-            if (connected) {
                 int size = array.size();
                 if (array.size() > 0) {
                     int max = (int) Math.ceil(target.getNumber() / size);
@@ -69,9 +67,6 @@ public class H5Robot {
                         client.connect();
                     }
                 }
-            } else {
-                logger.error("目标无法通信 target={}", target);
-            }
 
         }
 
@@ -79,7 +74,7 @@ public class H5Robot {
         //    logger.debug("");
 
     }
-    
+
 
     public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
         List<T> list = new ArrayList<>();
@@ -88,8 +83,13 @@ public class H5Robot {
             List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
             array.forEach(e -> {
                 T T = JSON.parseObject(e, clazz);
-                T.parse();
-                list.add(T);
+                boolean connected = TelnetUtils.isConnected(T.getIp(), T.getPort());
+                if(connected){
+                    T.parse();
+                    list.add(T);
+                }else {
+                    logger.error("目标无法通信 target={}", T);
+                }
             });
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
