@@ -19,6 +19,7 @@ package io.gamioo.robot;
 import com.google.protobuf.UnknownFieldSet;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
+import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
 import io.netty.bootstrap.Bootstrap;
@@ -161,6 +162,7 @@ public class WebSocketClient {
 
     }
 
+
     public void sendMessage(Channel channel) {
         if (isConnected()) {
             if (channel.isWritable()) {
@@ -181,7 +183,10 @@ public class WebSocketClient {
                     future.cancel(false);
                 }
             }
-            this.connect();
+            //能通信再连
+            if(TelnetUtils.isConnected(this.target.getIp(),this.target.getPort())){
+                this.connect();
+            }
         }
     }
 

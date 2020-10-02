@@ -17,6 +17,7 @@
 package io.gamioo.robot;
 
 import io.gamioo.core.util.FileUtils;
+import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.core.util.ThreadUtils;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Server;
@@ -42,56 +43,43 @@ public class H5Robot {
     private static final Logger logger = LogManager.getLogger(H5Robot.class);
 
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         H5Robot robot = new H5Robot();
         List<Target> targets = robot.getServerList(Target.class, "target.txt");
         List<Proxy> array = robot.getServerList(Proxy.class, "cell.txt");
         int id = 1;
         for (Target target : targets) {
-            int size=array.size();
-            if(array.size()>0){
-                int max=(int)Math.ceil(target.getNumber()/size);
-                for(int i=0;i<max;i++){
-                    for (Proxy proxy : array) {
-                        WebSocketClient client = new WebSocketClient(id++, proxy, target);
+            boolean connected = TelnetUtils.isConnected(target.getIp(), target.getPort());
+            if (connected) {
+                int size = array.size();
+                if (array.size() > 0) {
+                    int max = (int) Math.ceil(target.getNumber() / size);
+                    for (int i = 0; i < max; i++) {
+                        for (Proxy proxy : array) {
+                            WebSocketClient client = new WebSocketClient(id++, proxy, target);
+                            ThreadUtils.sleep(target.getInterval());
+                            client.connect();
+                        }
+                    }
+
+                } else {
+                    for (int i = 0; i < target.getNumber(); i++) {
+                        WebSocketClient client = new WebSocketClient(id++, null, target);
                         ThreadUtils.sleep(target.getInterval());
                         client.connect();
                     }
                 }
-
-            }else{
-                for(int i=0;i<target.getNumber();i++){
-                    WebSocketClient client = new WebSocketClient(id++, null, target);
-                    ThreadUtils.sleep(target.getInterval());
-                    client.connect();
-                }
+            } else {
+                logger.error("目标无法通信 target={}", target);
             }
+
         }
 
 
-    //    logger.debug("");
+        //    logger.debug("");
 
     }
-
-//    public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
-//        List<T> list = new ArrayList<>();
-//        File file = FileUtils.getFile(path);
-//        try {
-//            List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
-//            array.forEach(e -> {
-//                try {
-//                    T T = clazz.newInstance();
-//                    T.parse(e);
-//                    list.add(T);
-//                } catch (IllegalAccessException | InstantiationException ex) {
-//                    logger.error(ex.getMessage(), ex);
-//                }
-//            });
-//        } catch (IOException e) {
-//            logger.error(e.getMessage(), e);
-//        }
-//        return list;
-//    }
+    
 
     public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
         List<T> list = new ArrayList<>();
@@ -99,9 +87,9 @@ public class H5Robot {
         try {
             List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
             array.forEach(e -> {
-                    T T = JSON.parseObject(e, clazz);
-                    T.parse();
-                    list.add(T);
+                T T = JSON.parseObject(e, clazz);
+                T.parse();
+                list.add(T);
             });
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

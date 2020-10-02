@@ -31,7 +31,7 @@ task copyJar(type: Copy) {
 task release(type: Copy, dependsOn: [build, clearJar, copyJar]);
 
 processResources {
-    exclude { "**/*.*" };
+    //exclude { "**/*.*" };
 //    from('src/main/resources') {
 //        include '*.properties';
 //    }
