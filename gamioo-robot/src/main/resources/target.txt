@@ -1,1 +1,0 @@
-{scheme:"https",ip:"kylin.nantang.selfzone.club",port:443,interval:50,number:2,text:true,url:"wss://kylin.nantang.selfzone.club/7781/socket.io/?EIO=3&transport=websocket"}

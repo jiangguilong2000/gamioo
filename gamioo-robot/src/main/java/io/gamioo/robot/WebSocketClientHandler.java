@@ -7,20 +7,22 @@ import io.netty.util.CharsetUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Date;
+
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger logger = LogManager.getLogger(WebSocketClientHandler.class);
     //public static StringBuilder content=new StringBuilder();
     //public static String CONTENT = "hello soybean";
 
-    	public static String CONTENT = "{'cmd':'login','data':{'ServerID':'57173','RoomId':'243158'}}".replaceAll("'",
-			"\"");
+    public static String CONTENT = "{'cmd':'login','data':{'ServerID':'57173','RoomId':'243158'}}".replaceAll("'",
+            "\"");
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
-    private int id;
+    private WebSocketClient webSocketClient;
 
 
-    public WebSocketClientHandler(int id,WebSocketClientHandshaker handshaker) {
-        this.id = id;
+    public WebSocketClientHandler(WebSocketClient webSocketClient, WebSocketClientHandshaker handshaker) {
+        this.webSocketClient = webSocketClient;
         this.handshaker = handshaker;
     }
 
@@ -30,28 +32,27 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-      // logger.debug("handlerAdded");
+        // logger.debug("handlerAdded");
         handshakeFuture = ctx.newPromise();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-      // logger.debug("channelActive {}",this.id);
+        // logger.debug("channelActive {}",this.id);
         handshaker.handshake(ctx.channel());
-
 
 
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        logger.info("连接断开 id={}", this.id);
+        logger.info("连接断开 id={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
     }
 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) {
-    	//   logger.debug("recv msg={}", msg);
+        //   logger.debug("recv msg={}", msg);
         if (msg instanceof FullHttpResponse) {
             handleHttpRequest(ctx, (FullHttpResponse) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -67,7 +68,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if (!handshaker.isHandshakeComplete()) {
             try {
                 handshaker.finishHandshake(ch, response);
-                logger.debug("client connected id={}", this.id);
+                logger.debug("client connected id={}", this.webSocketClient.getId());
                 handshakeFuture.setSuccess();
 
 
@@ -105,7 +106,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 //    }
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-
+        this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
             logger.debug("WebSocket Client received closing");
@@ -116,21 +117,21 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if (frame instanceof PingWebSocketFrame) {
             logger.debug("WebSocket Client received ping");
             frame.content().retain();
-           // ctx.write(new PingWebSocketFrame(frame.content().retain()));
+            // ctx.write(new PingWebSocketFrame(frame.content().retain()));
             return;
         }
         if (frame instanceof PongWebSocketFrame) {
-            logger.debug("WebSocket Client received pong");
+            logger.debug("WebSocket Client received pong id={}", this.webSocketClient.getId());
             frame.content().retain();
-          //  ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
+            //  ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
             return;
         }
         if (frame instanceof TextWebSocketFrame) {
             // Echo the frame
             String request = ((TextWebSocketFrame) frame).text();
-            logger.debug("recv content={}",request);
+            logger.debug("recv content={}", request);
             frame.retain();
-          //  ctx.writeAndFlush(frame.retain());
+            //  ctx.writeAndFlush(frame.retain());
             return;
         }
         if (frame instanceof BinaryWebSocketFrame) {
@@ -146,8 +147,10 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("exceptionCaught,id={}", this.id);
-        logger.error(cause.getMessage(), cause);
+        logger.error("exceptionCaught,proxy={},cause={}", this.webSocketClient.getProxy(), cause.getMessage());
+        //   logger.error(cause.getMessage(), cause);
+
+
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }

@@ -17,6 +17,9 @@
 package io.gamioo.robot.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.gamioo.core.util.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 
@@ -26,7 +29,10 @@ import java.util.Date;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class Proxy extends  Server{
+public class Proxy extends Server {
+    private static final Logger logger = LogManager.getLogger(Proxy.class);
+    private int id;
+
     @JSONField(name = "ip")
     private String ip;
     @JSONField(name = "port")
@@ -39,7 +45,20 @@ public class Proxy extends  Server{
     @JSONField(name = "expire_time", format = "yyyy-MM-dd HH:mm:ss")
     private Date expireTime;
 
-    public void parse()  {
+    public void init(String value) {
+        try {
+            String[] array = StringUtils.split(value, ":");
+            ip = array[0];
+            port = Integer.parseInt(array[1]);
+        } catch (Exception e) {
+            logger.error("解析错误 value={}", value);
+            logger.error(e.getMessage(), e);
+        }
+
+
+    }
+
+    public void parse() {
     }
 
     public String getIp() {
@@ -80,5 +99,13 @@ public class Proxy extends  Server{
 
     public void setIsp(String isp) {
         this.isp = isp;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

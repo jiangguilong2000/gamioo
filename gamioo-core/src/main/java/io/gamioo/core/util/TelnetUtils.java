@@ -63,11 +63,18 @@ public class TelnetUtils {
         boolean ret = false;
             try {
                 TelnetClient telnet = new TelnetClient();
+                telnet.setConnectTimeout(5000);//连接超时时间
+              //  TelnetClient telnetClient = new TelnetClient("vt200");  //指明Telnet终端类型，否则会返回来的数据中文会乱码
+              //  telnet.setDefaultTimeout(5000);//打开端口的超时时间
                 telnet.connect(ip, port);
                 ret = telnet.isConnected();
-                telnet.disconnect();
+                if(ret){
+                    logger.warn("该连接可以用 {}:{}",ip,port);
+                    telnet.disconnect();
+                }
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+               // logger.warn("该连接无法使用 {}:{}",ip,port);
+            //    logger.error(e.getMessage(), e);
             }
             return ret;
     }

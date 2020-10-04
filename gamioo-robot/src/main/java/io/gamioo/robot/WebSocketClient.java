@@ -48,6 +48,7 @@ import javax.net.ssl.SSLException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -62,22 +63,22 @@ public class WebSocketClient {
     private final int id;
     private final Proxy proxy;
     private final Target target;
+    private Date lastSendTime;
+    private Date lastRecvTime;
 
     private static Bootstrap bootstrap = new Bootstrap();
     private Channel socketChannel;
     private static NioEventLoopGroup group = new NioEventLoopGroup(8);
     private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
     private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(8, new GameThreadFactory("robot"));
-    private static ScheduledExecutorService stat = Executors.newScheduledThreadPool(1, new GameThreadFactory("stat"));
+
 
     static {
         bootstrap.group(group);
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.TCP_NODELAY, true);
         bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-        stat.scheduleAtFixedRate(() -> {
-            logger.info("活跃的连接数 num={}", store.size());
-        }, 60000, 60000, TimeUnit.MILLISECONDS);
+
 
     }
 
@@ -90,7 +91,7 @@ public class WebSocketClient {
     public void connect() {
         URI uri = target.getUri();
         try {
-            final WebSocketClientHandler handler = new WebSocketClientHandler(this.id, WebSocketClientHandshakerFactory
+            final WebSocketClientHandler handler = new WebSocketClientHandler(this, WebSocketClientHandshakerFactory
                     .newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
@@ -118,20 +119,38 @@ public class WebSocketClient {
                     p.addLast("handle", handler);
                 }
             });
+            ChannelFuture  channelFuture=bootstrap.connect(target.getIp(), target.getPort());
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if (!channelFuture.isSuccess()) {
+                        logger.error("连接失败 id={},proxy={},target={}", id, proxy,target);
+                        logger.error("连接失败", channelFuture.cause());
+                    } else {
+                   //     logger.info("连接成功 id={},proxy={},target={}", id, proxy,target);
+                    }
+                }
+            });
+            socketChannel=channelFuture.sync().channel();
 
-            socketChannel = bootstrap.connect(target.getIp(), target.getPort()).sync().channel();
+
 
             handler.handshakeFuture().addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
                     if (!channelFuture.isSuccess()) {
-                        logger.error("连接失败 id={},target={},proxy={}", id, target, proxy);
-                        logger.error("连接失败", channelFuture.cause());
+                        logger.error("握手失败 id={},proxy={},target={}", id, proxy,target);
+                        logger.error("握手失败", channelFuture.cause());
                     } else {
-                        logger.info("建立连接 id={},target={},proxy={}", id, target, proxy);
+                        logger.info("握手成功 id={},proxy={},target.ip={},target.port={}", id, proxy,target.getIp(),target.getPort());
                         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
-                            sendMessage(socketChannel);
+                            try {
+                                sendMessage(socketChannel);
+                            }catch (Exception e){
+                                logger.error("exception id={},proxy={}",getId(),proxy);
+                                logger.error(e.getMessage(),e);
+                            }
                             //	logger.debug("send id={}", this.id);
                         }, 30000, 50000, TimeUnit.MILLISECONDS);
                         store.put(id, future);
@@ -140,13 +159,18 @@ public class WebSocketClient {
             });
 
 
-            handler.handshakeFuture().sync();
+     //       handler.handshakeFuture().sync();
 
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
+
+
+public static int getConnectNum(){
+    return store.size();
+}
 
     public boolean isConnected() {
         if (socketChannel != null) {
@@ -164,10 +188,11 @@ public class WebSocketClient {
 
 
     public void sendMessage(Channel channel) {
+        Date now=new Date();
         if (isConnected()) {
             if (channel.isWritable()) {
                 //    logger.debug("send content={}",content);
-                logger.debug("send ping");
+                logger.debug("send ping id={}",id);
                 if(this.target.isText()){
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
@@ -175,6 +200,7 @@ public class WebSocketClient {
 
                 WebSocketFrame frame = new PingWebSocketFrame();
                 channel.writeAndFlush(frame);
+                lastSendTime=now;
             }
         } else {
             ScheduledFuture<?> future = store.remove(this.id);
@@ -183,10 +209,15 @@ public class WebSocketClient {
                     future.cancel(false);
                 }
             }
+
             //能通信再连
-            if(TelnetUtils.isConnected(this.target.getIp(),this.target.getPort())){
-                this.connect();
+
+            if(now.before(this.proxy.getExpireTime())){
+                if(TelnetUtils.isConnected(this.target.getIp(),this.target.getPort())){
+                    this.connect();
+                }
             }
+
         }
     }
 
@@ -200,5 +231,21 @@ public class WebSocketClient {
 
     public Target getTarget() {
         return target;
+    }
+
+    public Date getLastSendTime() {
+        return lastSendTime;
+    }
+
+    public void setLastSendTime(Date lastSendTime) {
+        this.lastSendTime = lastSendTime;
+    }
+
+    public Date getLastRecvTime() {
+        return lastRecvTime;
+    }
+
+    public void setLastRecvTime(Date lastRecvTime) {
+        this.lastRecvTime = lastRecvTime;
     }
 }

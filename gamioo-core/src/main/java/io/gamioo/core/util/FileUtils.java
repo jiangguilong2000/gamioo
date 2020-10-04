@@ -208,4 +208,49 @@ public class FileUtils {
         return new FileInputStream(file);
     }
 
+    /**
+     * Reads the contents of a file into a String using the default encoding for the VM.
+     * The file is always closed.
+     *
+     * @param file the file to read, must not be {@code null}
+     * @return the file contents, never {@code null}
+     * @throws IOException in case of an I/O error
+     * @since 1.3.1
+     */
+    public static String readFileToString(final File file) throws IOException {
+        return readFileToString(file, Charset.defaultCharset());
+    }
+
+    /**
+     * Reads the contents of a file into a String.
+     * The file is always closed.
+     *
+     * @param file     the file to read, must not be {@code null}
+     * @param charsetName the name of the requested charset, {@code null} means platform default
+     * @return the file contents, never {@code null}
+     * @throws IOException in case of an I/O error
+     * @since 2.3
+     */
+    public static String readFileToString(final File file, final Charset charsetName) throws IOException {
+        try (InputStream in = openInputStream(file)) {
+            return IOUtils.toString(in, Charsets.toCharset(charsetName));
+        }
+    }
+
+
+    /**
+     * Reads the contents of a file into a String. The file is always closed.
+     *
+     * @param file     the file to read, must not be {@code null}
+     * @param charsetName the name of the requested charset, {@code null} means platform default
+     * @return the file contents, never {@code null}
+     * @throws IOException                 in case of an I/O error
+     * @throws java.nio.charset.UnsupportedCharsetException thrown instead of {@link java.io
+     * .UnsupportedEncodingException} in version 2.2 if the encoding is not supported.
+     * @since 2.3
+     */
+    public static String readFileToString(final File file, final String charsetName) throws IOException {
+        return readFileToString(file, Charsets.toCharset(charsetName));
+    }
+
 }
