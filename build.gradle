@@ -35,10 +35,10 @@ subprojects {
 
 
     jar {
-        manifest.attributes provider: 'Allen Jiang'
-        manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-        manifest.attributes["Implementation-Title"] = project.name
-        manifest.attributes["Implementation-Version"] = project.version
+        manifest.attributes provider: 'Allen Jiang';
+        manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})";
+        manifest.attributes["Implementation-Title"] = project.name;
+        manifest.attributes["Implementation-Version"] = project.version+"-"+'git rev-parse --short HEAD'.execute().text.trim()+"-S"+new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08:00"))+"R1";
     }
 
 
