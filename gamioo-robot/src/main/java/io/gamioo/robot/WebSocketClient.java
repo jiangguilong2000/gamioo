@@ -152,7 +152,7 @@ public class WebSocketClient {
                                 logger.error(e.getMessage(),e);
                             }
                             //	logger.debug("send id={}", this.id);
-                        }, 30000, 50000, TimeUnit.MILLISECONDS);
+                        }, 2000, 50000, TimeUnit.MILLISECONDS);
                         store.put(id, future);
                     }
                 }
@@ -212,7 +212,7 @@ public static int getConnectNum(){
 
             //能通信再连
 
-            if(now.before(this.proxy.getExpireTime())){
+            if(this.proxy!=null&&now.before(this.proxy.getExpireTime())){
                 if(TelnetUtils.isConnected(this.target.getIp(),this.target.getPort())){
                     this.connect();
                 }

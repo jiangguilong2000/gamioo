@@ -58,7 +58,7 @@ public class H5Robot {
                 if(num < 20){
                     step++;
                     if (step >=6) {
-                        logger.debug("启动连接补偿");
+                        logger.info("启动连接补偿");
                         this.asyncHandle();
                         step = 0;
                     }
@@ -72,7 +72,8 @@ public class H5Robot {
 
 
     public static void main(String[] args) {
-        logger.info("start working");
+        String version = H5Robot.class.getPackage().getImplementationVersion();
+        logger.info("start working version={}",version);
         H5Robot robot = new H5Robot();
         robot.init();
         Target target = robot.getTarget("target.json");
