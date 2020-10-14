@@ -36,6 +36,8 @@ public class Target extends Server {
     private static final Logger logger = LogManager.getLogger(Target.class);
     private final static String URI_HTTP = "ws://{0}:{1}/websocket";
     private final static String URI_HTTPS = "wss://{0}:{1}/websocket";
+    @JSONField(name = "id")
+    private int id;
     @JSONField(name = "scheme")
     private String scheme;
     private URI uri;
@@ -128,5 +130,13 @@ public class Target extends Server {
 
     public void setText(boolean text) {
         this.text = text;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

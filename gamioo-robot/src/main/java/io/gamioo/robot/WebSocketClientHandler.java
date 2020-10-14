@@ -1,5 +1,7 @@
 package io.gamioo.robot;
 
+import io.gamioo.robot.entity.Message;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
@@ -52,7 +54,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) {
-        //   logger.debug("recv msg={}", msg);
+         //  logger.debug("recv id={},msg={}", this.webSocketClient.getId(),msg);
         if (msg instanceof FullHttpResponse) {
             handleHttpRequest(ctx, (FullHttpResponse) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -109,7 +111,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
-            logger.debug("WebSocket Client received closing");
+            logger.debug("WebSocket Client received closing id={}",this.webSocketClient.getId());
             CloseWebSocketFrame close = (CloseWebSocketFrame) frame.retain();
             handshaker.close(ctx.channel(), close);
             return;
@@ -139,7 +141,22 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
             // String request = ((BinaryWebSocketFrame) frame).toString();
             // System.out.println(request);
-            ctx.write(frame.retain());
+            BinaryWebSocketFrame content=(BinaryWebSocketFrame) frame;
+            try {
+                Message.ServerResponse_LoginArgs args= Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
+              if(args.getResultType()==1){
+                  logger.warn("{}",this.webSocketClient.getUserId());
+
+              }
+           //     this.webSocketClient.disconnect();
+                logger.debug("recv id={},content={}",this.webSocketClient.getId(),args);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+
+
+            frame.retain();
+          //  ctx.write(frame.retain());
             return;
         }
     }

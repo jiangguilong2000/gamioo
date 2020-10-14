@@ -20,10 +20,13 @@ import com.google.protobuf.UnknownFieldSet;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
 import io.gamioo.core.util.TelnetUtils;
+import io.gamioo.robot.entity.Message;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -63,8 +66,11 @@ public class WebSocketClient {
     private final int id;
     private final Proxy proxy;
     private final Target target;
+    private final long userId;
     private Date lastSendTime;
     private Date lastRecvTime;
+    private boolean login;
+
 
     private static Bootstrap bootstrap = new Bootstrap();
     private Channel socketChannel;
@@ -82,8 +88,9 @@ public class WebSocketClient {
 
     }
 
-    public WebSocketClient(int id, Proxy proxy, Target target) {
+    public WebSocketClient(int id,long userId, Proxy proxy, Target target) {
         this.id = id;
+        this.userId=userId;
         this.proxy = proxy;
         this.target = target;
     }
@@ -119,20 +126,19 @@ public class WebSocketClient {
                     p.addLast("handle", handler);
                 }
             });
-            ChannelFuture  channelFuture=bootstrap.connect(target.getIp(), target.getPort());
+            ChannelFuture channelFuture = bootstrap.connect(target.getIp(), target.getPort());
             channelFuture.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if (!channelFuture.isSuccess()) {
-                        logger.error("连接失败 id={},proxy={},target={}", id, proxy,target);
+                        logger.error("连接失败 id={},proxy={},target={}", id, proxy, target);
                         logger.error("连接失败", channelFuture.cause());
                     } else {
-                   //     logger.info("连接成功 id={},proxy={},target={}", id, proxy,target);
+                        //     logger.info("连接成功 id={},proxy={},target={}", id, proxy,target);
                     }
                 }
             });
-            socketChannel=channelFuture.sync().channel();
-
+            socketChannel = channelFuture.sync().channel();
 
 
             handler.handshakeFuture().addListener(new ChannelFutureListener() {
@@ -140,16 +146,16 @@ public class WebSocketClient {
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
                     if (!channelFuture.isSuccess()) {
-                        logger.error("握手失败 id={},proxy={},target={}", id, proxy,target);
+                        logger.error("握手失败 id={},proxy={},target={}", id, proxy, target);
                         logger.error("握手失败", channelFuture.cause());
                     } else {
-                        logger.info("握手成功 id={},proxy={},target.ip={},target.port={}", id, proxy,target.getIp(),target.getPort());
+                        logger.info("握手成功 id={},proxy={},target.ip={},target.port={}", id, proxy, target.getIp(), target.getPort());
                         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
                             try {
                                 sendMessage(socketChannel);
-                            }catch (Exception e){
-                                logger.error("exception id={},proxy={}",getId(),proxy);
-                                logger.error(e.getMessage(),e);
+                            } catch (Exception e) {
+                                logger.error("exception id={},proxy={}", getId(), proxy);
+                                logger.error(e.getMessage(), e);
                             }
                             //	logger.debug("send id={}", this.id);
                         }, 2000, 50000, TimeUnit.MILLISECONDS);
@@ -159,7 +165,7 @@ public class WebSocketClient {
             });
 
 
-     //       handler.handshakeFuture().sync();
+            //       handler.handshakeFuture().sync();
 
 
         } catch (Exception e) {
@@ -168,9 +174,9 @@ public class WebSocketClient {
     }
 
 
-public static int getConnectNum(){
-    return store.size();
-}
+    public static int getConnectNum() {
+        return store.size();
+    }
 
     public boolean isConnected() {
         if (socketChannel != null) {
@@ -187,20 +193,44 @@ public static int getConnectNum(){
     }
 
 
+    public void login(Channel channel) {
+            try {
+                Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
+                //最大值300000000,最小值999999
+               // builder.setUserID(target.getId() * 200290 + id-3);
+               //  userId=target.getId()*100000+id;
+                builder.setUserID(userId);
+                builder.setToken("529382015132319205"+userId);
+                byte[] content = builder.build().toByteArray();
+                ByteBuf raw = Unpooled.wrappedBuffer(content);
+                BinaryWebSocketFrame frame = new BinaryWebSocketFrame(raw);
+                channel.writeAndFlush(frame);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+
+
+//		//keep.setTimestamp(System.currentTimeMillis());
+    }
+
     public void sendMessage(Channel channel) {
-        Date now=new Date();
+        Date now = new Date();
         if (isConnected()) {
             if (channel.isWritable()) {
                 //    logger.debug("send content={}",content);
-                logger.debug("send ping id={}",id);
-                if(this.target.isText()){
+                logger.debug("send ping id={}", id);
+                if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
                 }
-
-                WebSocketFrame frame = new PingWebSocketFrame();
-                channel.writeAndFlush(frame);
-                lastSendTime=now;
+                if (!login) {
+                    this.login(channel);
+                    login = true;
+                }else{
+                    WebSocketFrame frame = new PingWebSocketFrame();
+                    channel.writeAndFlush(frame);
+                }
+                lastSendTime = now;
             }
         } else {
             ScheduledFuture<?> future = store.remove(this.id);
@@ -211,9 +241,8 @@ public static int getConnectNum(){
             }
 
             //能通信再连
-
-            if(this.proxy!=null&&now.before(this.proxy.getExpireTime())){
-                if(TelnetUtils.isConnected(this.target.getIp(),this.target.getPort())){
+            if (this.proxy == null||(this.proxy != null && now.before(this.proxy.getExpireTime()))) {
+                if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
                     this.connect();
                 }
             }
@@ -248,4 +277,9 @@ public static int getConnectNum(){
     public void setLastRecvTime(Date lastRecvTime) {
         this.lastRecvTime = lastRecvTime;
     }
+
+    public long getUserId() {
+        return userId;
+    }
+
 }

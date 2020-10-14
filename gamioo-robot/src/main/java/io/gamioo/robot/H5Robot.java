@@ -47,6 +47,7 @@ public class H5Robot {
     private ScheduledExecutorService stat = Executors.newScheduledThreadPool(1, new GameThreadFactory("stat"));
     private Target target;
     private Map<Integer, Proxy> proxyStore;
+    private List<Long> userList;
     private boolean complete;
     private int step;
 
@@ -54,33 +55,34 @@ public class H5Robot {
         stat.scheduleAtFixedRate(() -> {
             int num = WebSocketClient.getConnectNum();
             logger.info("活跃的连接数 num={}", num);
-            if (complete) {
-                if(num < 20){
-                    step++;
-                    if (step >=6) {
-                        logger.info("启动连接补偿");
-                        this.asyncHandle();
-                        step = 0;
-                    }
-                }else{
-                    step=0;
-                }
-
-            }
+//            if (complete) {
+//                if(num < 20){
+//                    step++;
+//                    if (step >=6) {
+//                        logger.info("启动连接补偿");
+//                        this.asyncHandle();
+//                        step = 0;
+//                    }
+//                }else{
+//                    step=0;
+//                }
+//
+//            }
         }, 60000, 60000, TimeUnit.MILLISECONDS);
     }
 
 
     public static void main(String[] args) {
         String version = H5Robot.class.getPackage().getImplementationVersion();
-        logger.info("start working version={}",version);
+        logger.info("start working version={}", version);
         H5Robot robot = new H5Robot();
         robot.init();
+        List<Long> userList = robot.getUserList("user.txt");
+        robot.setUserList(userList);
         Target target = robot.getTarget("target.json");
         robot.setTarget(target);
         Map<Integer, Proxy> proxyStore = robot.getProxyStore("cell.json");
         robot.setProxyStore(proxyStore);
-
         robot.handle();
 
 
@@ -97,15 +99,15 @@ public class H5Robot {
 
     public void handle() {
         complete = false;
-        int id = 1;
+        int id = 0;
         int size = proxyStore.size();
         if (size > 0) {
-            int max = (int) Math.ceil(1f*target.getNumber() / size);
+            int max = (int) Math.ceil(1f * target.getNumber() / size);
             for (int i = 0; i < max; i++) {
                 for (Proxy proxy : proxyStore.values()) {
                     Date now = new Date();
                     if (now.before(proxy.getExpireTime())) {
-                        WebSocketClient client = new WebSocketClient(id++, proxy, target);
+                        WebSocketClient client = new WebSocketClient(++id,userList.get(id-1),proxy, target);
                         ThreadUtils.sleep(target.getInterval());
                         client.connect();
                     }
@@ -114,7 +116,7 @@ public class H5Robot {
 
         } else {
             for (int i = 0; i < target.getNumber(); i++) {
-                WebSocketClient client = new WebSocketClient(id++, null, target);
+                WebSocketClient client = new WebSocketClient(++id, userList.get(id-1),null, target);
                 ThreadUtils.sleep(target.getInterval());
                 client.connect();
             }
@@ -142,6 +144,21 @@ public class H5Robot {
             logger.error(e.getMessage(), e);
         }
         return list;
+    }
+
+    public List<Long> getUserList(String path) {
+        List<Long> ret = new ArrayList<>();
+        File file = FileUtils.getFile(path);
+        try {
+            List<String> content = FileUtils.readLines(file);
+            content.forEach((value) -> {
+                ret.add(Long.parseLong(value));
+            });
+
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return ret;
     }
 
     public Target getTarget(String path) {
@@ -229,5 +246,13 @@ public class H5Robot {
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+    public List<Long> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<Long> userList) {
+        this.userList = userList;
     }
 }
