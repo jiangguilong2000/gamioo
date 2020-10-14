@@ -69,7 +69,7 @@ public class TelnetUtils {
                 telnet.connect(ip, port);
                 ret = telnet.isConnected();
                 if(ret){
-                    logger.warn("该连接可以用 {}:{}",ip,port);
+                    logger.info("该连接可以用 {}:{}",ip,port);
                     telnet.disconnect();
                 }
             } catch (Exception e) {

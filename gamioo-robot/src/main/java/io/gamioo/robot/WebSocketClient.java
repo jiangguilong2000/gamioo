@@ -19,7 +19,6 @@ package io.gamioo.robot;
 import com.google.protobuf.UnknownFieldSet;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
-import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.robot.entity.Message;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
@@ -66,7 +65,7 @@ public class WebSocketClient {
     private final int id;
     private final Proxy proxy;
     private final Target target;
-    private final long userId;
+    private  long userId;
     private Date lastSendTime;
     private Date lastRecvTime;
     private boolean login;
@@ -198,7 +197,7 @@ public class WebSocketClient {
                 Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
                 //最大值300000000,最小值999999
                // builder.setUserID(target.getId() * 200290 + id-3);
-               //  userId=target.getId()*100000+id;
+               // userId=275029;//(long)(target.getId()*100000+id);
                 builder.setUserID(userId);
                 builder.setToken("529382015132319205"+userId);
                 byte[] content = builder.build().toByteArray();
@@ -244,7 +243,7 @@ public class WebSocketClient {
             if (this.proxy == null||(this.proxy != null && now.before(this.proxy.getExpireTime()))) {
                 if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
                     this.connect();
-                }
+               }
             }
 
         }

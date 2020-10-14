@@ -159,6 +159,10 @@ public class FileUtils {
         return file.createNewFile();
     }
 
+    public static List<String> readLines(final File file) throws IOException {
+        return readLines(file, Charset.defaultCharset());
+    }
+
     /**
      * Reads the contents of a file line by line to a List of Strings.
      * The file is always closed.

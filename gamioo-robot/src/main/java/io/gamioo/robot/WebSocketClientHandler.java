@@ -144,11 +144,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             BinaryWebSocketFrame content=(BinaryWebSocketFrame) frame;
             try {
                 Message.ServerResponse_LoginArgs args= Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
-              if(args.getResultType()==1){
-                  logger.warn("{}",this.webSocketClient.getUserId());
+            //  if(args.getResultType()==1){
+           //       logger.fatal ("{}",this.webSocketClient.getUserId());
 
-              }
-           //     this.webSocketClient.disconnect();
+         //     }
+          //   this.webSocketClient.disconnect();
                 logger.debug("recv id={},content={}",this.webSocketClient.getId(),args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
