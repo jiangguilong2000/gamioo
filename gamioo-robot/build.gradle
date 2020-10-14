@@ -12,10 +12,10 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class':'io.gamioo.robot.H5Robot';
-        attributes 'Class-Path':' . '+configurations.runtimeClasspath.collect { "lib/${it.name}" }.join(' ');
+        attributes 'Main-Class': 'io.gamioo.robot.H5Robot';
+        attributes 'Class-Path': ' . ' + configurations.runtimeClasspath.collect { "lib/${it.name}" }.join(' ');
     }
-    destinationDirectory=file('../robot');
+    destinationDirectory = file('../robot');
 }
 
 task clearJar(type: Delete) {
@@ -24,18 +24,28 @@ task clearJar(type: Delete) {
 
 task copyJar(type: Copy) {
     //from configurations.testRuntimeClasspath
-    from configurations.runtimeClasspath
-    into "../robot/lib"
+    from configurations.runtimeClasspath;
+    into "../robot/lib";
 }
 
-task release(type: Copy, dependsOn: [build, clearJar, copyJar]);
+task copyResources(type: Copy) {
+    sourceSets.main.resources.srcDirs.each {
+        from it;
+        into "../robot";
+    }
+}
+
+task release(type: Copy, dependsOn: [build, clearJar, copyJar,copyResources]);
 
 processResources {
-   //   exclude { "**/*.*" };
+
+   // include { "**/*.properties" };
+    exclude { "**/*.*" };
 //    from('src/main/resources') {
 //        include '*.properties';
 //    }
 
-  //
-  //  from('**/*.*') {into '../robot'};
+    //
+    //  from('**/*.*') {into '../robot'};
 }
+
