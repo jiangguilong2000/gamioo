@@ -19,6 +19,7 @@ package io.gamioo.robot;
 import com.google.protobuf.UnknownFieldSet;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
+import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.robot.entity.Message;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
@@ -148,7 +149,7 @@ public class WebSocketClient {
                         logger.error("握手失败 id={},proxy={},target={}", id, proxy, target);
                         logger.error("握手失败", channelFuture.cause());
                     } else {
-                        logger.info("握手成功 id={},proxy={},target.ip={},target.port={}", id, proxy, target.getIp(), target.getPort());
+                        logger.info("握手成功 id={},userId={},proxy={},target.ip={},target.port={}", id, userId,proxy, target.getIp(), target.getPort());
                         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
                             try {
                                 sendMessage(socketChannel);
