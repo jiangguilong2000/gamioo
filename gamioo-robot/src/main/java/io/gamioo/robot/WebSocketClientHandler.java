@@ -49,6 +49,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
+        this.webSocketClient.setLogin(false);
     }
 
 

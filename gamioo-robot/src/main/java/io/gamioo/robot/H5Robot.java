@@ -108,7 +108,7 @@ public class H5Robot {
                     Date now = new Date();
                     if (now.before(proxy.getExpireTime())) {
                         WebSocketClient client = new WebSocketClient(++id,userList.get(id-1),proxy, target);
-                        ThreadUtils.sleep(target.getInterval());
+                        ThreadUtils.sleep(target.getInterval()+target.getError()*10);
                         client.connect();
                     }
                 }
@@ -117,7 +117,7 @@ public class H5Robot {
         } else {
             for (int i = 0; i < target.getNumber(); i++) {
                 WebSocketClient client = new WebSocketClient(++id, userList.get(id-1),null, target);
-                ThreadUtils.sleep(target.getInterval());
+                ThreadUtils.sleep(target.getInterval()+target.getError()*10);
                 client.connect();
             }
         }

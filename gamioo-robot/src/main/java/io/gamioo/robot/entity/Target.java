@@ -54,6 +54,8 @@ public class Target extends Server {
     @JSONField(name = "text")
     private boolean text;
 
+    private int error;
+
 
     public void parse() {
         if(url==null){
@@ -138,5 +140,17 @@ public class Target extends Server {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
+    }
+
+    public void increaseError(){
+        this.error++;
     }
 }

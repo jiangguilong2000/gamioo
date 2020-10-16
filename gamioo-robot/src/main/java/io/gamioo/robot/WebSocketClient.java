@@ -133,6 +133,7 @@ public class WebSocketClient {
                     if (!channelFuture.isSuccess()) {
                         logger.error("连接失败 id={},proxy={},target={}", id, proxy, target);
                         logger.error("连接失败", channelFuture.cause());
+                        target.increaseError();
                     } else {
                         //     logger.info("连接成功 id={},proxy={},target={}", id, proxy,target);
                     }
@@ -148,6 +149,7 @@ public class WebSocketClient {
                     if (!channelFuture.isSuccess()) {
                         logger.error("握手失败 id={},proxy={},target={}", id, proxy, target);
                         logger.error("握手失败", channelFuture.cause());
+                        target.increaseError();
                     } else {
                         logger.info("握手成功 id={},userId={},proxy={},target.ip={},target.port={}", id, userId,proxy, target.getIp(), target.getPort());
                         ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
@@ -163,9 +165,7 @@ public class WebSocketClient {
                     }
                 }
             });
-
-
-            //       handler.handshakeFuture().sync();
+        //    handler.handshakeFuture().sync();
 
 
         } catch (Exception e) {
@@ -282,4 +282,11 @@ public class WebSocketClient {
         return userId;
     }
 
+    public boolean isLogin() {
+        return login;
+    }
+
+    public void setLogin(boolean login) {
+        this.login = login;
+    }
 }
