@@ -71,7 +71,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if (!handshaker.isHandshakeComplete()) {
             try {
                 handshaker.finishHandshake(ch, response);
-                logger.debug("client connected id={}", this.webSocketClient.getId());
+                logger.debug("client connected userId={}", this.webSocketClient.getUserId());
                 handshakeFuture.setSuccess();
 
 
@@ -112,7 +112,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
-            logger.debug("WebSocket Client received closing id={}",this.webSocketClient.getId());
+            logger.debug("WebSocket Client received closing userId={}",this.webSocketClient.getUserId());
             CloseWebSocketFrame close = (CloseWebSocketFrame) frame.retain();
             handshaker.close(ctx.channel(), close);
             return;
@@ -124,7 +124,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             return;
         }
         if (frame instanceof PongWebSocketFrame) {
-            logger.debug("WebSocket Client received pong id={}", this.webSocketClient.getId());
+            logger.debug("WebSocket Client received pong userId={}", this.webSocketClient.getUserId());
             frame.content().retain();
             //  ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
             return;
@@ -150,7 +150,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
          //     }
           //   this.webSocketClient.disconnect();
-                logger.debug("recv id={},content={}",this.webSocketClient.getId(),args);
+                logger.debug("recv userId={},content={}",this.webSocketClient.getUserId(),args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }

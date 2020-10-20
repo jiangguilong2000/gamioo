@@ -131,7 +131,7 @@ public class WebSocketClient {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if (!channelFuture.isSuccess()) {
-                        logger.error("连接失败 id={},proxy={},target={}", id, proxy, target);
+                        logger.error("连接失败 userId={},proxy={},target={}", userId, proxy, target);
                         logger.error("连接失败", channelFuture.cause());
                         target.increaseError();
                     } else {
@@ -147,7 +147,7 @@ public class WebSocketClient {
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
                     if (!channelFuture.isSuccess()) {
-                        logger.error("握手失败 id={},proxy={},target={}", id, proxy, target);
+                        logger.error("握手失败 userId={},proxy={},target={}", userId, proxy, target);
                         logger.error("握手失败", channelFuture.cause());
                         target.increaseError();
                     } else {
@@ -160,7 +160,7 @@ public class WebSocketClient {
                                 logger.error(e.getMessage(), e);
                             }
                             //	logger.debug("send id={}", this.id);
-                        }, 2000, 30000, TimeUnit.MILLISECONDS);
+                        }, 2000, 5000, TimeUnit.MILLISECONDS);
                         store.put(id, future);
                     }
                 }
@@ -218,7 +218,7 @@ public class WebSocketClient {
         if (isConnected()) {
             if (channel.isWritable()) {
                 //    logger.debug("send content={}",content);
-                logger.debug("send ping id={}", id);
+                logger.debug("send ping id={}, userId={}",id, userId);
                 if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
@@ -240,10 +240,13 @@ public class WebSocketClient {
                 }
             }
 
+
             //能通信再连
             if (this.proxy == null||(this.proxy != null && now.before(this.proxy.getExpireTime()))) {
                 if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
+                    logger.debug("开始重连... id={},userId={}",id,userId);
                     this.connect();
+
                }
             }
 
