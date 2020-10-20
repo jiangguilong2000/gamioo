@@ -160,7 +160,7 @@ public class WebSocketClient {
                                 logger.error(e.getMessage(), e);
                             }
                             //	logger.debug("send id={}", this.id);
-                        }, 2000, 50000, TimeUnit.MILLISECONDS);
+                        }, 2000, 30000, TimeUnit.MILLISECONDS);
                         store.put(id, future);
                     }
                 }
