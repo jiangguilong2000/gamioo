@@ -16,9 +16,6 @@
 
 package io.gamioo.ioc.entity;
 
-import io.gamioo.ioc.factory.annotation.Autowired;
-import io.gamioo.ioc.stereotype.Component;
-
 
 /**
  * some description
@@ -26,24 +23,13 @@ import io.gamioo.ioc.stereotype.Component;
  * @author Allen Jiang
  * @since 1.0.0
  */
-@Component
+
 public class Fruit {
-	
-	@Autowired
-	private Pig pig;
-	
-    private int id;
-    private String name;
 
-    public Pig getPig() {
-		return pig;
-	}
+    protected int id;
+    protected String name;
 
-	public void setPig(Pig pig) {
-		this.pig = pig;
-	}
-
-	public int getId() {
+    public int getId() {
         return id;
     }
 
@@ -58,4 +44,6 @@ public class Fruit {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

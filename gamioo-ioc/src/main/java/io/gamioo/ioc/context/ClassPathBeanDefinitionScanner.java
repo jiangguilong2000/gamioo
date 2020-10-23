@@ -27,7 +27,6 @@ import io.gamioo.ioc.stereotype.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -52,12 +51,7 @@ public class ClassPathBeanDefinitionScanner {
     public void doScan(String... basePackages) {
         Assert.notEmpty(basePackages, "At least one base package must be specified");
         for (String e : basePackages) {
-            try {
-                this.analysisResourceList(e);
-            } catch (IOException ex) {
-                logger.error(ex.getMessage(), ex);
-            }
-
+             this.analysisResourceList(e);
         }
     }
 
@@ -67,19 +61,18 @@ public class ClassPathBeanDefinitionScanner {
      *
      * @param location 资源的地址
      */
-    public void analysisResourceList(String location) throws IOException {
+    public void analysisResourceList(String location){
         List<Resource> list = this.resourceLoader.getResourceList(location);
         for (Resource e : list) {
             this.analysisResource(e);
         }
     }
 
-    public void analysisResource(Resource resource) throws IOException {
-        String className = resource.getClassName();
-        Class<?> clazz = ClassUtils.loadClass(className);
-        //TODO ...
-        analysisClass(clazz);
-
+    public void analysisResource(Resource resource)  {
+            String className = resource.getClassName();
+            Class<?> clazz = ClassUtils.loadClass(className);
+            //TODO ...
+            analysisClass(clazz);
     }
 
     /**
@@ -107,7 +100,7 @@ public class ClassPathBeanDefinitionScanner {
 
 
 
-            //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
+        //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
         beanFactory.registerBeanDefinition(klass.getSimpleName() ,new GenericBeanDefinition(klass,annotation));
 
 

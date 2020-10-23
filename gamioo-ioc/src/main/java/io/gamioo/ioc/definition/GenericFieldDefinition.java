@@ -20,9 +20,6 @@ import io.gamioo.core.util.FieldUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
-import java.util.Map;
 
 /**
  * some description
@@ -46,16 +43,14 @@ public class GenericFieldDefinition implements FieldDefinition {
 
     @Override
     public Class<?> getClazz() {
-        Class<?>  clazz= field.getGenericType().getClass();
-        if (clazz == List.class) {
-            clazz= (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-        }else if(clazz == Map.class){
-            clazz= (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[1];
-        }
+        Class<?>  clazz= field.getType().getClass();
         return clazz;
     }
 
-
+    @Override
+    public Field getField() {
+        return field;
+    }
 
 
     @Override
@@ -70,6 +65,9 @@ public class GenericFieldDefinition implements FieldDefinition {
      */
     @Override
     public void inject(Object instance,Object value) {
+
+        //TODO ...
+
         FieldUtils.writeField(instance, field, value);
     }
 

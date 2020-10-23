@@ -17,9 +17,7 @@
 package io.gamioo.ioc.factory.support;
 
 
-import io.gamioo.ioc.definition.BeanDefinition;
-import io.gamioo.ioc.definition.FieldDefinition;
-import io.gamioo.ioc.definition.MethodDefinition;
+import io.gamioo.ioc.definition.*;
 
 import java.util.List;
 
@@ -38,12 +36,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     Object doCreateBean(BeanDefinition beanDefinition) {
-       String beanName=beanDefinition.getName();
+        String beanName = beanDefinition.getName();
         Object instance = createBeanInstance(beanDefinition);
         // Eagerly cache singletons to be able to resolve circular references
         // even when triggered by lifecycle interfaces like BeanFactoryAware.
         boolean earlySingletonExposure = isSingletonCurrentlyInCreation(beanName);
-        if(earlySingletonExposure){
+        if (earlySingletonExposure) {
             addSingletonFactory(beanName, () -> getEarlyBeanReference(instance));
         }
         //填充实例，这里完成了循环引用的问题
@@ -75,12 +73,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     @Override
     protected void populateBean(Object instance, BeanDefinition beanDefinition) {
 
-            List<FieldDefinition> list = beanDefinition.getAutowiredFieldDefinition();
+        List<FieldDefinition> list = beanDefinition.getAutowiredFieldDefinition();
 
-            for (FieldDefinition e : list) {
-                Object field = this.getBean(e.getName());
-                e.inject(instance, field);
+        for (FieldDefinition e : list) {
+            Object field = null;
+            if (e instanceof ListFieldDefinition) {
+                field = this.getBeanListOfType(e.getClazz());
+            } else if (e instanceof MapFieldDefinition) {
+                field = this.getBeanMapOfType(e.getClazz());
+            }else if (e instanceof GenericFieldDefinition) {
+                field = this.getBean(e.getName());
             }
+            e.inject(instance, field);
+        }
     }
 
 //    @Override
@@ -109,10 +114,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * 调用PostConstruct方法
      */
     private void invokeInitMethods(Object object, BeanDefinition beanDefinition) {
-            MethodDefinition method = beanDefinition.getInitMethodDefinition();
-            if (method!=null) {
-                method.invoke(object);
-            }
+        MethodDefinition method = beanDefinition.getInitMethodDefinition();
+        if (method != null) {
+            method.invoke(object);
+        }
     }
 
 }

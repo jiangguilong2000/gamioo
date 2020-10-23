@@ -17,10 +17,12 @@
 package io.gamioo.ioc.factory.support;
 
 import io.gamioo.core.exception.BeansException;
+import io.gamioo.core.exception.ServerBootstrapException;
 import io.gamioo.core.util.StringUtils;
 import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.factory.ObjectFactory;
+import io.gamioo.ioc.stereotype.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,17 +82,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      */
     @Override
     public void preInstantiateSingletons() {
-        //实例化
         for (BeanDefinition e : beanDefinitionMap.values()) {
-            try {
-                getBean(e.getName());
-
-                //    singletonObjects.put(e.getBeanClassName(), wrapper.getWrappedInstance());
-                //     beanDefinitionMap.put(e.getName(), e);
-            } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
-            }
-
+            getBean(e.getName());
         }
     }
 
@@ -112,6 +105,45 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
         return (T) sharedInstance;
     }
+
+    @Override
+    public <T> List<T> getBeanListOfType(Class<T> type) {
+        List<T> ret = new ArrayList<>();
+        Collection<BeanDefinition> list = beanDefinitionMap.values();
+        for (BeanDefinition e : list) {
+            if (type.isAssignableFrom(e.getClazz())) {
+                T instance = (T) this.getBean(e.getName());
+                ret.add(instance);
+            }
+        }
+        return ret;
+    }
+
+    @Override
+    public <T> Map<String,T> getBeanMapOfType(Class<T> type) {
+        Map<String,T> ret = new HashMap<>();
+        Collection<BeanDefinition> list = beanDefinitionMap.values();
+        for (BeanDefinition e : list) {
+            if (type.isAssignableFrom(e.getClazz())) {
+                T instance = (T) this.getBean(e.getName());
+                Component annotation =(Component)e.getAnnotationList()[0];
+                ret.put(annotation.name()[0],instance);
+            }
+        }
+        return ret;
+    }
+
+
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredType){
+        Object bean = getBean(name);
+        if (requiredType != null && !requiredType.isInstance(bean)) {
+            throw new ServerBootstrapException(name, requiredType, bean.getClass());
+        }
+        return (T) bean;
+    }
+
 
 
 //    public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
@@ -201,6 +233,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     /**
      * Remove the bean with the given name from the singleton cache of this factory,
      * to be able to clean up eager registration of a singleton if creation failed.
+     *
      * @param beanName the name of the bean
      */
     protected void removeSingleton(String beanName) {
@@ -211,6 +244,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             this.registeredSingletons.remove(beanName);
         }
     }
+
     /**
      * Return whether the specified singleton bean is currently in creation
      * (within the entire factory).
@@ -248,6 +282,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     protected Object getEarlyBeanReference(Object bean) {
         return bean;
     }
+
     //
 //    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
 //        // 何时设置beanDefinition的其他属性beanClass,beanClassName?——在BeanDefinitionReader加载xml文件的时候set（初始化的时候）

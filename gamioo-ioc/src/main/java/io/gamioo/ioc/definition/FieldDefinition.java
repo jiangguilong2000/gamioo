@@ -16,6 +16,8 @@
 
 package io.gamioo.ioc.definition;
 
+import java.lang.reflect.Field;
+
 /**
  * 一个字段定义
  *
@@ -30,5 +32,5 @@ public interface FieldDefinition extends  Definition{
      */
     void inject(Object instance,Object value);
 
-
+     Field getField();
 }

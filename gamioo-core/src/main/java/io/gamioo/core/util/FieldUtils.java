@@ -26,8 +26,8 @@ import java.util.*;
 /**
  * 属性工具类.
  *
- * @author 小流氓[176543888@qq.com]
- * @since 3.0
+ * @author Allen Jiang
+ * @since 1.0.0
  */
 public class FieldUtils {
 

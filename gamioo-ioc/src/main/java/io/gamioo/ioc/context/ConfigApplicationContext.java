@@ -19,6 +19,8 @@ package io.gamioo.ioc.context;
 import io.gamioo.ioc.annotation.AnnotationBeanDefinitionReader;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
 
+import java.util.List;
+
 /**
  * some description
  *
@@ -51,9 +53,9 @@ public class ConfigApplicationContext implements  ApplicationContext{
         return factory;
     }
 
-    /**TODO ...做一些beanFactory的属性设置工作*/
+    /**做一些beanFactory的属性设置工作 */
     protected void prepareBeanFactory(DefaultListableBeanFactory beanFactory) {
-
+        //TODO ...
     }
 
     /**实例化操作*/
@@ -80,6 +82,10 @@ public class ConfigApplicationContext implements  ApplicationContext{
 
     public <T> T getBean(Class<T> requiredType){
         return this.beanFactory.getBean(requiredType);
+    }
+
+    public <T> List<T> getBeanListOfType(Class<T> type){
+        return this.beanFactory.getBeanListOfType(type);
     }
 
 //    public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {

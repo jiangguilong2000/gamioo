@@ -19,6 +19,9 @@ package io.gamioo.ioc.factory;
 import io.gamioo.core.exception.BeansException;
 import io.gamioo.ioc.definition.BeanDefinition;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * some description
@@ -34,6 +37,12 @@ public interface BeanFactory {
     public <T> T getBean(Class<T> requiredType);
 
     public Object getBean(String name) throws BeansException;
+
+    public <T> List<T> getBeanListOfType(Class<T> type);
+
+    public <T> T getBean(String name, Class<T> requiredType);
+
+    public <T> Map<String,T> getBeanMapOfType(Class<T> type);
 
     void preInstantiateSingletons();
 

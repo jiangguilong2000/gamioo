@@ -109,7 +109,15 @@ public class GenericBeanDefinition implements BeanDefinition {
 
 
     private void analysisField(Class<? extends Annotation> annotationType, FieldAccess access, Field field) {
-        fieldStore.computeIfAbsent(annotationType, key -> new ArrayList<>(64)).add(new GenericFieldDefinition(field));
+
+        Class<?> clazz = field.getType();
+        if (clazz == List.class) {
+            fieldStore.computeIfAbsent(annotationType, key -> new ArrayList<>()).add(new ListFieldDefinition(field));
+        } else if (clazz == Map.class) {
+            fieldStore.computeIfAbsent(annotationType, key -> new ArrayList<>()).add(new MapFieldDefinition(field));
+        } else {
+            fieldStore.computeIfAbsent(annotationType, key -> new ArrayList<>(64)).add(new GenericFieldDefinition(field));
+        }
     }
 
 
@@ -147,18 +155,18 @@ public class GenericBeanDefinition implements BeanDefinition {
      */
     @Override
     public void inject() {
-     //   fieldList.values().forEach(v -> v.forEach(field -> field.inject(this)));
+        //   fieldList.values().forEach(v -> v.forEach(field -> field.inject(this)));
 
     }
 
     @Override
-    public List<FieldDefinition> getAutowiredFieldDefinition(){
-        List<FieldDefinition> list = fieldStore.getOrDefault(Autowired.class,new ArrayList<>());
+    public List<FieldDefinition> getAutowiredFieldDefinition() {
+        List<FieldDefinition> list = fieldStore.getOrDefault(Autowired.class, new ArrayList<>());
         return list;
     }
 
     @Override
-    public  List<FieldDefinition> getValueFieldDefinition(){
+    public List<FieldDefinition> getValueFieldDefinition() {
         List<FieldDefinition> list = fieldStore.get(Value.class);
         return list;
     }

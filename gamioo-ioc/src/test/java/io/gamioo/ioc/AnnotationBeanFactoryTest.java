@@ -17,7 +17,7 @@
 package io.gamioo.ioc;
 
 import io.gamioo.ioc.context.ConfigApplicationContext;
-import io.gamioo.ioc.entity.Fruit;
+import io.gamioo.ioc.entity.Apple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -48,13 +48,9 @@ public class AnnotationBeanFactoryTest {
     @Order(1)
     @DisplayName("IOC2测试")
     public void test() throws Exception {
-
-
-
 //        //初始化完毕，获取想要的bean
-        Fruit helloWorldService = context.getBean(Fruit.class);
-        System.out.println(helloWorldService.getName());
-        logger.debug("content={}", "aaa");
+        Apple fruit = context.getBean (Apple.class);
+        logger.debug("content={}", fruit.getName());
 
     }
 
