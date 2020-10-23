@@ -106,7 +106,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return (T) sharedInstance;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T> List<T> getBeanListOfType(Class<T> type) {
         List<T> ret = new ArrayList<>();
         Collection<BeanDefinition> list = beanDefinitionMap.values();
@@ -119,7 +120,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return ret;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T> Map<String,T> getBeanMapOfType(Class<T> type) {
         Map<String,T> ret = new HashMap<>();
         Collection<BeanDefinition> list = beanDefinitionMap.values();
@@ -135,7 +137,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
 
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T> T getBean(String name, Class<T> requiredType){
         Object bean = getBean(name);
         if (requiredType != null && !requiredType.isInstance(bean)) {
