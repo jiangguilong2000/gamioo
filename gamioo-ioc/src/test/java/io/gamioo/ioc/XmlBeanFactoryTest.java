@@ -54,9 +54,6 @@ public class XmlBeanFactoryTest {
 //        for (Map.Entry<String, AbstractBeanDefinition> beanDefinitionEntry : beanFactory.entrySet()) {
 //            beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
 //        }
-        //初始化完毕，获取想要的bean
-        HelloWorldService helloWorldService =beanFactory.getBean(HelloWorldService.class);
-        logger.debug("content={}",helloWorldService.helloWorld());
 
     }
 

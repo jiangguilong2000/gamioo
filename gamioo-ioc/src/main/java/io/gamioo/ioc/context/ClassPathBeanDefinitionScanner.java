@@ -19,7 +19,9 @@ package io.gamioo.ioc.context;
 import io.gamioo.core.util.AnnotationUtils;
 import io.gamioo.core.util.Assert;
 import io.gamioo.core.util.ClassUtils;
+import io.gamioo.ioc.annotation.Configuration;
 import io.gamioo.ioc.annotation.DefaultResourceLoader;
+import io.gamioo.ioc.definition.ConfigurationBeanDefinition;
 import io.gamioo.ioc.definition.GenericBeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.io.Resource;
@@ -98,16 +100,19 @@ public class ClassPathBeanDefinitionScanner {
             return;
         }
 
+        // 配置类
+        if (annotation.annotationType() == Configuration.class) {
+           // configurations.add(new ConfigurationBeanDefinition(klass,annotation));
+            beanFactory.registerBeanDefinition(klass.getSimpleName() ,new ConfigurationBeanDefinition(klass,annotation));
+        }else{
+            //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
+            beanFactory.registerBeanDefinition(klass.getSimpleName() ,new GenericBeanDefinition(klass,annotation));
+        }
 
 
-        //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
-        beanFactory.registerBeanDefinition(klass.getSimpleName() ,new GenericBeanDefinition(klass,annotation));
 
 
-//        // 配置类
-//        if (annotationType == Configuration.class) {
-//            configurations.add(new ConfigurationBeanDefinition(klass).init());
-//        }
+
 //        // 模板转化器.
 //        else if (annotationType == TemplateConverter.class) {
 //            ConvertManager.getInstance().register(klass, (TemplateConverter) annotation);

@@ -17,6 +17,7 @@
 package io.gamioo.ioc;
 
 import io.gamioo.ioc.context.ConfigApplicationContext;
+import io.gamioo.ioc.entity.ServerConfig;
 import io.gamioo.ioc.skill.AbstractSkill;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,21 +35,21 @@ import java.util.List;
 
 @DisplayName("IOC测试")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AnnotationBeanFactoryTest {
-    private static final Logger logger = LogManager.getLogger(AnnotationBeanFactoryTest.class);
+public class IOCFactoryTest {
+    private static final Logger logger = LogManager.getLogger(IOCFactoryTest.class);
     //private final Benchmark benchmark=new Benchmark(10000);
     private static ConfigApplicationContext context;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
         //初始化......
-        context=new ConfigApplicationContext(AnnotationBeanFactoryTest.class.getPackage().getName());
+        context=new ConfigApplicationContext(IOCFactoryTest.class.getPackage().getName());
 
     }
 
     @Test
     @Order(1)
-    @DisplayName("IOC2测试")
+    @DisplayName("容器扫描和获取")
     public void test() throws Exception {
 //        //初始化完毕，获取想要的bean
         RoleService roleService = context.getBean (RoleService.class);
@@ -58,6 +59,14 @@ public class AnnotationBeanFactoryTest {
 
     }
 
+    @Test
+    @Order(2)
+    @DisplayName("配置文件读取")
+    public void handleConfig() throws Exception {
+        ServerConfig serverConfig = context.getBean (ServerConfig.class);
+        logger.debug("serverConfig={}", serverConfig);
+
+    }
 
     @BeforeEach
     public void beforeEach() {

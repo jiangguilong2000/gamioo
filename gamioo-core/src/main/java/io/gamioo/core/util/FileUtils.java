@@ -74,11 +74,21 @@ public class FileUtils {
      * @return 返回文件中的文本
      */
     public static File getFile(String fileName) {
-            URL url =FileUtils.class.getClassLoader().getResource(fileName);
+            URL url =Thread.currentThread().getContextClassLoader().getResource(fileName);
             // 通过url获取File的绝对路径
             return new File(url.getFile());
     }
 
+
+    /**
+     * 读取指定名称文件中的文本.
+     *
+     * @param fileName 文件名称
+     * @return 返回文件中的文本
+     */
+    public static InputStream getInputStream(String fileName) {
+       return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+    }
 
     /**
      * 写入指定文本到文件中.

@@ -5,7 +5,7 @@ dependencies {
     implementation project(':gamioo-game');
     implementation project(':gamioo-network');
     testImplementation project(':gamioo-benchmark');
-    implementation 'com.alibaba:fastjson:1.2.73';
+    implementation 'com.alibaba:fastjson:1.2.74';
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.6.0';
 
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- id:  platformId: 联运平台  ; maxConcurrentUser: 允许同时最高在线  maxRegisterUser: 允许最多注册人数  -->
+<!--  游戏配置: local: 策划数据;  debug: 调试模式(true: 聊天框内输出调试信息/允许debug命令) saveInterval: 存档时间间隔(单位:秒) offlineInterval: 离线玩家在内存中的存活时间(单位:秒) exchange 充值功能是否开启-->
+<!-- translate ：是否开启翻译功能 -->
+<!-- location: true 表示会定位玩家[仅限在中国大陆使用]-->
+<!-- RPC Client配置: timeout: 毫秒单位,0表示没有timeout,一般生产线上为5000-->
+<root local="E:/stone/chess/design/trunk/data/server/" debug="true" saveInterval="1" offlineInterval="3600"  location="true" rpcTimeout="0">
+    <!--  服务器相关配置 innerPort 服务器内部RPC通信端口，tcpPort TCP玩家通信端口，webPort 后台http连接端口-->
+    <server id="2" name="Gate-2" externalIp="192.168.2.214" tcpPort="8866" webPort="10086"/>
+    <!-- MySQL 配置 needCompress: blob字段是否压缩-->
+    <db jdbcUrl="jdbc:mysql://192.168.2.214:3306/chess?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8"
+        jdbcUser="root" jdbcPassword="pass">
+    </db>
+    <!-- redis配置 type 1表示全局库, 2表示消息库 -->
+    <cache type="1" ip="192.168.2.214" port="6385" index="0" password="com.123"/>
+    <cache type="2" ip="192.168.2.214" port="6386" index="0" password="com.123"/>
+</root>

@@ -23,7 +23,6 @@ import io.gamioo.core.util.ClassUtils;
 import io.gamioo.core.util.FieldUtils;
 import io.gamioo.core.util.MethodUtils;
 import io.gamioo.core.util.StringUtils;
-import io.gamioo.ioc.annotation.Value;
 import io.gamioo.ioc.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -154,26 +153,25 @@ public class GenericBeanDefinition implements BeanDefinition {
         return ClassUtils.newInstance(this.beanClass);
     }
 
-    /**
-     * 注入
-     */
-    @Override
-    public void inject() {
-        //   fieldList.values().forEach(v -> v.forEach(field -> field.inject(this)));
+//    /**
+//     * 注入
+//     */
+//    @Override
+//    public void inject() {
+//        //   fieldList.values().forEach(v -> v.forEach(field -> field.inject(this)));
+//
+//    }
 
-    }
-
-    @Override
     public List<FieldDefinition> getAutowiredFieldDefinition() {
         List<FieldDefinition> list = fieldStore.getOrDefault(Autowired.class, new ArrayList<>());
         return list;
     }
 
-    @Override
-    public List<FieldDefinition> getValueFieldDefinition() {
-        List<FieldDefinition> list = fieldStore.get(Value.class);
-        return list;
-    }
+
+//    public List<FieldDefinition> getValueFieldDefinition() {
+//        List<FieldDefinition> list = fieldStore.get(Value.class);
+//        return list;
+//    }
 
     @Override
     public Class<?> getClazz() {
