@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -510,24 +509,54 @@ public class StringUtils {
         return str.toString().getBytes(charset);
     }
 
+//    /**
+//     * 常规的格式化一个带有占位符的字符串.
+//     * <p>
+//     * 区别于JDK的{@link MessageFormat#format(String, Object...)}，这个方法只是简单的按位填充
+//     *
+//     * @param messagePattern       带有占位符的字符串
+//     * @param arguments 参数列表
+//     * @return 格式化以后的字符串
+//     */
+//    public static String format(String messagePattern, Object... arguments) {
+//        if (arguments.length == 0) {
+//            return messagePattern;
+//        }
+//        // FIXME 这个方法基本用于日志，邮件内容拼接，可以参考日志中使用的方案做一个缓存策略
+//        for (int i = 0, len = arguments.length; i < len; i++) {
+//            messagePattern = messagePattern.replace(join("{", String.valueOf(i), "}"), String.valueOf(arguments[i]));
+//        }
+//        return messagePattern;
+//    }
+
     /**
-     * 常规的格式化一个带有占位符的字符串.
-     * <p>
-     * 区别于JDK的{@link MessageFormat#format(String, Object...)}，这个方法只是简单的按位填充
+     * Replace placeholders in the given messagePattern with arguments.
      *
-     * @param messagePattern       带有占位符的字符串
-     * @param arguments 参数列表
-     * @return 格式化以后的字符串
+     * @param messagePattern the message pattern containing placeholders.
+     * @param arguments the arguments to be used to replace placeholders.
+     * @return the formatted message.
      */
     public static String format(String messagePattern, Object... arguments) {
-        if (arguments.length == 0) {
+        if (messagePattern == null || arguments == null || arguments.length == 0) {
             return messagePattern;
         }
-        // FIXME 这个方法基本用于日志，邮件内容拼接，可以参考日志中使用的方案做一个缓存策略
-        for (int i = 0, len = arguments.length; i < len; i++) {
-            messagePattern = messagePattern.replace(join("{", String.valueOf(i), "}"), String.valueOf(arguments[i]));
+        final StringBuilder result = new StringBuilder();
+        int currentArgument = 0;
+        for (int i = 0; i < messagePattern.length(); i++) {
+            final char curChar = messagePattern.charAt(i);
+            if (curChar == DELIM_START && i < messagePattern.length() - 1 && messagePattern.charAt(i + 1) == DELIM_STOP) {
+                if (currentArgument < arguments.length) {
+                    result.append(arguments[currentArgument]);
+                } else {
+                    result.append(DELIM_START).append(DELIM_STOP);
+                }
+                currentArgument++;
+                i++;
+            } else {
+                result.append(curChar);
+            }
         }
-        return messagePattern;
+        return result.toString();
     }
 
     /**

@@ -17,10 +17,12 @@
 package io.gamioo.ioc;
 
 import io.gamioo.ioc.context.ConfigApplicationContext;
-import io.gamioo.ioc.entity.Apple;
+import io.gamioo.ioc.skill.AbstractSkill;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
+
+import java.util.List;
 
 
 /**
@@ -49,8 +51,10 @@ public class AnnotationBeanFactoryTest {
     @DisplayName("IOC2测试")
     public void test() throws Exception {
 //        //初始化完毕，获取想要的bean
-        Apple fruit = context.getBean (Apple.class);
-        logger.debug("content={}", fruit.getName());
+        RoleService roleService = context.getBean (RoleService.class);
+        roleService.handleCommand("-- add rmb");
+        List<AbstractSkill>list=roleService.getSkillList();
+        logger.debug("array={}", list);
 
     }
 

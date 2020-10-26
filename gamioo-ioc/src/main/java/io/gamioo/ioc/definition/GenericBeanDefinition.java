@@ -18,6 +18,7 @@ package io.gamioo.ioc.definition;
 
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
+import io.gamioo.core.exception.ServerBootstrapException;
 import io.gamioo.core.util.ClassUtils;
 import io.gamioo.core.util.FieldUtils;
 import io.gamioo.core.util.MethodUtils;
@@ -39,12 +40,11 @@ import java.util.*;
  * @since 1.0.0
  */
 public class GenericBeanDefinition implements BeanDefinition {
+
     private static final Set<Class<?>> IGNORE_ANNOTATION_BY_METHODS = new HashSet<>();
 
     static {
-        IGNORE_ANNOTATION_BY_METHODS.add(Override.class);
         IGNORE_ANNOTATION_BY_METHODS.add(Deprecated.class);
-        IGNORE_ANNOTATION_BY_METHODS.add(SuppressWarnings.class);
     }
 
     // protected Object instance;
@@ -71,19 +71,23 @@ public class GenericBeanDefinition implements BeanDefinition {
         HashSet<String> nameList = new HashSet<>(list.size());
         for (Method method : list) {
             Annotation[] array = method.getAnnotations();
-            if (nameList.add(method.getName())) {
-                if (array != null && array.length > 0) {
+
+            if (array != null && array.length > 0) {
+                if (!nameList.contains(method.getName())) {
                     for (Annotation annotation : array) {
                         Class<? extends Annotation> annotationType = annotation.annotationType();
                         if (IGNORE_ANNOTATION_BY_METHODS.contains(annotationType)) {
                             continue;
                         }
                         this.analysisMethod(annotationType, access, method);
+                        nameList.add(method.getName());
                     }
+                } else {
+                    throw new ServerBootstrapException("注入方法名冲突 class={},method={}", beanClass.getName(), method.getName());
                 }
-            } else {
-                //TODO...
             }
+
+
         }
 
     }
