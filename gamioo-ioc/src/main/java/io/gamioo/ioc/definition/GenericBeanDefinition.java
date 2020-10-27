@@ -67,26 +67,17 @@ public class GenericBeanDefinition implements BeanDefinition {
     public void analysisMethodList() {
         MethodAccess access = MethodAccess.get(beanClass);
         List<Method> list = MethodUtils.getMethodList(beanClass);
-        HashSet<String> nameList = new HashSet<>(list.size());
         for (Method method : list) {
             Annotation[] array = method.getAnnotations();
-
             if (array != null && array.length > 0) {
-                if (!nameList.contains(method.getName())) {
-                    for (Annotation annotation : array) {
-                        Class<? extends Annotation> annotationType = annotation.annotationType();
-                        if (IGNORE_ANNOTATION_BY_METHODS.contains(annotationType)) {
-                            continue;
-                        }
-                        this.analysisMethod(annotationType, access, method);
-                        nameList.add(method.getName());
+                for (Annotation annotation : array) {
+                    Class<? extends Annotation> annotationType = annotation.annotationType();
+                    if (IGNORE_ANNOTATION_BY_METHODS.contains(annotationType)) {
+                        continue;
                     }
-                } else {
-                    throw new ServerBootstrapException("注入方法名冲突 class={},method={}", beanClass.getName(), method.getName());
+                    this.analysisMethod(annotationType, access, method);
                 }
             }
-
-
         }
 
     }
