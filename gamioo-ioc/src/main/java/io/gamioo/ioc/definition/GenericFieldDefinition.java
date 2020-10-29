@@ -36,10 +36,11 @@ public class GenericFieldDefinition implements FieldDefinition {
      //   this.field.setAccessible(true);
     }
 
-
-    public Annotation[] getAnnotationList() {
-        return this.field.getDeclaredAnnotations();
+    @Override
+    public Annotation getAnnotation(){
+        return this.field.getDeclaredAnnotations()[0];
     }
+
 
     @Override
     public Class<?> getClazz() {

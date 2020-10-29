@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.lang.reflect.Method;
 
 /**
- * some description
+ * 方法的包装类
  *
  * @author Allen Jiang
  * @since 1.0.0
@@ -34,6 +34,15 @@ public class MethodWrapper {
 	private Object instance;
 	private Class<?> paramClazz;// 参数类型
 	private String name;
+
+
+	public MethodWrapper( Object instance,Method method,MethodAccess access,int index) {
+		this.name = method.getName();
+		this.access = access;
+		this.index = index;
+		this.instance = instance;
+		this.paramClazz = method.getParameterTypes()[0];
+	}
 
 	public MethodWrapper(Method method, Object instance) {
 		this.name = method.getName();

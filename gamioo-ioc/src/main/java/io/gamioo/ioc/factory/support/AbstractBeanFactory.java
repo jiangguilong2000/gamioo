@@ -23,6 +23,7 @@ import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.factory.ObjectFactory;
 import io.gamioo.ioc.stereotype.Component;
+import io.gamioo.ioc.wrapper.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +38,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
+    /**
+     * 控制器的消息处理容器
+     */
+    protected final Map<Integer, Command> commandStore = new ConcurrentHashMap<>(1024);
     /**
      * Map of bean definition objects, keyed by bean name.
      */
@@ -107,7 +112,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public <T> List<T> getBeanListOfType(Class<T> type) {
         List<T> ret = new ArrayList<>();
         Collection<BeanDefinition> list = beanDefinitionMap.values();
@@ -121,25 +126,24 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     @SuppressWarnings("unchecked")
-	@Override
-    public <T> Map<String,T> getBeanMapOfType(Class<T> type) {
-        Map<String,T> ret = new HashMap<>();
+    @Override
+    public <T> Map<String, T> getBeanMapOfType(Class<T> type) {
+        Map<String, T> ret = new HashMap<>();
         Collection<BeanDefinition> list = beanDefinitionMap.values();
         for (BeanDefinition e : list) {
             if (type.isAssignableFrom(e.getClazz())) {
                 T instance = (T) this.getBean(e.getName());
-                Component annotation =(Component)e.getAnnotationList()[0];
-                ret.put(annotation.name()[0],instance);
+                Component annotation = e.getAnnotation();
+                ret.put(annotation.name()[0], instance);
             }
         }
         return ret;
     }
 
 
-
     @SuppressWarnings("unchecked")
-	@Override
-    public <T> T getBean(String name, Class<T> requiredType){
+    @Override
+    public <T> T getBean(String name, Class<T> requiredType) {
         Object bean = getBean(name);
         if (requiredType != null && !requiredType.isInstance(bean)) {
             throw new ServerBootstrapException(name, requiredType, bean.getClass());
@@ -147,6 +151,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return (T) bean;
     }
 
+    /**根据指令调用*/
+    public Command getCommand(int code) {
+        return this.commandStore.get(code);
+    }
+
+    /**指令列表*/
+    public Collection<Command> getCommandList(){
+        return this.commandStore.values();
+    }
 
 
 //    public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {

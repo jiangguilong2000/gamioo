@@ -49,8 +49,8 @@ public class GenericBeanDefinition implements BeanDefinition {
     // protected Object instance;
     private final Map<Class<? extends Annotation>, List<FieldDefinition>> fieldStore = new HashMap<>();
     protected Map<Class<? extends Annotation>, List<MethodDefinition>> methodStore = new HashMap<>();
-    protected final Class<?> beanClass;
-    protected final Annotation annotation;
+    private final Class<?> beanClass;
+    private final Annotation annotation;
 
 
     public GenericBeanDefinition(Class<?> clazz, Annotation annotation) {
@@ -114,6 +114,19 @@ public class GenericBeanDefinition implements BeanDefinition {
         }
     }
 
+//    @Override
+//    public void inject(Object instance){
+//    }
+
+    @Override
+    public List<FieldDefinition> getFieldDefinitionList(Class<? extends Annotation> clazz) {
+       return fieldStore.getOrDefault(clazz,new ArrayList<>());
+    }
+
+    @Override
+    public List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz){
+        return methodStore.getOrDefault(clazz,new ArrayList<>());
+    }
 
     /**
      * 初始化的方法
@@ -152,11 +165,11 @@ public class GenericBeanDefinition implements BeanDefinition {
 //        //   fieldList.values().forEach(v -> v.forEach(field -> field.inject(this)));
 //
 //    }
-
-    public List<FieldDefinition> getAutowiredFieldDefinition() {
-        List<FieldDefinition> list = fieldStore.getOrDefault(Autowired.class, new ArrayList<>());
-        return list;
-    }
+//
+//    public List<FieldDefinition> getAutowiredFieldDefinitionList() {
+//        List<FieldDefinition> list = fieldStore.getOrDefault(Autowired.class, new ArrayList<>());
+//        return list;
+//    }
 
 
 //    public List<FieldDefinition> getValueFieldDefinition() {
@@ -178,8 +191,8 @@ public class GenericBeanDefinition implements BeanDefinition {
      * 获取注解
      */
     @Override
-    public Annotation[] getAnnotationList() {
-        return new Annotation[]{this.annotation};
+    public Annotation getAnnotation(){
+        return this.annotation;
     }
 
     /**

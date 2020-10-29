@@ -17,6 +17,7 @@
 package io.gamioo.ioc.definition;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
+import io.gamioo.ioc.wrapper.MethodWrapper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -43,9 +44,9 @@ public class GenericMethodDefinition implements MethodDefinition {
         this.method.setAccessible(true);
     }
 
-
-    public Annotation[] getAnnotationList() {
-        return this.method.getDeclaredAnnotations();
+    @Override
+    public Annotation getAnnotation() {
+        return this.method.getDeclaredAnnotations()[0];
     }
 
     @Override
@@ -79,7 +80,7 @@ public class GenericMethodDefinition implements MethodDefinition {
     }
 
 
-    public Object invoke(Object instance,Object ...args) {
+    public Object invoke(Object instance, Object... args) {
         Object ret = null;
         if (args == null) {
             // 无参数调用
@@ -91,7 +92,10 @@ public class GenericMethodDefinition implements MethodDefinition {
         return ret;
     }
 
-
+    public MethodWrapper getMethodWrapper(Object instance) {
+        MethodWrapper ret = new MethodWrapper(instance, method, access, index);
+        return ret;
+    }
 
     /**
      * 获取参数列表

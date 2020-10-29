@@ -17,6 +17,7 @@
 package io.gamioo.ioc.definition;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
+import io.gamioo.ioc.wrapper.MethodWrapper;
 
 import java.lang.reflect.Parameter;
 
@@ -44,4 +45,7 @@ public interface MethodDefinition extends  Definition{
     Parameter[] getParameters();
 
     Object invoke(Object instance,Object ...args);
+
+    MethodWrapper getMethodWrapper(Object instance);
+
 }

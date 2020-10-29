@@ -31,7 +31,7 @@ public interface Definition {
     String getName();
 
     /**获取注解*/
-    Annotation[] getAnnotationList();
+    <T extends Annotation> T  getAnnotation();
 
     /**
      * 获取此方法的访问入口所对应的Index.

@@ -22,10 +22,12 @@ import io.gamioo.core.util.ClassUtils;
 import io.gamioo.ioc.annotation.Configuration;
 import io.gamioo.ioc.annotation.DefaultResourceLoader;
 import io.gamioo.ioc.definition.ConfigurationBeanDefinition;
+import io.gamioo.ioc.definition.ControllerBeanDefinition;
 import io.gamioo.ioc.definition.GenericBeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.io.Resource;
 import io.gamioo.ioc.stereotype.Component;
+import io.gamioo.ioc.stereotype.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,7 +55,7 @@ public class ClassPathBeanDefinitionScanner {
     public void doScan(String... basePackages) {
         Assert.notEmpty(basePackages, "At least one base package must be specified");
         for (String e : basePackages) {
-             this.analysisResourceList(e);
+            this.analysisResourceList(e);
         }
     }
 
@@ -63,18 +65,18 @@ public class ClassPathBeanDefinitionScanner {
      *
      * @param location 资源的地址
      */
-    public void analysisResourceList(String location){
+    public void analysisResourceList(String location) {
         List<Resource> list = this.resourceLoader.getResourceList(location);
         for (Resource e : list) {
             this.analysisResource(e);
         }
     }
 
-    public void analysisResource(Resource resource)  {
-            String className = resource.getClassName();
-            Class<?> clazz = ClassUtils.loadClass(className);
-            //TODO ...
-            analysisClass(clazz);
+    public void analysisResource(Resource resource) {
+        String className = resource.getClassName();
+        Class<?> clazz = ClassUtils.loadClass(className);
+        //TODO ...
+        analysisClass(clazz);
     }
 
     /**
@@ -99,18 +101,17 @@ public class ClassPathBeanDefinitionScanner {
         if (annotation == null) {
             return;
         }
-
+        Class<? extends Annotation> type = annotation.annotationType();
         // 配置类
-        if (annotation.annotationType() == Configuration.class) {
-           // configurations.add(new ConfigurationBeanDefinition(klass,annotation));
-            beanFactory.registerBeanDefinition(klass.getSimpleName() ,new ConfigurationBeanDefinition(klass,annotation));
-        }else{
+        if (type == Configuration.class) {
+            // configurations.add(new ConfigurationBeanDefinition(klass,annotation));
+            beanFactory.registerBeanDefinition(klass.getSimpleName(), new ConfigurationBeanDefinition(klass, annotation));
+        } else if (type == Controller.class) {
+            beanFactory.registerBeanDefinition(klass.getSimpleName(), new ControllerBeanDefinition(klass, annotation));
+        } else {
             //不需要处理循环引用的问题，只要不同的定义放到不同的集合里就行
-            beanFactory.registerBeanDefinition(klass.getSimpleName() ,new GenericBeanDefinition(klass,annotation));
+            beanFactory.registerBeanDefinition(klass.getSimpleName(), new GenericBeanDefinition(klass, annotation));
         }
-
-
-
 
 
 //        // 模板转化器.

@@ -16,6 +16,7 @@
 
 package io.gamioo.ioc.definition;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -26,9 +27,10 @@ import java.util.List;
  */
 public interface BeanDefinition extends Definition {
 
-   List<FieldDefinition> getAutowiredFieldDefinition();
+    List<FieldDefinition> getFieldDefinitionList(Class<? extends Annotation> clazz);
 
-  //  List<FieldDefinition> getValueFieldDefinition();
+     List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz);
+    //  List<FieldDefinition> getValueFieldDefinition();
 
     Object newInstance();
 
@@ -41,11 +43,11 @@ public interface BeanDefinition extends Definition {
      * 解析字段
      */
     void analysisFieldList();
-//
+
 //    /**
 //     * 注入
 //     */
-//    void inject();
+//      void inject(Object instance);
 
     MethodDefinition getInitMethodDefinition();
 

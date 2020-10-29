@@ -22,14 +22,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * some description
+ * TCP 协议入口
  *
  * @author Allen Jiang
  * @since 1.0.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MessageMapping {
+public @interface CommandMapping {
     int code() default 0;
     boolean cross() default false;//是否只跨服处理
     boolean print() default true;//是否要打印

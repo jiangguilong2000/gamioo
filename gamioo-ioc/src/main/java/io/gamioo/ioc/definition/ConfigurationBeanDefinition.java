@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.gamioo.core.util.JSONUtils;
 import io.gamioo.core.util.StringUtils;
 import io.gamioo.ioc.annotation.Configuration;
+import io.gamioo.ioc.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
@@ -18,31 +19,37 @@ import java.util.Map;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class ConfigurationBeanDefinition implements BeanDefinition{
+public class ConfigurationBeanDefinition implements BeanDefinition {
     protected final Class<?> beanClass;
     protected final Configuration annotation;
 
     protected Map<Class<? extends Annotation>, List<MethodDefinition>> methodStore = new HashMap<>();
-    
+
     public ConfigurationBeanDefinition(Class<?> clazz, Annotation annotation) {
         this.beanClass = clazz;
-        this.annotation = (Configuration)annotation;
+        this.annotation = (Configuration) annotation;
     }
 
-    /**每次都可以从磁盘加载*/
+    /**
+     * 每次都可以从磁盘加载
+     */
     @Override
     public Object newInstance() {
-        String fileName=this.annotation.value();
-        JSONObject object= JSONUtils.loadFromXMLFile(fileName);
+        String fileName = this.annotation.value();
+        JSONObject object = JSONUtils.loadFromXMLFile(fileName);
         return object.toJavaObject(this.beanClass);
     }
-    
+
+
     @Override
-    public List<FieldDefinition> getAutowiredFieldDefinition() {
+    public List<FieldDefinition> getFieldDefinitionList(Class<? extends Annotation> clazz) {
         return new ArrayList<>();
     }
 
-
+    @Override
+    public List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz) {
+        return methodStore.getOrDefault(clazz, new ArrayList<>());
+    }
 
 
     /**
@@ -70,12 +77,12 @@ public class ConfigurationBeanDefinition implements BeanDefinition{
 
     @Override
     public MethodDefinition getInitMethodDefinition() {
-    	  MethodDefinition ret = null;
-          List<MethodDefinition> list = methodStore.get(PostConstruct.class);
-          if (list != null && list.size() > 0) {
-              ret = list.get(0);
-          }
-          return ret;
+        MethodDefinition ret = null;
+        List<MethodDefinition> list =  this.getMethodDefinitionList(PostConstruct.class);
+        if (list != null && list.size() > 0) {
+            ret = list.get(0);
+        }
+        return ret;
     }
 
     @Override
@@ -88,12 +95,13 @@ public class ConfigurationBeanDefinition implements BeanDefinition{
         return StringUtils.uncapitalized(this.beanClass.getSimpleName());
     }
 
+
     /**
      * 获取注解
      */
     @Override
-    public Annotation[] getAnnotationList() {
-        return new Annotation[]{this.annotation};
+    public Annotation getAnnotation() {
+        return this.annotation;
     }
 
     /**

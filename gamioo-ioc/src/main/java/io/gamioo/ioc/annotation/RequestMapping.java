@@ -21,7 +21,7 @@ import io.gamioo.core.http.RequestMethod;
 import java.lang.annotation.*;
 
 /**
- * some description
+ * HTTP 协议入口
  *
  * @author Allen Jiang
  * @since 1.0.0

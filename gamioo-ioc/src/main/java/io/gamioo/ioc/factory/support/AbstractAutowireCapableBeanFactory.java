@@ -17,8 +17,15 @@
 package io.gamioo.ioc.factory.support;
 
 
+import io.gamioo.ioc.annotation.CommandMapping;
+import io.gamioo.ioc.annotation.RequestMapping;
 import io.gamioo.ioc.definition.*;
+import io.gamioo.ioc.factory.annotation.Autowired;
+import io.gamioo.ioc.stereotype.Controller;
+import io.gamioo.ioc.wrapper.Command;
+import io.gamioo.ioc.wrapper.MethodWrapper;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 
@@ -72,20 +79,45 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     @Override
     protected void populateBean(Object instance, BeanDefinition beanDefinition) {
-
-        List<FieldDefinition> list = beanDefinition.getAutowiredFieldDefinition();
-
-        for (FieldDefinition e : list) {
+        //处理  @Autowire 注解的字段
+        List<FieldDefinition> fieldList = beanDefinition.getFieldDefinitionList(Autowired.class);
+        for (FieldDefinition e : fieldList) {
             Object field = null;
             if (e instanceof ListFieldDefinition) {
                 field = this.getBeanListOfType(e.getClazz());
             } else if (e instanceof MapFieldDefinition) {
                 field = this.getBeanMapOfType(e.getClazz());
-            }else if (e instanceof GenericFieldDefinition) {
+            } else if (e instanceof GenericFieldDefinition) {
                 field = this.getBean(e.getName());
             }
             e.inject(instance, field);
         }
+
+        //控制器入口有特殊的分析
+        Class<? extends Annotation> type = beanDefinition.getAnnotation().annotationType();
+        // 控制器
+        if (type == Controller.class) {
+            //@MessageMapping
+            List<MethodDefinition> methodList = beanDefinition.getMethodDefinitionList(CommandMapping.class);
+            for (MethodDefinition e : methodList) {
+                CommandMapping mapping = e.getAnnotation();
+                MethodWrapper wrapper = e.getMethodWrapper(instance);
+                Command command = new Command(wrapper, mapping);
+                this.commandStore.put(command.getCode(), command);
+            }
+            //@RequestMapping
+            methodList = beanDefinition.getMethodDefinitionList(RequestMapping.class);
+            ;
+            for (MethodDefinition e : methodList) {
+                RequestMapping mapping = e.getAnnotation();
+                //TODO ...
+            }
+
+
+        } else {
+
+        }
+
     }
 
 //    @Override
