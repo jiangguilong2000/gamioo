@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
-
+@ChannelHandler.Sharable
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger logger = LogManager.getLogger(WebSocketClientHandler.class);
     //public static StringBuilder content=new StringBuilder();
@@ -109,6 +109,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 //    }
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+     //   logger.debug("recv content={}", frame);
         this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
@@ -145,12 +146,20 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             BinaryWebSocketFrame content=(BinaryWebSocketFrame) frame;
             try {
                 Message.ServerResponse_LoginArgs args= Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
-            //  if(args.getResultType()==1){
-           //       logger.fatal ("{}",this.webSocketClient.getUserId());
+              if(args.getResultType()==1){
 
-         //     }
-          //   this.webSocketClient.disconnect();
-                logger.debug("recv userId={},content={}",this.webSocketClient.getUserId(),args);
+                  if(!this.webSocketClient.isLegal()){
+                      this.webSocketClient.setLegal(true);
+                      H5Robot.clientStore.put(this.webSocketClient.getId(),this.webSocketClient);
+                  //    System.out.println(this.webSocketClient.getUserId());
+                     // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
+                  }
+
+
+
+              }
+        //    this.webSocketClient.disconnect();
+                logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }

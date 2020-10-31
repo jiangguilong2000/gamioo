@@ -20,9 +20,11 @@ import com.google.protobuf.UnknownFieldSet;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
 import io.gamioo.core.util.TelnetUtils;
+import io.gamioo.core.util.ThreadUtils;
 import io.gamioo.robot.entity.Message;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
+import io.gamioo.robot.entity.User;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -66,17 +68,18 @@ public class WebSocketClient {
     private final int id;
     private final Proxy proxy;
     private final Target target;
-    private  long userId;
+    private User user;
     private Date lastSendTime;
     private Date lastRecvTime;
     private boolean login;
+    private boolean legal;
 
 
     private static Bootstrap bootstrap = new Bootstrap();
     private Channel socketChannel;
     private static NioEventLoopGroup group = new NioEventLoopGroup(8);
-    private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
-    private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(8, new GameThreadFactory("robot"));
+    //private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
+   // private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1, new GameThreadFactory("robot"));
 
 
     static {
@@ -88,9 +91,9 @@ public class WebSocketClient {
 
     }
 
-    public WebSocketClient(int id,long userId, Proxy proxy, Target target) {
+    public WebSocketClient(int id, User user, Proxy proxy, Target target) {
         this.id = id;
-        this.userId=userId;
+        this.user = user;
         this.proxy = proxy;
         this.target = target;
     }
@@ -100,6 +103,8 @@ public class WebSocketClient {
         try {
             final WebSocketClientHandler handler = new WebSocketClientHandler(this, WebSocketClientHandshakerFactory
                     .newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
+
+
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws SSLException {
@@ -122,7 +127,6 @@ public class WebSocketClient {
                     p.addLast("protobufDecoder", new ProtobufDecoder(UnknownFieldSet.getDefaultInstance()));
                     p.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());
                     p.addLast("protobufEncoder", new ProtobufEncoder());
-
                     p.addLast("handle", handler);
                 }
             });
@@ -131,7 +135,7 @@ public class WebSocketClient {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if (!channelFuture.isSuccess()) {
-                        logger.error("连接失败 userId={},proxy={},target={}", userId, proxy, target);
+                        logger.error("连接失败 userId={},proxy={},target={}", user.getId(), proxy, target);
                         logger.error("连接失败", channelFuture.cause());
                         target.increaseError();
                     } else {
@@ -141,31 +145,27 @@ public class WebSocketClient {
             });
             socketChannel = channelFuture.sync().channel();
 
+            if (handler.handshakeFuture() != null) {
+                handler.handshakeFuture().addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
-            handler.handshakeFuture().addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture channelFuture) throws Exception {
-
-                    if (!channelFuture.isSuccess()) {
-                        logger.error("握手失败 userId={},proxy={},target={}", userId, proxy, target);
-                        logger.error("握手失败", channelFuture.cause());
-                        target.increaseError();
-                    } else {
-                        logger.info("握手成功 id={},userId={},proxy={},target.ip={},target.port={}", id, userId,proxy, target.getIp(), target.getPort());
-                        ScheduledFuture<?> future = pool.scheduleWithFixedDelay(() -> {
-                            try {
-                                sendMessage(socketChannel);
-                            } catch (Exception e) {
-                                logger.error("exception id={},proxy={}", getId(), proxy);
-                                logger.error(e.getMessage(), e);
-                            }
-                            //	logger.debug("send id={}", this.id);
-                        }, 2000, 5000, TimeUnit.MILLISECONDS);
-                        store.put(id, future);
+                        if (!channelFuture.isSuccess()) {
+                            logger.error("握手失败 userId={},proxy={},target={}", user.getId(), proxy, target);
+                            logger.error("握手失败", channelFuture.cause());
+                            target.increaseError();
+                        } else {
+                            logger.info("握手成功 id={},userId={},proxy={},target.ip={},target.port={}", id, user.getId(), proxy, target.getIp(), target.getPort());
+                            sendMessage(socketChannel);
+                        }
                     }
-                }
-            });
-        //    handler.handshakeFuture().sync();
+                });
+
+                handler.handshakeFuture().sync();
+            }
+
+
+            //
 
 
         } catch (Exception e) {
@@ -173,10 +173,6 @@ public class WebSocketClient {
         }
     }
 
-
-    public static int getConnectNum() {
-        return store.size();
-    }
 
     public boolean isConnected() {
         if (socketChannel != null) {
@@ -194,31 +190,40 @@ public class WebSocketClient {
 
 
     public void login(Channel channel) {
-            try {
-                Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
-                //最大值300000000,最小值999999
-               // builder.setUserID(target.getId() * 200290 + id-3);
-               // userId=275029;//(long)(target.getId()*100000+id);
-                builder.setUserID(userId);
-                builder.setToken("529382015132319205"+userId);
-                byte[] content = builder.build().toByteArray();
-                ByteBuf raw = Unpooled.wrappedBuffer(content);
-                BinaryWebSocketFrame frame = new BinaryWebSocketFrame(raw);
-                channel.writeAndFlush(frame);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            }
+        try {
+            Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
+            //最大值300000000,最小值999999
+            // builder.setUserID(target.getId() * 200290 + id-3);
+            // userId=275029;//(long)(target.getId()*100000+id);
+            builder.setUserID(user.getId());
+            //
+
+            builder.setToken(user.getToken()+ user.getId());
+           //builder.setToken("907227159132319045"+userId);
+            //  builder.setToken("529382015132319205"+userId);
+            //   builder.setToken("529382015132319205"+userId);
+            byte[] content = builder.build().toByteArray();
+            ByteBuf raw = Unpooled.wrappedBuffer(content);
+            BinaryWebSocketFrame frame = new BinaryWebSocketFrame(raw);
+            channel.writeAndFlush(frame);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
 
 //		//keep.setTimestamp(System.currentTimeMillis());
+    }
+
+    public void checkConnected(){
+
     }
 
     public void sendMessage(Channel channel) {
         Date now = new Date();
         if (isConnected()) {
             if (channel.isWritable()) {
-                //    logger.debug("send content={}",content);
-                logger.debug("send ping id={}, userId={}",id, userId);
+                //   logger.debug("send content={}",content);
+              //  logger.debug("send ping id={}, userId={}", id, userId);
                 if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
@@ -226,30 +231,12 @@ public class WebSocketClient {
                 if (!login) {
                     this.login(channel);
                     login = true;
-                }else{
+                } else {
                     WebSocketFrame frame = new PingWebSocketFrame();
-                    channel.writeAndFlush(frame);
+                    //   channel.writeAndFlush(frame);
                 }
                 lastSendTime = now;
             }
-        } else {
-            ScheduledFuture<?> future = store.remove(this.id);
-            if (future != null) {
-                if (!future.isCancelled()) {
-                    future.cancel(false);
-                }
-            }
-
-
-            //能通信再连
-            if (this.proxy == null||(this.proxy != null && now.before(this.proxy.getExpireTime()))) {
-                if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
-                    logger.debug("开始重连... id={},userId={}",id,userId);
-                    this.connect();
-
-               }
-            }
-
         }
     }
 
@@ -282,7 +269,7 @@ public class WebSocketClient {
     }
 
     public long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     public boolean isLogin() {
@@ -291,5 +278,13 @@ public class WebSocketClient {
 
     public void setLogin(boolean login) {
         this.login = login;
+    }
+
+    public boolean isLegal() {
+        return legal;
+    }
+
+    public void setLegal(boolean legal) {
+        this.legal = legal;
     }
 }

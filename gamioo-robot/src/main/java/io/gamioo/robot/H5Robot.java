@@ -19,11 +19,13 @@ package io.gamioo.robot;
 import com.alibaba.fastjson.JSON;
 import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.FileUtils;
+import io.gamioo.core.util.StringUtils;
 import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.core.util.ThreadUtils;
 import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Server;
 import io.gamioo.robot.entity.Target;
+import io.gamioo.robot.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,30 +47,62 @@ import java.util.concurrent.*;
 public class H5Robot {
     private static final Logger logger = LogManager.getLogger(H5Robot.class);
     private ScheduledExecutorService stat = Executors.newScheduledThreadPool(1, new GameThreadFactory("stat"));
+    private ScheduledExecutorService connect = Executors.newScheduledThreadPool(1, new GameThreadFactory("connect"));
     private Target target;
     private Map<Integer, Proxy> proxyStore;
-    private List<Long> userList;
+    private List<User> userList;
+    public static Map<Integer, WebSocketClient> clientStore = new ConcurrentHashMap<>();
     private boolean complete;
     private int step;
 
     public void init() {
         stat.scheduleAtFixedRate(() -> {
-            int num = WebSocketClient.getConnectNum();
-            logger.info("活跃的连接数 num={}", num);
-//            if (complete) {
-//                if(num < 20){
-//                    step++;
-//                    if (step >=6) {
-//                        logger.info("启动连接补偿");
-//                        this.asyncHandle();
-//                        step = 0;
-//                    }
-//                }else{
-//                    step=0;
-//                }
-//
-//            }
+            try {
+                int total = 0;
+                int connect = 0;
+                for (WebSocketClient e : clientStore.values()) {
+                    if (e.isLegal()) {
+                        total++;
+                        if (e.isConnected()) {
+                            connect++;
+                        }
+                    }
+
+                }
+                logger.info("连接数 num={},active={}", total, connect);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+
         }, 60000, 60000, TimeUnit.MILLISECONDS);
+
+
+    }
+
+    public void end(){
+        connect.scheduleAtFixedRate(() -> {
+            try {
+                for (WebSocketClient e : clientStore.values()) {
+                    if (!e.isConnected()) {
+                        Date now = new Date();
+                        //能通信再连
+                        if (e.getProxy() == null || (e.getProxy() != null && now.before(e.getProxy().getExpireTime()))) {
+                            if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
+                                if (e.isLegal()) {
+                                    logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
+                                    e.connect();
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
 
@@ -77,15 +111,14 @@ public class H5Robot {
         logger.info("start working version={}", version);
         H5Robot robot = new H5Robot();
         robot.init();
-        List<Long> userList = robot.getUserList("user.txt");
+        List<User> userList = robot.getUserList("user.txt");
         robot.setUserList(userList);
         Target target = robot.getTarget("target.json");
         robot.setTarget(target);
         Map<Integer, Proxy> proxyStore = robot.getProxyStore("cell.json");
         robot.setProxyStore(proxyStore);
         robot.handle();
-
-
+        robot.end();
         logger.info("end working");
 
     }
@@ -107,18 +140,20 @@ public class H5Robot {
                 for (Proxy proxy : proxyStore.values()) {
                     Date now = new Date();
                     if (now.before(proxy.getExpireTime())) {
-                        WebSocketClient client = new WebSocketClient(++id,userList.get(id-1),proxy, target);
-                        ThreadUtils.sleep(target.getInterval()+target.getError()*10);
+                        WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), proxy, target);
+                        ThreadUtils.sleep(target.getInterval() + target.getError() * 10);
                         client.connect();
+                        //    clientStore.put(id,client);
                     }
                 }
             }
 
         } else {
             for (int i = 0; i < target.getNumber(); i++) {
-                WebSocketClient client = new WebSocketClient(++id, userList.get(id-1),null, target);
-                ThreadUtils.sleep(target.getInterval()+target.getError()*10);
+                WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), null, target);
+                ThreadUtils.sleep(target.getInterval());
                 client.connect();
+                //   clientStore.put(id,client);
             }
         }
         complete = true;
@@ -146,13 +181,17 @@ public class H5Robot {
         return list;
     }
 
-    public List<Long> getUserList(String path) {
-        List<Long> ret = new ArrayList<>();
+    public List<User> getUserList(String path) {
+        List<User> ret = new ArrayList<>();
         File file = FileUtils.getFile(path);
         try {
             List<String> content = FileUtils.readLines(file);
             content.forEach((value) -> {
-                ret.add(Long.parseLong(value));
+                String[] array=StringUtils.split(value,",");
+                User user=new User();
+                user.setId(Long.parseLong(array[0]));
+                user.setToken(array[1]);
+                ret.add(user);
             });
 
         } catch (IOException e) {
@@ -248,11 +287,11 @@ public class H5Robot {
         this.complete = complete;
     }
 
-    public List<Long> getUserList() {
+    public List<User> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<Long> userList) {
+    public void setUserList(List<User> userList) {
         this.userList = userList;
     }
 }

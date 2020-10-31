@@ -16,6 +16,9 @@
 
 package io.gamioo.core.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 线程工具类.
  *
@@ -23,6 +26,7 @@ package io.gamioo.core.util;
  * @since 1.0.0
  */
 public class ThreadUtils {
+    private static final Logger logger = LogManager.getLogger(ThreadUtils.class);
     /**
      * 暂停执行.
      * <p>
@@ -55,5 +59,21 @@ public class ThreadUtils {
             sb.append("\tat ").append(e).append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * 输出当前线程正在运行的堆栈信息.
+     * @return 当前线程正在运行的堆栈信息
+     */
+    public static void printStackTrace() {
+
+        try{
+            throw new Exception();
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }
+
+
+
     }
 }
