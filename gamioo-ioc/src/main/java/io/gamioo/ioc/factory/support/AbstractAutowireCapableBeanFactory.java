@@ -61,8 +61,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     @Override
     protected Object createBeanInstance(BeanDefinition beanDefinition) {
-        Object ret = instantiateBean(beanDefinition);
-        return ret;
+        return instantiateBean(beanDefinition);
     }
 
 
@@ -70,8 +69,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * 初始化BEAN
      */
     protected Object instantiateBean(BeanDefinition beanDefinition) {
-        Object ret = beanDefinition.newInstance();
-        return ret;
+        return beanDefinition.newInstance();
     }
 
     /**
@@ -92,32 +90,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             }
             e.inject(instance, field);
         }
-
-        //控制器入口有特殊的分析
-        Class<? extends Annotation> type = beanDefinition.getAnnotation().annotationType();
-        // 控制器
-        if (type == Controller.class) {
-            //@MessageMapping
-            List<MethodDefinition> methodList = beanDefinition.getMethodDefinitionList(CommandMapping.class);
-            for (MethodDefinition e : methodList) {
-                CommandMapping mapping = e.getAnnotation();
-                MethodWrapper wrapper = e.getMethodWrapper(instance);
-                Command command = new Command(wrapper, mapping);
-                this.commandStore.put(command.getCode(), command);
-            }
-            //@RequestMapping
-            methodList = beanDefinition.getMethodDefinitionList(RequestMapping.class);
-            ;
-            for (MethodDefinition e : methodList) {
-                RequestMapping mapping = e.getAnnotation();
-                //TODO ...
-            }
-
-
-        } else {
-
-        }
-
     }
 
 //    @Override
