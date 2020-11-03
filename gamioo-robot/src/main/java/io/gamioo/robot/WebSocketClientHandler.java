@@ -152,7 +152,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                   if(!this.webSocketClient.isLegal()){
                       this.webSocketClient.setLegal(true);
                       H5Robot.clientStore.put(this.webSocketClient.getId(),this.webSocketClient);
-                  //   System.out.println(this.webSocketClient.getUserId());
+                //    System.out.println(this.webSocketClient.getUserId());
                      // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
                   }
 

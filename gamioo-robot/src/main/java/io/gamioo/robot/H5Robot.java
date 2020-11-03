@@ -95,6 +95,8 @@ public class H5Robot {
                                     lastUserId=e.getUserId();
                                     e.connect();
                                     break;
+                                }else{
+                                    lastUserId=0;
                                 }
                             }
                         }
