@@ -49,6 +49,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
+        this.webSocketClient.increaseError();
         this.webSocketClient.setLogin(false);
     }
 
@@ -151,7 +152,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                   if(!this.webSocketClient.isLegal()){
                       this.webSocketClient.setLegal(true);
                       H5Robot.clientStore.put(this.webSocketClient.getId(),this.webSocketClient);
-                  //    System.out.println(this.webSocketClient.getUserId());
+                  //   System.out.println(this.webSocketClient.getUserId());
                      // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
                   }
 

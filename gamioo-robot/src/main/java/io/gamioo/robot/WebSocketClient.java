@@ -73,6 +73,7 @@ public class WebSocketClient {
     private Date lastRecvTime;
     private boolean login;
     private boolean legal;
+    private int error;
 
 
     private static Bootstrap bootstrap = new Bootstrap();
@@ -286,5 +287,16 @@ public class WebSocketClient {
 
     public void setLegal(boolean legal) {
         this.legal = legal;
+    }
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
+    }
+
+    public void increaseError(){
+        this.error++;
     }
 }
