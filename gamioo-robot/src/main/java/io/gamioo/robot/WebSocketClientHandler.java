@@ -110,7 +110,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 //    }
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-     //   logger.debug("recv content={}", frame);
+       //logger.debug("recv content={}", frame);
         this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
@@ -159,7 +159,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
 
               }
-        //    this.webSocketClient.disconnect();
+      //   this.webSocketClient.disconnect();
                 logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

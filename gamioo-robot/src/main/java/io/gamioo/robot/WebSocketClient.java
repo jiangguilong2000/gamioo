@@ -197,12 +197,10 @@ public class WebSocketClient {
             // builder.setUserID(target.getId() * 200290 + id-3);
             // userId=275029;//(long)(target.getId()*100000+id);
             builder.setUserID(user.getId());
-            //
-
-            builder.setToken(user.getToken()+ user.getId());
-           //builder.setToken("907227159132319045"+userId);
+          //  builder.setToken(user.getToken()+ user.getId());
             //  builder.setToken("529382015132319205"+userId);
-            //   builder.setToken("529382015132319205"+userId);
+          //  builder.setToken("529382015132319205726300");
+            builder.setToken(user.getToken());
             byte[] content = builder.build().toByteArray();
             ByteBuf raw = Unpooled.wrappedBuffer(content);
             BinaryWebSocketFrame frame = new BinaryWebSocketFrame(raw);
@@ -224,17 +222,18 @@ public class WebSocketClient {
         if (isConnected()) {
             if (channel.isWritable()) {
                 //   logger.debug("send content={}",content);
-              //  logger.debug("send ping id={}, userId={}", id, userId);
+             //  logger.debug("send ping id={}, userId={}", id, this.getUserId());
                 if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
                 }
                 if (!login) {
+
                     this.login(channel);
                     login = true;
                 } else {
                     WebSocketFrame frame = new PingWebSocketFrame();
-                    //   channel.writeAndFlush(frame);
+                 //   channel.writeAndFlush(frame);
                 }
                 lastSendTime = now;
             }
