@@ -158,6 +158,13 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
 
 
+              }else if(args.getResultType()==0){
+                  if(args.toString().length()>24){
+                      this.webSocketClient.setOnline(true);
+                      logger.debug("玩家在线 userId={}",this.webSocketClient.getUserId());
+                      //这种玩家在线
+                  }
+                 // args.toString()
               }
       //   this.webSocketClient.disconnect();
                 logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),args);

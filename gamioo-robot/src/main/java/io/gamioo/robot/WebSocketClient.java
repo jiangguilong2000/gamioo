@@ -73,6 +73,7 @@ public class WebSocketClient {
     private Date lastRecvTime;
     private boolean login;
     private boolean legal;
+    private boolean online;
     private int error;
 
 
@@ -80,7 +81,7 @@ public class WebSocketClient {
     private Channel socketChannel;
     private static NioEventLoopGroup group = new NioEventLoopGroup(8);
     //private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
-   // private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1, new GameThreadFactory("robot"));
+    // private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1, new GameThreadFactory("robot"));
 
 
     static {
@@ -184,6 +185,7 @@ public class WebSocketClient {
 
     public void disconnect() {
         if (isConnected()) {
+            logger.debug("主动断开，id={}",id);
             socketChannel.disconnect();
         }
 
@@ -197,9 +199,9 @@ public class WebSocketClient {
             // builder.setUserID(target.getId() * 200290 + id-3);
             // userId=275029;//(long)(target.getId()*100000+id);
             builder.setUserID(user.getId());
-          //  builder.setToken(user.getToken()+ user.getId());
+            //  builder.setToken(user.getToken()+ user.getId());
             //  builder.setToken("529382015132319205"+userId);
-          //  builder.setToken("529382015132319205726300");
+            //  builder.setToken("529382015132319205726300");
             builder.setToken(user.getToken());
             byte[] content = builder.build().toByteArray();
             ByteBuf raw = Unpooled.wrappedBuffer(content);
@@ -213,7 +215,7 @@ public class WebSocketClient {
 //		//keep.setTimestamp(System.currentTimeMillis());
     }
 
-    public void checkConnected(){
+    public void checkConnected() {
 
     }
 
@@ -222,7 +224,7 @@ public class WebSocketClient {
         if (isConnected()) {
             if (channel.isWritable()) {
                 //   logger.debug("send content={}",content);
-             //  logger.debug("send ping id={}, userId={}", id, this.getUserId());
+                //  logger.debug("send ping id={}, userId={}", id, this.getUserId());
                 if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
@@ -233,7 +235,7 @@ public class WebSocketClient {
                     login = true;
                 } else {
                     WebSocketFrame frame = new PingWebSocketFrame();
-                 //   channel.writeAndFlush(frame);
+                    //   channel.writeAndFlush(frame);
                 }
                 lastSendTime = now;
             }
@@ -287,6 +289,7 @@ public class WebSocketClient {
     public void setLegal(boolean legal) {
         this.legal = legal;
     }
+
     public int getError() {
         return error;
     }
@@ -295,7 +298,15 @@ public class WebSocketClient {
         this.error = error;
     }
 
-    public void increaseError(){
+    public void increaseError() {
         this.error++;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 }

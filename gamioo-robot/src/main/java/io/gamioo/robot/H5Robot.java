@@ -26,6 +26,7 @@ import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Server;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,9 +62,17 @@ public class H5Robot {
             try {
                 int total = 0;
                 int connect = 0;
+                Date now = new Date();
                 for (WebSocketClient e : clientStore.values()) {
                     if (e.isLegal()) {
                         total++;
+                        if (!e.isOnline()) {
+                            if (DateUtils.addSeconds(e.getLastRecvTime(), 10).before(now)) {
+                                e.disconnect();
+                            clientStore.remove(e.getId());
+                            }
+                        }
+
                         if (e.isConnected()) {
                             connect++;
                         }
@@ -75,12 +84,12 @@ public class H5Robot {
                 logger.error(e.getMessage(), e);
             }
 
-        }, 60000, 60000, TimeUnit.MILLISECONDS);
+        }, 10000, 10000, TimeUnit.MILLISECONDS);
 
 
     }
 
-    public void end(){
+    public void end() {
         connect.scheduleAtFixedRate(() -> {
             try {
                 for (WebSocketClient e : clientStore.values()) {
@@ -88,17 +97,19 @@ public class H5Robot {
                         Date now = new Date();
                         //能通信再连
                         if (e.getProxy() == null || (e.getProxy() != null && now.before(e.getProxy().getExpireTime()))) {
-                            if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
-                                if (e.isLegal()&&lastUserId!=e.getUserId()) {
+                                if (e.isOnline() && lastUserId != e.getUserId()) {
                                     ThreadUtils.sleep(e.getError() * 5);
                                     logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
-                                    lastUserId=e.getUserId();
-                                    e.connect();
+                                    lastUserId = e.getUserId();
+                                    if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
+                                        e.connect();
+                                    }
+
                                     break;
-                                }else{
-                                    lastUserId=0;
+                                } else {
+                                    lastUserId = 0;
                                 }
-                            }
+
                         }
 
                     }
@@ -155,9 +166,15 @@ public class H5Robot {
 
         } else {
             for (int i = 0; i < target.getNumber(); i++) {
-                WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), null, target);
-                ThreadUtils.sleep(target.getInterval());
-                client.connect();
+                try{
+                    WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), null, target);
+                    ThreadUtils.sleep(target.getInterval());
+                    client.connect();
+                }catch (Exception e){
+                    logger.error("size={}",userList.size());
+                    logger.error(e.getMessage(),e);
+                }
+
                 //   clientStore.put(id,client);
             }
         }
@@ -192,8 +209,8 @@ public class H5Robot {
         try {
             List<String> content = FileUtils.readLines(file);
             content.forEach((value) -> {
-                String[] array=StringUtils.split(value,",");
-                User user=new User();
+                String[] array = StringUtils.split(value, ",");
+                User user = new User();
                 user.setId(Long.parseLong(array[0]));
                 user.setToken(array[1]);
                 ret.add(user);
