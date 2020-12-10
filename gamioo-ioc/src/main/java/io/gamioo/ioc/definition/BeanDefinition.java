@@ -44,6 +44,9 @@ public interface BeanDefinition extends Definition {
      */
     void analysisFieldList();
 
+    /**解析实体对象*/
+    void analysisBean(Object instance);
+
 //    /**
 //     * 注入
 //     */

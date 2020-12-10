@@ -33,6 +33,8 @@ public interface Definition {
     /**获取注解*/
     <T extends Annotation> T  getAnnotation();
 
+    /**获取注解*/
+    Class<? extends Annotation> getAnnotationType();
     /**
      * 获取此方法的访问入口所对应的Index.
      *

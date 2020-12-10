@@ -101,6 +101,16 @@ public class GenericBeanDefinition implements BeanDefinition {
         }
     }
 
+    /**
+     * 解析实体对象 异步事件等
+     *
+     * @param instance
+     */
+    @Override
+    public void analysisBean(Object instance) {
+//
+    }
+
 
     private void analysisField(Class<? extends Annotation> annotationType, FieldAccess access, Field field) {
 
@@ -195,6 +205,14 @@ public class GenericBeanDefinition implements BeanDefinition {
         return this.annotation;
     }
 
+
+    /**
+     * 获取注解类型
+     */
+    @Override
+    public Class<? extends Annotation> getAnnotationType() {
+        return this.getAnnotation().annotationType();
+    }
     /**
      * 获取此方法的访问入口所对应的Index.
      *

@@ -66,6 +66,18 @@ public class ConfigurationBeanDefinition implements BeanDefinition {
     @Override
     public void analysisFieldList() {
     }
+
+    /**
+     * 解析实体对象
+     *
+     * @param instance
+     */
+    @Override
+    public void analysisBean(Object instance) {
+        //TODO ...
+    }
+
+
 //
 //    /**
 //     * 注入
@@ -102,6 +114,15 @@ public class ConfigurationBeanDefinition implements BeanDefinition {
     @Override
     public Annotation getAnnotation() {
         return this.annotation;
+    }
+
+
+    /**
+     * 获取注解类型
+     */
+    @Override
+    public Class<? extends Annotation> getAnnotationType() {
+        return this.getAnnotation().annotationType();
     }
 
     /**

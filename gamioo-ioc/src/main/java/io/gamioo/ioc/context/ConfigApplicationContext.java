@@ -17,8 +17,12 @@
 package io.gamioo.ioc.context;
 
 import io.gamioo.ioc.annotation.AnnotationBeanDefinitionReader;
+import io.gamioo.ioc.definition.ControllerBeanDefinition;
 import io.gamioo.ioc.factory.support.DefaultListableBeanFactory;
+import io.gamioo.ioc.wrapper.Command;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,39 +31,46 @@ import java.util.List;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class ConfigApplicationContext implements  ApplicationContext{
+public class ConfigApplicationContext implements ApplicationContext {
 
 
     private String location;
     private DefaultListableBeanFactory beanFactory;
 
-    public ConfigApplicationContext(String location){
-        this.location=location;
+    public ConfigApplicationContext(String location) {
+        this.location = location;
         this.refresh();
     }
 
-    /**TODO ...*/
-    public void refresh(){
-    //注入属性实例化等
-        DefaultListableBeanFactory factory=this.refreshBeanFactory();
+    /**
+     * TODO ...
+     */
+    public void refresh() {
+        //注入属性实例化等
+        DefaultListableBeanFactory factory = this.refreshBeanFactory();
         prepareBeanFactory(factory);
         // Instantiate all remaining (non-lazy-init) singletons.
         finishBeanFactoryInitialization(factory);
 
     }
-    public DefaultListableBeanFactory refreshBeanFactory(){
-        DefaultListableBeanFactory factory=this.createBeanFactory();
+
+    public DefaultListableBeanFactory refreshBeanFactory() {
+        DefaultListableBeanFactory factory = this.createBeanFactory();
         this.loadBeanDefinitions(factory);
         return factory;
     }
 
-    /**做一些beanFactory的属性设置工作 */
+    /**
+     * 做一些beanFactory的属性设置工作
+     */
     protected void prepareBeanFactory(DefaultListableBeanFactory beanFactory) {
         //TODO ...
     }
 
-    /**实例化操作*/
-    protected void finishBeanFactoryInitialization(DefaultListableBeanFactory beanFactory){
+    /**
+     * 实例化操作
+     */
+    protected void finishBeanFactoryInitialization(DefaultListableBeanFactory beanFactory) {
         beanFactory.preInstantiateSingletons();
     }
 
@@ -74,18 +85,30 @@ public class ConfigApplicationContext implements  ApplicationContext{
 
     @Override
     public void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) {
-        this.beanFactory=beanFactory;
+        this.beanFactory = beanFactory;
         AnnotationBeanDefinitionReader reader = new AnnotationBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions(location);
 
     }
 
-    public <T> T getBean(Class<T> requiredType){
+    public <T> T getBean(Class<T> requiredType) {
         return this.beanFactory.getBean(requiredType);
     }
 
-    public <T> List<T> getBeanListOfType(Class<T> type){
+    public <T> List<T> getBeanListOfType(Class<T> type) {
         return this.beanFactory.getBeanListOfType(type);
+    }
+
+    public <T> List<T> getBeanListOfAnnotation(Class<? extends Annotation> annotation) {
+        return this.beanFactory.getBeanListOfAnnotation(annotation);
+    }
+
+    public Command getCommand(int code) {
+        return ControllerBeanDefinition.getCommand(code);
+    }
+
+    public Collection<Command> getCommandList() {
+        return ControllerBeanDefinition.getCommandList();
     }
 
 //    public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
@@ -95,4 +118,4 @@ public class ConfigApplicationContext implements  ApplicationContext{
 //        private final ClassPathBeanDefinitionScanner scanner;
 
 
-    }
+}

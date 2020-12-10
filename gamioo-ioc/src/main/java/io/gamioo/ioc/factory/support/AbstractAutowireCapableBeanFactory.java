@@ -17,15 +17,9 @@
 package io.gamioo.ioc.factory.support;
 
 
-import io.gamioo.ioc.annotation.CommandMapping;
-import io.gamioo.ioc.annotation.RequestMapping;
 import io.gamioo.ioc.definition.*;
 import io.gamioo.ioc.factory.annotation.Autowired;
-import io.gamioo.ioc.stereotype.Controller;
-import io.gamioo.ioc.wrapper.Command;
-import io.gamioo.ioc.wrapper.MethodWrapper;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 
@@ -55,9 +49,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         populateBean(instance, beanDefinition);
         //调用类的初始化方法
         initializeBean(instance, beanDefinition);
+        //解析对象 控制指令，异步事件等额外处理
+        beanDefinition.analysisBean(instance);
         return instance;
 
     }
+
 
     @Override
     protected Object createBeanInstance(BeanDefinition beanDefinition) {

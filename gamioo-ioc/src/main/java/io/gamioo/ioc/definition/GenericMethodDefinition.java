@@ -60,6 +60,14 @@ public class GenericMethodDefinition implements MethodDefinition {
     }
 
     /**
+     * 获取注解
+     */
+    @Override
+    public Class<? extends Annotation> getAnnotationType() {
+        return this.getAnnotation().annotationType();
+    }
+
+    /**
      * 获取此方法的访问入口.
      *
      * @return 访问入口

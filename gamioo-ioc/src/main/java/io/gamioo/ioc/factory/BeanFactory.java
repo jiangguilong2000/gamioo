@@ -19,6 +19,7 @@ package io.gamioo.ioc.factory;
 import io.gamioo.core.exception.BeansException;
 import io.gamioo.ioc.definition.BeanDefinition;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public interface BeanFactory {
     public Object getBean(String name) throws BeansException;
 
     public <T> List<T> getBeanListOfType(Class<T> type);
+
+    public <T> List<T> getBeanListOfAnnotation(Class<? extends Annotation> type);
 
     public <T> T getBean(String name, Class<T> requiredType);
 

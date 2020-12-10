@@ -60,6 +60,14 @@ public class GenericFieldDefinition implements FieldDefinition {
     }
 
     /**
+     * 获取注解类型
+     */
+    @Override
+    public Class<? extends Annotation> getAnnotationType() {
+        return this.getAnnotation().annotationType();
+    }
+
+    /**
      * 注入对象.
      *
      * @param instance 宿主对象

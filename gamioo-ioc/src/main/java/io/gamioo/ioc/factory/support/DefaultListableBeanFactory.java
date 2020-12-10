@@ -25,7 +25,10 @@ import io.gamioo.ioc.wrapper.Command;
 import io.gamioo.ioc.wrapper.MethodWrapper;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * some description
@@ -35,33 +38,13 @@ import java.util.List;
  */
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory {
 
-    @Override
-    protected void populateBean(Object instance, BeanDefinition beanDefinition) {
-        super.populateBean(instance, beanDefinition);
-        //控制器入口有特殊的分析
-        Class<? extends Annotation> type = beanDefinition.getAnnotation().annotationType();
-        // 控制器
-        if (type == Controller.class) {
-            //@MessageMapping
-            List<MethodDefinition> methodList = beanDefinition.getMethodDefinitionList(CommandMapping.class);
-            for (MethodDefinition e : methodList) {
-                CommandMapping mapping = e.getAnnotation();
-                MethodWrapper wrapper = e.getMethodWrapper(instance);
-                Command command = new Command(wrapper, mapping);
-                this.commandStore.put(command.getCode(), command);
-            }
-            //@RequestMapping
-            methodList = beanDefinition.getMethodDefinitionList(RequestMapping.class);
-            for (MethodDefinition e : methodList) {
-                RequestMapping mapping = e.getAnnotation();
-                //TODO ...
-            }
+    /**
+     * 控制器的消息处理容器
+     */
+    protected final Map<Integer, Command> commandStore = new ConcurrentHashMap<>(1024);
 
 
-        } else {
 
-        }
 
-    }
 }
 

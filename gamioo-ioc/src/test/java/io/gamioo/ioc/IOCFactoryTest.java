@@ -19,6 +19,7 @@ package io.gamioo.ioc;
 import io.gamioo.ioc.context.ConfigApplicationContext;
 import io.gamioo.ioc.entity.ServerConfig;
 import io.gamioo.ioc.skill.AbstractSkill;
+import io.gamioo.ioc.wrapper.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -65,6 +66,15 @@ public class IOCFactoryTest {
     public void handleConfig() throws Exception {
         ServerConfig serverConfig = context.getBean (ServerConfig.class);
         logger.debug("serverConfig={}", serverConfig);
+
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("指令读取")
+    public void handleControl() throws Exception {
+        Command command = context.getCommand(10001);
+        logger.debug("command={}", command);
 
     }
 

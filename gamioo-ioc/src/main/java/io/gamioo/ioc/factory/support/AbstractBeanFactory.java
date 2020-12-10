@@ -27,6 +27,7 @@ import io.gamioo.ioc.wrapper.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,10 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Logger logger = LogManager.getLogger(AbstractBeanFactory.class);
-    /**
-     * 控制器的消息处理容器
-     */
-    protected final Map<Integer, Command> commandStore = new ConcurrentHashMap<>(1024);
     /**
      * Map of bean definition objects, keyed by bean name.
      */
@@ -56,7 +53,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
     /**
-     * Cache of singleton factories: bean name --> ObjectFactory 三级缓存
+     * Cache of singleton factories: bean name --> ObjectFactory 三级缓存，主要为了解决AOP代理类才存在的
      */
     private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
@@ -125,6 +122,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return ret;
     }
 
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> Map<String, T> getBeanMapOfType(Class<T> type) {
@@ -135,6 +133,21 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                 T instance = (T) this.getBean(e.getName());
                 Component annotation = e.getAnnotation();
                 ret.put(annotation.name()[0], instance);
+            }
+        }
+        return ret;
+    }
+
+    /**通过注解类型获得对象集合*/
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> List<T> getBeanListOfAnnotation(Class<? extends Annotation> annotation) {
+        List<T> ret = new ArrayList<>();
+        Collection<BeanDefinition> list = beanDefinitionMap.values();
+        for (BeanDefinition e : list) {
+            if(e.getAnnotationType()==annotation){
+                T instance = (T) this.getBean(e.getName());
+                ret.add(instance);
             }
         }
         return ret;
@@ -151,15 +164,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return (T) bean;
     }
 
-    /**根据指令调用*/
-    public Command getCommand(int code) {
-        return this.commandStore.get(code);
-    }
-
-    /**指令列表*/
-    public Collection<Command> getCommandList(){
-        return this.commandStore.values();
-    }
 
 
 //    public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
