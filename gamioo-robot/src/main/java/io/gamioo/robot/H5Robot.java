@@ -66,12 +66,12 @@ public class H5Robot {
                 for (WebSocketClient e : clientStore.values()) {
                     if (e.isLegal()) {
                         total++;
-                        if (!e.isOnline()) {
-                            if (DateUtils.addSeconds(e.getLastRecvTime(), 10).before(now)) {
-                                e.disconnect();
-                            clientStore.remove(e.getId());
-                            }
-                        }
+//                        if (!e.isOnline()) {
+////                            if (DateUtils.addSeconds(e.getLastRecvTime(), 10).before(now)) {
+////                                e.disconnect();
+////                            clientStore.remove(e.getId());
+////                            }
+//                        }
 
                         if (e.isConnected()) {
                             connect++;
@@ -84,7 +84,7 @@ public class H5Robot {
                 logger.error(e.getMessage(), e);
             }
 
-        }, 10000, 10000, TimeUnit.MILLISECONDS);
+        }, 10000, 60000, TimeUnit.MILLISECONDS);
 
 
     }
@@ -97,7 +97,7 @@ public class H5Robot {
                         Date now = new Date();
                         //能通信再连
                         if (e.getProxy() == null || (e.getProxy() != null && now.before(e.getProxy().getExpireTime()))) {
-                                if (e.isOnline() && lastUserId != e.getUserId()) {
+                                if (lastUserId != e.getUserId()) {
                                     ThreadUtils.sleep(e.getError() * 5);
                                     logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
                                     lastUserId = e.getUserId();

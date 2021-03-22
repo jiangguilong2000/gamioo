@@ -18,11 +18,6 @@ public class StageEventHandler {
 	
 	@Subscribe
 	public void handle(UserLoginEvent event) {
-		logger.debug("-StageEventHandler.handle(UserLoginEvent event)");
+		logger.debug("StageEventHandler.handle(UserLoginEvent event)");
 	}
-	
-
-	
-	
-
 }

@@ -10,7 +10,7 @@ public class MainT {
 
 	public static void main(String[] args) {
 		String packager=MainT.class.getPackage().getName();
-		String[] packages = Arrays.asList(packager, "xyz.noark").toArray(new String[]{});
+		String[] packages = Arrays.asList(packager, "io.gamioo").toArray(new String[]{});
 		logger.debug("init ioc, packages={}", packager);
 	}
 

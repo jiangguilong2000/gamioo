@@ -1,6 +1,8 @@
 package io.gamioo.ioc.wrapper;
 
 import io.gamioo.ioc.annotation.CommandMapping;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,6 +68,10 @@ public class Command {
 
     public long getInvokeNumber() {
         return number.longValue();
+    }
+
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
 }

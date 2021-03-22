@@ -15,13 +15,12 @@ public class UserLoginEvent extends BaseEvent{
 	@Override
 	public void subscribe() {
 		this.eventBus.register(UserEventHandler.getInstance());
-	//	this.asyncEventBus.register(StageEventHandler.getInstance());
+		this.asyncEventBus.register(StageEventHandler.getInstance());
 	}
 	public  void publish(String name) {
 		UserLoginEvent event=new UserLoginEvent();
 		event.setName(name);
-		this.eventBus.post(event);
-	//	this.asyncEventBus.post(event);
+		this.eventBus.post(event);//同步推送
+		this.asyncEventBus.post(event);//异步推送
 	}
-	
 }

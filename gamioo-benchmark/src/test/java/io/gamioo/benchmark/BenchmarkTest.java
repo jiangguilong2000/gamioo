@@ -14,7 +14,10 @@
 package io.gamioo.benchmark;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.Executors;
 
 /**
  * 测试用例.
@@ -28,5 +31,12 @@ public class BenchmarkTest {
     @Test
     public void test() throws Exception {
     	benchmark.run("random function test", () -> RandomUtils.nextInt(0, 1000));
+        Executors.newSingleThreadExecutor()
+                .submit(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("");
+            }
+        });
     }
 }
