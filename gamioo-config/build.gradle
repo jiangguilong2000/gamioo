@@ -4,7 +4,6 @@ dependencies {
 
     testImplementation project(':gamioo-benchmark');
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
-    implementation group: 'com.google.guava', name: 'guava', version: '28.+';
     implementation group: 'com.alibaba.nacos', name: 'nacos-client', version: '2.0.0';
 
 }

@@ -1,6 +1,13 @@
 dependencies {
 	implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.8.5';
 	api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3';
-	api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'; 
+	api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3';
+	api group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.13.3';
+	//桥接：告诉Slf4j使用Log4j2
+	api group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.3';
+	//桥接：告诉commons logging使用 Log4j2
+	api group: 'org.apache.logging.log4j', name: 'log4j-jcl', version: '2.13.3';
+	api group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30';
+	//  api group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30';
 	api group: 'com.lmax', name: 'disruptor', version: '3.4.2';
 }
