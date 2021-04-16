@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(':gamioo-core');
+    implementation group: 'org.jctools', name: 'jctools-core', version: '3.3.0';
+    //  testImplementation project(':gamioo-benchmark');
+}

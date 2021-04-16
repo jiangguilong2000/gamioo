@@ -4,5 +4,5 @@ rootProject.name = 'gamioo';
 include  "gamioo-cache","gamioo-core",'gamioo-config',"gamioo-protocol","gamioo-network","gamioo-asm","gamioo-event","gamioo-orm", "gamioo-ioc","gamioo-redis","gamioo-benchmark","gamioo-xml", "gamioo-compress","gamioo-log";
 
 // 游戏服务器
-include "gamioo-game", "gamioo-robot";
+include "gamioo-game", "gamioo-robot",'gamioo-sandbox';
 
