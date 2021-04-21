@@ -37,6 +37,30 @@ public class BalanceBusinessExecutorTest {
 
     }
 
+    @DisplayName("jctools hash运算")
+    @Test
+    public void jctoolsHash() throws Exception {
+        Map<Integer, DeviationDTO> store = new HashMap<>();
+        for (Long id : list) {
+            int h =System.identityHashCode(id);;
+            int index = (int) (h & 7);
+            DeviationDTO dto = store.get(index);
+            if (dto == null) {
+                dto = new DeviationDTO();
+                dto.setValue(1);
+                store.put(index, dto);
+            } else {
+                dto.increase();
+            }
+
+        }
+        for (DeviationDTO e : store.values()) {
+            e.setRatio(String.format("%.4f", Math.abs(0.125f - e.getValue() / 2000f) * 100) + "%");
+        }
+
+        logger.debug("rehash8 store={}", store);
+    }
+
 
     @DisplayName("取模运算")
     @Test
