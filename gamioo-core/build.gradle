@@ -16,6 +16,8 @@ dependencies {
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1';
     //任务调度
     api group: 'it.sauronsoftware.cron4j', name: 'cron4j', version: '2.2.5';
+    api group: 'com.jfinal', name: 'jfinal', version: '3.8';
+
 
     testImplementation project(':gamioo-benchmark');
    
