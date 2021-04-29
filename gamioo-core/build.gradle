@@ -14,6 +14,8 @@ dependencies {
     api group: 'org.apache.commons', name: 'commons-collections4', version: '4.4';
     api group: 'io.netty', name: 'netty-all', version: '4.1.60.Final';
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1';
+    //任务调度
+    api group: 'it.sauronsoftware.cron4j', name: 'cron4j', version: '2.2.5';
 
     testImplementation project(':gamioo-benchmark');
    
