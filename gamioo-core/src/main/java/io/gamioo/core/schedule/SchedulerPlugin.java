@@ -169,7 +169,7 @@ public class SchedulerPlugin implements IPlugin {
     @Override
     public boolean start() {
         //自动通过注解加载
-        scanAnnotation();
+   //     scanAnnotation();
         //通过文件记载
         loadJobsFromConfigFile();
         //启动cron任务
@@ -330,66 +330,66 @@ public class SchedulerPlugin implements IPlugin {
         return jobNames.keySet();
     }
 
-    /**
-     * @Title: scanAnnotation
-     * @Description: 扫描所有任务注解
-     * @since V1.0.0
-     */
-    private void scanAnnotation() {
-        if (StrKit.isBlank(scanRootPackage)) {
-            return;
-        }
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .addUrls(ClasspathHelper.forClass(Scheduled.class))
-                .forPackages(scanRootPackage.split(","))
-                .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
-        );
-        autoLoadByAnnotation(reflections);
-    }
-
-    /**
-     * @param reflections
-     * @Title: autoLoadByAnnotation
-     * @Description: 扫描Scheduled任务
-     * @since V1.0.0
-     */
-    private void autoLoadByAnnotation(Reflections reflections) {
-        Set<Class<?>> cronTaskClasses = reflections.getTypesAnnotatedWith(Scheduled.class);
-        for (Class<?> mc : cronTaskClasses) {
-            if (!Runnable.class.isAssignableFrom(mc)) {
-                throw new RuntimeException(mc.getName() + " 必须实现Runnable接口");
-            }
-            Scheduled scheduled = mc.getAnnotation(Scheduled.class);
-            try {
-                Runnable runnable = (Runnable) mc.newInstance();
-                String cron = scheduled.cron();
-                int fixedRate = scheduled.fixedRate();
-                int fixedDelay = scheduled.fixedDelay();
-                int initialDelay = scheduled.initialDelay();
-
-                if (!cron.isEmpty()) {
-                    this.scheduleCron(runnable, cron);
-                    LOG.info("通过注解自动加载Cron类型定时任务( expr=" + cron + ",job= " + mc.getName() + " )");
-                } else {
-                    if (fixedDelay != 0) {
-                        this.scheduleAtFixedRate(runnable, initialDelay, fixedDelay);
-                        LOG.info("通过注解自动加载FixedRate类型定时任务( initialDelay=" + initialDelay + "'s, period=" + fixedDelay + "'s, job= " + mc.getName() + " )");
-                    } else {
-                        if (fixedRate != 0) {
-                            this.scheduleWithFixedDelay(runnable, initialDelay, fixedRate);
-                            LOG.info("通过注解自动加载FixedDelay类型定时任务( initialDelay=" + initialDelay + "'s, period=" + fixedRate + "'s, job= " + mc.getName() + " )");
-                        } else {
-                            //都是0，则启动线程任务,提交这个任务
-                            this.executor.submit(runnable);
-                            LOG.info("通过注解自动加载常规线程任务(job= " + mc.getName() + " )");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-    }
+//    /**
+//     * @Title: scanAnnotation
+//     * @Description: 扫描所有任务注解
+//     * @since V1.0.0
+//     */
+//    private void scanAnnotation() {
+//        if (StrKit.isBlank(scanRootPackage)) {
+//            return;
+//        }
+//        Reflections reflections = new Reflections(new ConfigurationBuilder()
+//                .addUrls(ClasspathHelper.forClass(Scheduled.class))
+//                .forPackages(scanRootPackage.split(","))
+//                .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
+//        );
+//        autoLoadByAnnotation(reflections);
+//    }
+//
+//    /**
+//     * @param reflections
+//     * @Title: autoLoadByAnnotation
+//     * @Description: 扫描Scheduled任务
+//     * @since V1.0.0
+//     */
+//    private void autoLoadByAnnotation(Reflections reflections) {
+//        Set<Class<?>> cronTaskClasses = reflections.getTypesAnnotatedWith(Scheduled.class);
+//        for (Class<?> mc : cronTaskClasses) {
+//            if (!Runnable.class.isAssignableFrom(mc)) {
+//                throw new RuntimeException(mc.getName() + " 必须实现Runnable接口");
+//            }
+//            Scheduled scheduled = mc.getAnnotation(Scheduled.class);
+//            try {
+//                Runnable runnable = (Runnable) mc.newInstance();
+//                String cron = scheduled.cron();
+//                int fixedRate = scheduled.fixedRate();
+//                int fixedDelay = scheduled.fixedDelay();
+//                int initialDelay = scheduled.initialDelay();
+//
+//                if (!cron.isEmpty()) {
+//                    this.scheduleCron(runnable, cron);
+//                    LOG.info("通过注解自动加载Cron类型定时任务( expr=" + cron + ",job= " + mc.getName() + " )");
+//                } else {
+//                    if (fixedDelay != 0) {
+//                        this.scheduleAtFixedRate(runnable, initialDelay, fixedDelay);
+//                        LOG.info("通过注解自动加载FixedRate类型定时任务( initialDelay=" + initialDelay + "'s, period=" + fixedDelay + "'s, job= " + mc.getName() + " )");
+//                    } else {
+//                        if (fixedRate != 0) {
+//                            this.scheduleWithFixedDelay(runnable, initialDelay, fixedRate);
+//                            LOG.info("通过注解自动加载FixedDelay类型定时任务( initialDelay=" + initialDelay + "'s, period=" + fixedRate + "'s, job= " + mc.getName() + " )");
+//                        } else {
+//                            //都是0，则启动线程任务,提交这个任务
+//                            this.executor.submit(runnable);
+//                            LOG.info("通过注解自动加载常规线程任务(job= " + mc.getName() + " )");
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                throw new RuntimeException(e.getMessage(), e);
+//            }
+//        }
+//    }
 
     /**
      * @return
@@ -428,7 +428,6 @@ public class SchedulerPlugin implements IPlugin {
         }
 
         /**
-         * @param scheduledThreadPoolSize
          * @return
          * @Title: scheduledThreadPoolSize
          * @Description: 配置调度线程池大小
@@ -440,7 +439,6 @@ public class SchedulerPlugin implements IPlugin {
         }
 
         /**
-         * @param jobConfigFile
          * @return
          * @Title: enableConfigFile
          * @Description: 使能配置文件加载
@@ -452,7 +450,6 @@ public class SchedulerPlugin implements IPlugin {
         }
 
         /**
-         * @param scanRootPackage
          * @return
          * @Title: enableAnnotationScan
          * @Description: 使能注解扫描（进行类库检查）
