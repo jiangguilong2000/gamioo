@@ -22,8 +22,6 @@ import io.gamioo.core.util.FileUtils;
 import io.gamioo.core.util.StringUtils;
 import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.core.util.ThreadUtils;
-import io.gamioo.robot.entity.Proxy;
-import io.gamioo.robot.entity.Server;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +29,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +49,6 @@ public class H5Robot {
     private ScheduledExecutorService stat = Executors.newScheduledThreadPool(1, new GameThreadFactory("stat"));
     private ScheduledExecutorService connect = Executors.newScheduledThreadPool(1, new GameThreadFactory("connect"));
     private Target target;
-    private Map<Integer, Proxy> proxyStore;
     private List<User> userList;
     public static Map<Integer, WebSocketClient> clientStore = new ConcurrentHashMap<>();
     private boolean complete;
@@ -96,24 +92,18 @@ public class H5Robot {
             try {
                 for (WebSocketClient e : clientStore.values()) {
                     if (!e.isConnected()) {
-                        Date now = new Date();
                         //能通信再连
-                        if (e.getProxy() == null || (e.getProxy() != null && now.before(e.getProxy().getExpireTime()))) {
-                            if (lastUserId != e.getUserId()) {
-                                ThreadUtils.sleep(e.getError() * 5);
-                                logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
-                                lastUserId = e.getUserId();
-                                if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
-                                    e.connect();
-                                }
-
-                                break;
-                            } else {
-                                lastUserId = 0;
+                        if (lastUserId != e.getUserId()) {
+                            ThreadUtils.sleep(e.getError() * 5);
+                            logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
+                            lastUserId = e.getUserId();
+                            if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
+                                e.connect();
                             }
-
+                            break;
+                        } else {
+                            lastUserId = 0;
                         }
-
                     }
                 }
             } catch (Exception e) {
@@ -133,8 +123,6 @@ public class H5Robot {
         robot.setUserList(userList);
         Target target = robot.getTarget("target.json");
         robot.setTarget(target);
-        Map<Integer, Proxy> proxyStore = robot.getProxyStore("cell.json");
-        robot.setProxyStore(proxyStore);
         robot.handle();
         robot.end();
         logger.info("end working");
@@ -144,58 +132,17 @@ public class H5Robot {
     public void handle() {
         complete = false;
         int id = 0;
-        int size = proxyStore.size();
-        if (size > 0) {
-            int max = (int) Math.ceil(1f * target.getNumber() / size);
-            for (int i = 0; i < max; i++) {
-                for (Proxy proxy : proxyStore.values()) {
-                    Date now = new Date();
-                    if (now.before(proxy.getExpireTime())) {
-                        WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), proxy, target);
-                        ThreadUtils.sleep(target.getInterval() + target.getError() * 10);
-                        client.connect();
-                        //    clientStore.put(id,client);
-                    }
-                }
-            }
-
-        } else {
-            for (int i = 0; i < target.getNumber(); i++) {
-                try {
-                    WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), null, target);
-                    ThreadUtils.sleep(target.getInterval());
-                    client.connect();
-                } catch (Exception e) {
-                    logger.error("size={}", userList.size());
-                    logger.error(e.getMessage(), e);
-                }
-
-                //   clientStore.put(id,client);
+        for (int i = 0; i < target.getNumber(); i++) {
+            try {
+                WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), target);
+                ThreadUtils.sleep(target.getInterval());
+                client.connect();
+            } catch (Exception e) {
+                logger.error("size={}", userList.size());
+                logger.error(e.getMessage(), e);
             }
         }
         complete = true;
-    }
-
-
-    public <T extends Server> List<T> getServerList(Class<T> clazz, String path) {
-        List<T> list = new ArrayList<>();
-        File file = FileUtils.getFile(path);
-        try {
-            List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
-            array.forEach(e -> {
-                T T = JSON.parseObject(e, clazz);
-                boolean connected = TelnetUtils.isConnected(T.getIp(), T.getPort());
-                if (connected) {
-                    T.parse();
-                    list.add(T);
-                } else {
-                    logger.error("目标无法通信 target={}", T);
-                }
-            });
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return list;
     }
 
     public List<User> getUserList(String path) {
@@ -236,76 +183,8 @@ public class H5Robot {
 
     }
 
-    public Map<Integer, Proxy> getProxyStore(String path) {
-        Map<Integer, Proxy> ret = new ConcurrentHashMap<>();
-        Date now = new Date();
-        File file = FileUtils.getFile(path);
-        try {
-            String array = FileUtils.readFileToString(file);
-            List<Proxy> list = JSON.parseArray(array, Proxy.class);
-            for (int i = 0; i < list.size(); i++) {
-                Proxy proxy = list.get(i);
-                proxy.setId(i + 1);
-                boolean connected = TelnetUtils.isConnected(proxy.getIp(), proxy.getPort());
-                if (now.before(proxy.getExpireTime()) && connected) {
-                    ret.put(proxy.getId(), proxy);
-                } else {
-                    logger.error("目标无法通信 target={}", proxy);
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return ret;
-    }
-
-    public List<Proxy> getProxyListX(String path) {
-        List<Proxy> list = new ArrayList<>();
-        File file = FileUtils.getFile(path);
-        try {
-            List<String> array = FileUtils.readLines(file, Charset.defaultCharset());
-            array.forEach(e -> {
-                Proxy proxy = new Proxy();
-                proxy.init(e);
-                boolean connected = TelnetUtils.isConnected(proxy.getIp(), proxy.getPort());
-                if (connected) {
-                    list.add(proxy);
-                } else {
-                    //    logger.error("目标无法通信 target={}", proxy);
-                }
-            });
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return list;
-    }
-
-    public Target getTarget() {
-        return target;
-    }
-
     public void setTarget(Target target) {
         this.target = target;
-    }
-
-    public Map<Integer, Proxy> getProxyStore() {
-        return proxyStore;
-    }
-
-    public void setProxyStore(Map<Integer, Proxy> proxyStore) {
-        this.proxyStore = proxyStore;
-    }
-
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
-
-    public List<User> getUserList() {
-        return userList;
     }
 
     public void setUserList(List<User> userList) {

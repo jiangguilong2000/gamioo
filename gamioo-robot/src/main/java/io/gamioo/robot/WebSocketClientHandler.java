@@ -52,7 +52,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
+        logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime());
         this.webSocketClient.increaseError();
         this.webSocketClient.setLogin(false);
     }
@@ -156,7 +156,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                     if (!this.webSocketClient.isLegal()) {
                         this.webSocketClient.setLegal(true);
                         H5Robot.clientStore.put(this.webSocketClient.getId(), this.webSocketClient);
-                        //    System.out.println(this.webSocketClient.getUserId());
                         // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
                     }
 
@@ -184,10 +183,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("exceptionCaught,proxy={},cause={}", this.webSocketClient.getProxy(), cause.getMessage());
-        //   logger.error(cause.getMessage(), cause);
-
-
+        logger.error("exceptionCaught,cause={}", cause.getMessage());
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }

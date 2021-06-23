@@ -17,12 +17,8 @@
 package io.gamioo.robot;
 
 import com.google.protobuf.UnknownFieldSet;
-import io.gamioo.core.concurrent.GameThreadFactory;
 import io.gamioo.core.util.StringUtils;
-import io.gamioo.core.util.TelnetUtils;
-import io.gamioo.core.util.ThreadUtils;
 import io.gamioo.robot.entity.Message;
-import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
 import io.netty.bootstrap.Bootstrap;
@@ -42,7 +38,6 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
-import io.netty.handler.proxy.Socks5ProxyHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -50,12 +45,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.URI;
 import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.*;
 
 /**
  * websocket 客户端连接器
@@ -66,7 +57,6 @@ import java.util.concurrent.*;
 public class WebSocketClient {
     private static final Logger logger = LogManager.getLogger(WebSocketClient.class);
     private final int id;
-    private final Proxy proxy;
     private final Target target;
     private User user;
     private Date lastSendTime;
@@ -93,10 +83,9 @@ public class WebSocketClient {
 
     }
 
-    public WebSocketClient(int id, User user, Proxy proxy, Target target) {
+    public WebSocketClient(int id, User user, Target target) {
         this.id = id;
         this.user = user;
-        this.proxy = proxy;
         this.target = target;
     }
 
@@ -111,13 +100,6 @@ public class WebSocketClient {
                 @Override
                 protected void initChannel(SocketChannel ch) throws SSLException {
                     ChannelPipeline p = ch.pipeline();
-                    //代理存在就用代理，代理不存在就直连
-                    if (proxy != null) {
-                        SocketAddress address = new InetSocketAddress(proxy.getIp(), proxy.getPort());
-                        Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(address);
-                        socks5ProxyHandler.setConnectTimeoutMillis(0);
-                        p.addFirst("proxy", socks5ProxyHandler);
-                    }
                     if (!StringUtils.equals(target.getScheme(), HttpScheme.HTTP.name())) {
                         SslContext context = SslContextBuilder.forClient()
                                 .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
@@ -137,7 +119,7 @@ public class WebSocketClient {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if (!channelFuture.isSuccess()) {
-                        logger.error("连接失败 userId={},proxy={},target={}", user.getId(), proxy, target);
+                        logger.error("连接失败 userId={},target={}", user.getId(), target);
                         logger.error("连接失败", channelFuture.cause());
                         target.increaseError();
                     } else {
@@ -153,11 +135,11 @@ public class WebSocketClient {
                     public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
                         if (!channelFuture.isSuccess()) {
-                            logger.error("握手失败 userId={},proxy={},target={}", user.getId(), proxy, target);
+                            logger.error("握手失败 userId={},target={}", user.getId(), target);
                             logger.error("握手失败", channelFuture.cause());
                             target.increaseError();
                         } else {
-                            logger.info("握手成功 id={},userId={},proxy={},target.ip={},target.port={}", id, user.getId(), proxy, target.getIp(), target.getPort());
+                            logger.info("握手成功 id={},userId={},target.ip={},target.port={}", id, user.getId(), target.getIp(), target.getPort());
                             sendMessage(socketChannel);
                         }
                     }
@@ -185,7 +167,7 @@ public class WebSocketClient {
 
     public void disconnect() {
         if (isConnected()) {
-            logger.debug("主动断开，id={}",id);
+            logger.debug("主动断开，id={}", id);
             socketChannel.disconnect();
         }
 
@@ -244,10 +226,6 @@ public class WebSocketClient {
 
     public int getId() {
         return id;
-    }
-
-    public Proxy getProxy() {
-        return proxy;
     }
 
     public Target getTarget() {

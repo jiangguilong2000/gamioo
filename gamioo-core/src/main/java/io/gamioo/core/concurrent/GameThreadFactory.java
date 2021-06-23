@@ -10,22 +10,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.0
  */
 public class GameThreadFactory implements ThreadFactory {
-	private final String name;
-	private final AtomicInteger threadCounter = new AtomicInteger(0);
+    private final String name;
+    private final AtomicInteger threadCounter = new AtomicInteger(0);
 
-	@Override
-	public Thread newThread(Runnable runnable) {
-		StringBuilder threadName = new StringBuilder(name);
-		threadName.append("-").append(threadCounter.getAndIncrement());
-		Thread thread = new Thread(group, runnable, threadName.toString());
-		return thread;
-	}
+    @Override
+    public Thread newThread(Runnable runnable) {
+        StringBuilder threadName = new StringBuilder(name);
+        threadName.append("-").append(threadCounter.getAndIncrement());
+        Thread thread = new Thread(group, runnable, threadName.toString());
+        return thread;
+    }
 
-	final ThreadGroup group;
+    final ThreadGroup group;
 
-	public GameThreadFactory(String name) {
-		SecurityManager securitymanager = System.getSecurityManager();
-		this.group = securitymanager == null ? Thread.currentThread().getThreadGroup() : securitymanager.getThreadGroup();
-		this.name = name;
-	}
+    public GameThreadFactory(String name) {
+        SecurityManager securitymanager = System.getSecurityManager();
+        this.group = securitymanager == null ? Thread.currentThread().getThreadGroup() : securitymanager.getThreadGroup();
+        this.name = name;
+    }
 }
