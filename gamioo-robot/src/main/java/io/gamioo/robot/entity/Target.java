@@ -57,8 +57,9 @@ public class Target extends Server {
     private int error;
 
 
+    @Override
     public void parse() {
-        if(url==null){
+        if (url == null) {
             url = MessageFormat.format(StringUtils.equals(HttpScheme.HTTP.name(), scheme) ? URI_HTTP : URI_HTTPS, ip, String.valueOf(port));
         }
         try {
@@ -94,6 +95,7 @@ public class Target extends Server {
         this.scheme = scheme;
     }
 
+    @Override
     public String getIp() {
         return ip;
     }
@@ -102,6 +104,7 @@ public class Target extends Server {
         this.ip = ip;
     }
 
+    @Override
     public int getPort() {
         return port;
     }
@@ -150,7 +153,7 @@ public class Target extends Server {
         this.error = error;
     }
 
-    public void increaseError(){
+    public void increaseError() {
         this.error++;
     }
 }

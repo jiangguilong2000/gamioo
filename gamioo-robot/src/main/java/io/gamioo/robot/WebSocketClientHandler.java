@@ -10,6 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+
+/**
+ * @author Allen Jiang
+ */
 @ChannelHandler.Sharable
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger logger = LogManager.getLogger(WebSocketClientHandler.class);
@@ -48,7 +52,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
+        logger.info("连接断开 id={},userId={},lastSendTime={},lastRecvTime={},proxy={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), this.webSocketClient.getLastSendTime(), this.webSocketClient.getLastRecvTime(), webSocketClient.getProxy());
         this.webSocketClient.increaseError();
         this.webSocketClient.setLogin(false);
     }
@@ -56,7 +60,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) {
-         //  logger.debug("recv id={},msg={}", this.webSocketClient.getId(),msg);
+        //  logger.debug("recv id={},msg={}", this.webSocketClient.getId(),msg);
         if (msg instanceof FullHttpResponse) {
             handleHttpRequest(ctx, (FullHttpResponse) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -110,11 +114,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 //    }
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-       //logger.debug("recv content={}", frame);
+        //logger.debug("recv content={}", frame);
         this.webSocketClient.setLastRecvTime(new Date());
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
-            logger.debug("WebSocket Client received closing userId={}",this.webSocketClient.getUserId());
+            logger.debug("WebSocket Client received closing userId={}", this.webSocketClient.getUserId());
             CloseWebSocketFrame close = (CloseWebSocketFrame) frame.retain();
             handshaker.close(ctx.channel(), close);
             return;
@@ -144,38 +148,36 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
             // String request = ((BinaryWebSocketFrame) frame).toString();
             // System.out.println(request);
-            BinaryWebSocketFrame content=(BinaryWebSocketFrame) frame;
+            BinaryWebSocketFrame content = (BinaryWebSocketFrame) frame;
             try {
-                Message.ServerResponse_LoginArgs args= Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
-              if(args.getResultType()==1){
+                Message.ServerResponse_LoginArgs args = Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
+                if (args.getResultType() == 1) {
 
-                  if(!this.webSocketClient.isLegal()){
-                      this.webSocketClient.setLegal(true);
-                      H5Robot.clientStore.put(this.webSocketClient.getId(),this.webSocketClient);
-                //    System.out.println(this.webSocketClient.getUserId());
-                     // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
-                  }
+                    if (!this.webSocketClient.isLegal()) {
+                        this.webSocketClient.setLegal(true);
+                        H5Robot.clientStore.put(this.webSocketClient.getId(), this.webSocketClient);
+                        //    System.out.println(this.webSocketClient.getUserId());
+                        // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
+                    }
 
 
-
-              }else if(args.getResultType()==0){
-                  if(args.toString().length()>24){
-                      this.webSocketClient.setOnline(true);
-                      logger.debug("玩家在线 userId={}",this.webSocketClient.getUserId());
-                      //这种玩家在线
-                  }
-                 // args.toString()
-              }
-      //   this.webSocketClient.disconnect();
-                logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(),args);
+                } else if (args.getResultType() == 0) {
+                    if (args.toString().length() > 24) {
+                        this.webSocketClient.setOnline(true);
+                        logger.debug("玩家在线 userId={}", this.webSocketClient.getUserId());
+                        //这种玩家在线
+                    }
+                    // args.toString()
+                }
+                //   this.webSocketClient.disconnect();
+                logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
 
 
             frame.retain();
-          //  ctx.write(frame.retain());
-            return;
+            //  ctx.write(frame.retain());
         }
     }
 

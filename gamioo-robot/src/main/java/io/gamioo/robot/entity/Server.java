@@ -26,12 +26,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @since 1.0.0
  */
 public abstract class Server {
-    public abstract  void parse();
+    public abstract void parse();
 
     public abstract String getIp();
 
     public abstract int getPort();
 
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }

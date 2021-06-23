@@ -1,1 +1,9 @@
-{"id":1,"scheme":"http","ip":"47.97.67.129","port":5133,"interval":2000,"text":false,"number":1}
+{
+  "id": 1,
+  "scheme": "http",
+  "ip": "47.114.101.206",
+  "port": 5133,
+  "interval": 2000,
+  "text": false,
+  "number": 10
+}

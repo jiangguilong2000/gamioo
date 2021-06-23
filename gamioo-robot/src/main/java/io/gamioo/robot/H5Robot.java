@@ -26,7 +26,6 @@ import io.gamioo.robot.entity.Proxy;
 import io.gamioo.robot.entity.Server;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +36,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * some description
@@ -97,18 +99,18 @@ public class H5Robot {
                         Date now = new Date();
                         //能通信再连
                         if (e.getProxy() == null || (e.getProxy() != null && now.before(e.getProxy().getExpireTime()))) {
-                                if (lastUserId != e.getUserId()) {
-                                    ThreadUtils.sleep(e.getError() * 5);
-                                    logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
-                                    lastUserId = e.getUserId();
-                                    if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
-                                        e.connect();
-                                    }
-
-                                    break;
-                                } else {
-                                    lastUserId = 0;
+                            if (lastUserId != e.getUserId()) {
+                                ThreadUtils.sleep(e.getError() * 5);
+                                logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
+                                lastUserId = e.getUserId();
+                                if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
+                                    e.connect();
                                 }
+
+                                break;
+                            } else {
+                                lastUserId = 0;
+                            }
 
                         }
 
@@ -139,13 +141,6 @@ public class H5Robot {
 
     }
 
-    public void asyncHandle() {
-        new Thread(() -> {
-            handle();
-        }).start();
-
-    }
-
     public void handle() {
         complete = false;
         int id = 0;
@@ -166,13 +161,13 @@ public class H5Robot {
 
         } else {
             for (int i = 0; i < target.getNumber(); i++) {
-                try{
+                try {
                     WebSocketClient client = new WebSocketClient(++id, userList.get(id - 1), null, target);
                     ThreadUtils.sleep(target.getInterval());
                     client.connect();
-                }catch (Exception e){
-                    logger.error("size={}",userList.size());
-                    logger.error(e.getMessage(),e);
+                } catch (Exception e) {
+                    logger.error("size={}", userList.size());
+                    logger.error(e.getMessage(), e);
                 }
 
                 //   clientStore.put(id,client);
