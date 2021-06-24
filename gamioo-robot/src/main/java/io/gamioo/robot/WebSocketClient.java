@@ -65,14 +65,9 @@ public class WebSocketClient {
     private boolean legal;
     private boolean online;
     private int error;
-
-
     private static Bootstrap bootstrap = new Bootstrap();
     private Channel socketChannel;
     private static NioEventLoopGroup group = new NioEventLoopGroup(8);
-    //private static Map<Integer, ScheduledFuture<?>> store = new ConcurrentHashMap<>();
-    // private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1, new GameThreadFactory("robot"));
-
 
     static {
         bootstrap.group(group);
@@ -94,8 +89,6 @@ public class WebSocketClient {
         try {
             final WebSocketClientHandler handler = new WebSocketClientHandler(this, WebSocketClientHandshakerFactory
                     .newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
-
-
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws SSLException {
@@ -147,11 +140,6 @@ public class WebSocketClient {
 
                 handler.handshakeFuture().sync();
             }
-
-
-            //
-
-
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -177,13 +165,7 @@ public class WebSocketClient {
     public void login(Channel channel) {
         try {
             Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
-            //最大值300000000,最小值999999
-            // builder.setUserID(target.getId() * 200290 + id-3);
-            // userId=275029;//(long)(target.getId()*100000+id);
             builder.setUserID(user.getId());
-            //  builder.setToken(user.getToken()+ user.getId());
-            //  builder.setToken("529382015132319205"+userId);
-            //  builder.setToken("529382015132319205726300");
             builder.setToken(user.getToken());
             byte[] content = builder.build().toByteArray();
             ByteBuf raw = Unpooled.wrappedBuffer(content);
@@ -192,32 +174,21 @@ public class WebSocketClient {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-
-
-//		//keep.setTimestamp(System.currentTimeMillis());
-    }
-
-    public void checkConnected() {
-
     }
 
     public void sendMessage(Channel channel) {
         Date now = new Date();
         if (isConnected()) {
             if (channel.isWritable()) {
-                //   logger.debug("send content={}",content);
-                //  logger.debug("send ping id={}, userId={}", id, this.getUserId());
                 if (this.target.isText()) {
                     WebSocketFrame frame = new TextWebSocketFrame("1");
                     channel.writeAndFlush(frame);
                 }
                 if (!login) {
-
                     this.login(channel);
                     login = true;
                 } else {
                     WebSocketFrame frame = new PingWebSocketFrame();
-                    //   channel.writeAndFlush(frame);
                 }
                 lastSendTime = now;
             }
@@ -228,17 +199,10 @@ public class WebSocketClient {
         return id;
     }
 
-    public Target getTarget() {
-        return target;
-    }
-
     public Date getLastSendTime() {
         return lastSendTime;
     }
 
-    public void setLastSendTime(Date lastSendTime) {
-        this.lastSendTime = lastSendTime;
-    }
 
     public Date getLastRecvTime() {
         return lastRecvTime;
@@ -250,10 +214,6 @@ public class WebSocketClient {
 
     public long getUserId() {
         return user.getId();
-    }
-
-    public boolean isLogin() {
-        return login;
     }
 
     public void setLogin(boolean login) {
@@ -272,16 +232,8 @@ public class WebSocketClient {
         return error;
     }
 
-    public void setError(int error) {
-        this.error = error;
-    }
-
     public void increaseError() {
         this.error++;
-    }
-
-    public boolean isOnline() {
-        return online;
     }
 
     public void setOnline(boolean online) {

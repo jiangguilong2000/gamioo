@@ -173,8 +173,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
-
-
             frame.retain();
             //  ctx.write(frame.retain());
         }

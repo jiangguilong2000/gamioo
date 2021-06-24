@@ -51,8 +51,6 @@ public class H5Robot {
     private Target target;
     private List<User> userList;
     public static Map<Integer, WebSocketClient> clientStore = new ConcurrentHashMap<>();
-    private boolean complete;
-    private int step;
     private long lastUserId;
 
     public void init() {
@@ -95,7 +93,7 @@ public class H5Robot {
                         //能通信再连
                         if (lastUserId != e.getUserId()) {
                             ThreadUtils.sleep(e.getError() * 5);
-                            logger.debug("开始重连... id={},userId={}", e.getId(), e.getUserId());
+                            logger.debug("开始重连  id={},userId={}", e.getId(), e.getUserId());
                             lastUserId = e.getUserId();
                             if (TelnetUtils.isConnected(this.target.getIp(), this.target.getPort())) {
                                 e.connect();
@@ -130,7 +128,6 @@ public class H5Robot {
     }
 
     public void handle() {
-        complete = false;
         int id = 0;
         for (int i = 0; i < target.getNumber(); i++) {
             try {
@@ -142,7 +139,6 @@ public class H5Robot {
                 logger.error(e.getMessage(), e);
             }
         }
-        complete = true;
     }
 
     public List<User> getUserList(String path) {
