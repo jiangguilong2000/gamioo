@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class StringUtils {
-
+    private static Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
     /**
      * 空字符串 {@code ""}.
      */
@@ -533,7 +533,7 @@ public class StringUtils {
      * Replace placeholders in the given messagePattern with arguments.
      *
      * @param messagePattern the message pattern containing placeholders.
-     * @param arguments the arguments to be used to replace placeholders.
+     * @param arguments      the arguments to be used to replace placeholders.
      * @return the formatted message.
      */
     public static String format(String messagePattern, Object... arguments) {
@@ -681,7 +681,6 @@ public class StringUtils {
     }
 
 
-
     public static String format2Percent(double value) {
         String p = String.valueOf(value * 100D);
         int ix = p.indexOf(".") + 1;
@@ -691,13 +690,17 @@ public class StringUtils {
 
     public static String byte2GBMBKB(long value) {
         if (value / GB >= 1) // 如果当前Byte的值大于等于1GB
+        {
             return String.format("%.2f", value / (float) GB) + " GB";// 将其转换成GB
-        else if (value / MB >= 1) // 如果当前Byte的值大于等于1MB
+        } else if (value / MB >= 1) // 如果当前Byte的值大于等于1MB
+        {
             return String.format("%.2f", value / (float) MB) + " MB";// 将其转换成MB
-        else if (value / KB >= 1) // 如果当前Byte的值大于等于1KB
+        } else if (value / KB >= 1) // 如果当前Byte的值大于等于1KB
+        {
             return String.format("%.2f", value / (float) KB) + " KB";// 将其转换成KB
-        else
+        } else {
             return String.valueOf(value) + " Byte";// 显示Byte值
+        }
     }
 
     public static String stringToAscii(String value) {
@@ -715,16 +718,16 @@ public class StringUtils {
 
     /**
      * 解析字符串中所有数字，注意：这里只是把数字字符串切割出来了，转换成数字时注意边界
+     *
      * @param content 需要解析的字符串
      * @return 所有数字字符串集合
      */
-    public static ArrayList<String> incisionNumber(String content){
-        ArrayList<String> ret=new ArrayList<>();
-        if(org.apache.commons.lang3.StringUtils.isEmpty(content)){
+    public static ArrayList<String> incisionNumber(String content) {
+        ArrayList<String> ret = new ArrayList<>();
+        if (org.apache.commons.lang3.StringUtils.isEmpty(content)) {
             return ret;
         }
-        Pattern p = Pattern.compile("[0-9]+");
-        Matcher m = p.matcher(content);
+        Matcher m = NUMBER_PATTERN.matcher(content);
         while (m.find()) {
             ret.add(m.group());
         }
@@ -733,12 +736,13 @@ public class StringUtils {
 
     /**
      * 判断字符串是否是同一个字符。kkk全是k;22222全是2
-     * @param arg  需要解析的字符串
+     *
+     * @param arg 需要解析的字符串
      * @return 返回判断结果
      */
-    public static boolean isSameChar(String arg){
+    public static boolean isSameChar(String arg) {
         boolean flag = true;
-        if(org.apache.commons.lang3.StringUtils.isEmpty(arg)){
+        if (org.apache.commons.lang3.StringUtils.isEmpty(arg)) {
             return flag;
         }
         char str = arg.charAt(0);
@@ -753,36 +757,38 @@ public class StringUtils {
 
     /**
      * 判断一个数字是否是连续的数字，例如，12345和54321就是连续的
+     *
      * @param str 要判断的数字字符串
      * @return 返回结果
      */
-    public static boolean strNumberIsContinue(String str){
-        if(isEmpty(str)){
+    public static boolean strNumberIsContinue(String str) {
+        if (isEmpty(str)) {
             return false;
         }
-        char[] chars= str.toCharArray();
-        char c= chars[0];
-        for(int i=1;i<chars.length;i++){
-            int diff= chars[i]-c;
-            if(diff!=1&&diff!=-1){
+        char[] chars = str.toCharArray();
+        char c = chars[0];
+        for (int i = 1; i < chars.length; i++) {
+            int diff = chars[i] - c;
+            if (diff != 1 && diff != -1) {
                 return false;
             }
-            c=chars[i];
+            c = chars[i];
         }
         return true;
     }
 
     /**
      * 获取字符串中去重后剩下多少个字符
-     * @param str  需要解析的字符串
+     *
+     * @param str 需要解析的字符串
      * @return 返回去重后的字符串
      */
-    public static int getStringCharCount(String str){
-        if(isEmpty(str)){
+    public static int getStringCharCount(String str) {
+        if (isEmpty(str)) {
             return 0;
         }
-        HashSet<Character> set=new HashSet<>();
-        for(char b:str.toCharArray()){
+        HashSet<Character> set = new HashSet<>();
+        for (char b : str.toCharArray()) {
             set.add(b);
         }
         return set.size();
@@ -814,6 +820,7 @@ public class StringUtils {
      * <p>More specifically, this method returns {@code true} if the
      * {@code String} is not {@code null}, its length is greater than 0,
      * and it contains at least one non-whitespace character.
+     *
      * @param str the {@code String} to check (may be {@code null})
      * @return {@code true} if the {@code String} is not {@code null}, its
      * length is greater than 0, and it does not contain whitespace only
@@ -826,9 +833,10 @@ public class StringUtils {
     /**
      * Apply the given relative path to the given path,
      * assuming standard Java folder separation (i.e. "/" separators).
-     * @param path the path to start from (usually a full file path)
+     *
+     * @param path         the path to start from (usually a full file path)
      * @param relativePath the relative path to apply
-     * (relative to the full file path above)
+     *                     (relative to the full file path above)
      * @return the full file path that results from applying the relative path
      */
     public static String applyRelativePath(String path, String relativePath) {
@@ -839,24 +847,24 @@ public class StringUtils {
                 newPath += FOLDER_SEPARATOR;
             }
             return newPath + relativePath;
-        }
-        else {
+        } else {
             return relativePath;
         }
     }
 
-    public static String uncapitalized(String name)  {
+    public static String uncapitalized(String name) {
         if (name == null || name.length() == 0) {
             return name;
         }
         if (name.length() > 1 && Character.isUpperCase(name.charAt(1)) &&
-                Character.isUpperCase(name.charAt(0))){
+                Character.isUpperCase(name.charAt(0))) {
             return name;
         }
         char chars[] = name.toCharArray();
         chars[0] = Character.toLowerCase(chars[0]);
         return new String(chars);
     }
+
     public static boolean equals(final CharSequence cs1, final CharSequence cs2) {
         if (cs1 == cs2) {
             return true;
