@@ -136,7 +136,7 @@ public class H5Robot {
 
     public void handle() {
         int id = 0;
-        logger.warn("待处理的玩家数 num={}", userList.size());
+        logger.warn("待处理玩家数 num={}", userList.size());
         for (User user : userList) {
             try {
                 WebSocketClient client = new WebSocketClient(++id, user, target);
