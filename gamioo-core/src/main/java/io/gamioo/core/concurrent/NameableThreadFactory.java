@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Allen Jiang[41157121@qq.com]
  * @since 1.0
  */
-public class GameThreadFactory implements ThreadFactory {
+public class NameableThreadFactory implements ThreadFactory {
     private final String name;
     private final AtomicInteger threadCounter = new AtomicInteger(0);
 
@@ -23,7 +23,7 @@ public class GameThreadFactory implements ThreadFactory {
 
     final ThreadGroup group;
 
-    public GameThreadFactory(String name) {
+    public NameableThreadFactory(String name) {
         SecurityManager securitymanager = System.getSecurityManager();
         this.group = securitymanager == null ? Thread.currentThread().getThreadGroup() : securitymanager.getThreadGroup();
         this.name = name;

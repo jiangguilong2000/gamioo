@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':gamioo-core');
+    implementation project(':gamioo-redis');
     implementation project(':gamioo-game');
     implementation project(':gamioo-network');
     testImplementation project(':gamioo-benchmark');
@@ -34,11 +35,11 @@ task copyResources(type: Copy) {
     }
 }
 
-task release(type: Copy, dependsOn: [build, clearJar, copyJar,copyResources]);
+task release(type: Copy, dependsOn: [build, clearJar, copyJar, copyResources]);
 
 processResources {
 
-   // include { "**/*.properties" };
+    // include { "**/*.properties" };
     exclude { "**/*.*" };
 //    from('src/main/resources') {
 //        include '*.properties';

@@ -166,7 +166,11 @@ public class WebSocketClient {
         try {
             Message.ClientRequest_LoginArgs.Builder builder = Message.ClientRequest_LoginArgs.newBuilder();
             builder.setUserID(user.getId());
-            builder.setToken(user.getToken());
+            if (this.user.getArea() == 1) {
+                builder.setToken(user.getToken());
+            } else {
+                builder.setToken(user.getTokenB());
+            }
             byte[] content = builder.build().toByteArray();
             ByteBuf raw = Unpooled.wrappedBuffer(content);
             BinaryWebSocketFrame frame = new BinaryWebSocketFrame(raw);

@@ -40,6 +40,7 @@ public class Target extends Server {
     private int id;
     @JSONField(name = "scheme")
     private String scheme;
+    @JSONField(serialize = false)
     private URI uri;
     @JSONField(name = "ip")
     private String ip;
@@ -47,13 +48,11 @@ public class Target extends Server {
     private int port;
     @JSONField(name = "interval")
     private int interval;
-    @JSONField(name = "number")
-    private int number;
-    @JSONField(name = "url")
+    @JSONField(serialize = false)
     private String url;
     @JSONField(name = "text")
     private boolean text;
-
+    @JSONField(serialize = false)
     private int error;
 
 
@@ -72,14 +71,6 @@ public class Target extends Server {
             logger.error("Only WS(S) is supported");
             return;
         }
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     public URI getUri() {

@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':gamioo-game');
+    implementation project(':gamioo-core');
     implementation 'redis.clients:jedis:3.3.0';
     implementation 'com.alibaba:fastjson:1.2.74';
     testImplementation project(':gamioo-benchmark');
