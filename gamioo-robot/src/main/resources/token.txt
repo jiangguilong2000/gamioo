@@ -2,3 +2,5 @@ WekzatJl1Ne94dkDA3t1wHjHD3a6cBz+OPYjgZJPNbE=
 0fljz6fENffSlvhD1nxziUw+TUB65swVwK5dZT066r8=
 bO4BwPnFwpWAGY+OrQ0fV4A4RjikeUu4YWZDZy8Xurg=
 2DvAw8rnyfpTvgUy+1+53KV0IPVt+7A+BW9GssNPn3Y=
+
+hset robot 275291 "{\"group\":3,\"hit\":0,\"id\":275291,\"online\":false,\"rmb\":30,\"priority\":1,\"token\":\"bO4BwPnFwpWAGY+OrQ0fV4A4RjikeUu4YWZDZy8Xurg=\",\"tokenB\":\"132311817043202015620572\"}"
