@@ -1,7 +1,7 @@
 FROM ccr.ccs.tencentyun.com/jiangguilong/kona-jdk8:1.0
 MAINTAINER jiangguilong jiangguilong@gamioo.io
 RUN mkdir /data/server
-ADD robot.tar.gz /data/server
+ADD . /data/server
 RUN yum install  lrzsz -y
 RUN yum install vim -y
 
