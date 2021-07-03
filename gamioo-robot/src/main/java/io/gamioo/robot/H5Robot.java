@@ -19,10 +19,7 @@ package io.gamioo.robot;
 import com.alibaba.fastjson.JSON;
 import io.gamioo.core.concurrent.NameableThreadFactory;
 import io.gamioo.core.lang.Cache;
-import io.gamioo.core.util.FileUtils;
-import io.gamioo.core.util.StringUtils;
-import io.gamioo.core.util.TelnetUtils;
-import io.gamioo.core.util.ThreadUtils;
+import io.gamioo.core.util.*;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
 import org.apache.logging.log4j.LogManager;
@@ -47,8 +44,12 @@ public class H5Robot {
     private ScheduledExecutorService stat = Executors.newScheduledThreadPool(1, new NameableThreadFactory("stat"));
     private ScheduledExecutorService connect = Executors.newScheduledThreadPool(1, new NameableThreadFactory("connect"));
     private Target target;
+    private int group;
+    private int area;
+    private RedisManager redisManager;
     private List<User> userList;
     public static Map<Integer, WebSocketClient> clientStore = new ConcurrentHashMap<>();
+
 
     private long lastUserId;
 
@@ -75,11 +76,12 @@ public class H5Robot {
 
                 }
                 logger.warn("连接数 num={},active={}", total, connect);
+                redisManager.updateRobotInfo(group, area, IPUtil.getIP(), userList.size(), total, connect);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
 
-        }, userList.size() * 300, 10000, TimeUnit.MILLISECONDS);
+        }, 1000 + userList.size() * 300, 16000, TimeUnit.MILLISECONDS);
 
 
     }
@@ -118,10 +120,12 @@ public class H5Robot {
         String version = H5Robot.class.getPackage().getImplementationVersion();
         logger.info("start working version={},group={},area={}", version, group, area);
         H5Robot robot = new H5Robot();
-
+        robot.setGroup(group);
+        robot.setArea(area);
         Cache cache = robot.getCache("cache.json");
         RedisManager redisManager = new RedisManager();
         redisManager.init(cache);
+        robot.setRedisManager(redisManager);
         List<User> userList = redisManager.getUserList(group, area);
         Collections.sort(userList);
         robot.setUserList(userList);
@@ -215,6 +219,29 @@ public class H5Robot {
 
     }
 
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
+    }
+
+    public int getArea() {
+        return area;
+    }
+
+    public void setArea(int area) {
+        this.area = area;
+    }
+
+    public RedisManager getRedisManager() {
+        return redisManager;
+    }
+
+    public void setRedisManager(RedisManager redisManager) {
+        this.redisManager = redisManager;
+    }
 
     public void setTarget(Target target) {
         this.target = target;

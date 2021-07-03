@@ -9,6 +9,7 @@ import io.gamioo.core.lang.ServerInfo;
 import io.gamioo.core.util.TelnetUtils;
 import io.gamioo.redis.Redis;
 import io.gamioo.redis.RedisConstant;
+import io.gamioo.robot.entity.RobotInfo;
 import io.gamioo.robot.entity.Target;
 import io.gamioo.robot.entity.User;
 import org.apache.logging.log4j.LogManager;
@@ -293,6 +294,12 @@ public class RedisManager {
 
     public void updateServerInfo(ServerInfo server) {
         globalCache.hset(RedisConstant.KEY_SERVER_INFO, String.valueOf(server.getId()), JSON.toJSONString(server));
+    }
+
+    public void updateRobotInfo(int group, int area, String ip, int total, int num, int active) {
+        RobotInfo info = new RobotInfo(group, area, ip, total, num, active);
+        globalCache.hset(RedisConstant.KEY_ROBOT_INFO, info.buildKey(), JSON.toJSONString(info));
+
     }
 
 }

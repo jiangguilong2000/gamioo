@@ -60,6 +60,11 @@ public class RedisConstant {
     public static final String KEY_ROBOT = "robot";
 
     /**
+     * 机器人信息
+     */
+    public static final String KEY_ROBOT_INFO = "robot_info";
+
+    /**
      * 服务器
      */
     public static final String KEY_TARGET = "target";
