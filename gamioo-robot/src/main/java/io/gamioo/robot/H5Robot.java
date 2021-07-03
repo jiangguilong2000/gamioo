@@ -79,7 +79,7 @@ public class H5Robot {
                 logger.error(e.getMessage(), e);
             }
 
-        }, 60000, 10000, TimeUnit.MILLISECONDS);
+        }, userList.size() * 300, 10000, TimeUnit.MILLISECONDS);
 
 
     }
@@ -118,7 +118,7 @@ public class H5Robot {
         String version = H5Robot.class.getPackage().getImplementationVersion();
         logger.info("start working version={},group={},area={}", version, group, area);
         H5Robot robot = new H5Robot();
-        robot.init();
+
         Cache cache = robot.getCache("cache.json");
         RedisManager redisManager = new RedisManager();
         redisManager.init(cache);
@@ -127,6 +127,7 @@ public class H5Robot {
         robot.setUserList(userList);
         Target target = redisManager.getTarget(area);
         robot.setTarget(target);
+        robot.init();
         //redisManager.updateTarget(target);
 
         robot.handle();

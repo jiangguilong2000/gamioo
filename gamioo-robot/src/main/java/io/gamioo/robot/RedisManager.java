@@ -52,6 +52,11 @@ public class RedisManager {
         }
     }
 
+    public void init(int type, String ip, int port, int index, String password) {
+        Cache cache = new Cache(type, ip, port, index, password);
+        this.init(cache);
+    }
+
     public void init(Cache cache) {
         switch (cache.getType()) {
             case RedisConstant.REDIS_TYPE_GLOBAL: {
@@ -99,6 +104,33 @@ public class RedisManager {
                 }
             }
         });
+        return ret;
+    }
+
+    public List<User> getUserList(int group) {
+        List<User> ret = new ArrayList<>();
+        Map<String, String> store = globalCache.hgetAll(RedisConstant.KEY_ROBOT);
+        store.forEach((key, value) -> {
+            User user = JSON.parseObject(value, User.class);
+            if (user != null) {
+                if (group == 0) {
+                    ret.add(user);
+                } else {
+                    if (user.getGroup() == group) {
+                        ret.add(user);
+                    }
+                }
+            }
+        });
+        return ret;
+    }
+
+    public User getUser(int id) {
+        User ret = null;
+        String value = globalCache.hget(RedisConstant.KEY_ROBOT, String.valueOf(id));
+        if (value != null) {
+            ret = JSON.parseObject(value, User.class);
+        }
         return ret;
     }
 

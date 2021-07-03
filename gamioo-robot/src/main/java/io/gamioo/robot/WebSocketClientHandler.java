@@ -152,10 +152,10 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             try {
                 Message.ServerResponse_LoginArgs args = Message.ServerResponse_LoginArgs.parseFrom(ByteBufUtil.getBytes(frame.content()));
                 if (args.getResultType() == 1) {
-
                     if (!this.webSocketClient.isLegal()) {
                         this.webSocketClient.setLegal(true);
                         H5Robot.clientStore.put(this.webSocketClient.getId(), this.webSocketClient);
+                        logger.debug("key passed ,recv id={},userId={},user={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), this.webSocketClient.getUser());
                         // logger.fatal ("id={} well {}",this.webSocketClient.getId(),this.webSocketClient.getUserId());
                     }
 
@@ -169,7 +169,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                     // args.toString()
                 }
                 //   this.webSocketClient.disconnect();
-                logger.debug("recv id={},userId={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), args);
+                logger.debug("recv id={},userId={},user={},content={}", this.webSocketClient.getId(), this.webSocketClient.getUserId(), args);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
