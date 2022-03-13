@@ -1,0 +1,51 @@
+dependencies {
+    implementation project(':gamioo-core');
+    implementation project(':gamioo-redis');
+    implementation project(':gamioo-game');
+    implementation project(':gamioo-network');
+    testImplementation project(':gamioo-benchmark');
+    implementation 'com.alibaba:fastjson:1.2.74';
+    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.6.0';
+   // implementation 'com.corundumstudio.socketio:netty-socketio:1.7.19';
+}
+version = '';
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'io.gamioo.lele.H5Robot';
+        attributes 'Class-Path': ' . ' + configurations.runtimeClasspath.collect { "lib/${it.name}" }.join(' ');
+    }
+    destinationDirectory = file('../robot');
+}
+
+task clearJar(type: Delete) {
+    delete '../robot/lib'
+}
+
+task copyJar(type: Copy) {
+    //from configurations.testRuntimeClasspath
+    from configurations.runtimeClasspath;
+    into "../robot/lib";
+}
+
+task copyResources(type: Copy) {
+    sourceSets.main.resources.srcDirs.each {
+        from it;
+        into "../robot";
+    }
+}
+
+task release(type: Copy, dependsOn: [build, clearJar, copyJar, copyResources]);
+
+processResources {
+
+    // include { "**/*.properties" };
+    exclude { "**/*.*" };
+//    from('src/main/resources') {
+//        include '*.properties';
+//    }
+
+    //
+    //  from('**/*.*') {into '../robot'};
+}
+
