@@ -38,11 +38,15 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             JSONObject entity = new JSONObject();
             //oR9cD1lM5cuXYI-P6nhEE0rFLz40
             //  entity.put("_id", "oxmtuw2bSnGwlEC-IZGs7ftrvFaM@ll2020");
-            //  entity.put("_id", "oxmtuw8BSnGwlEC-IZGs7ftrvFaM@ll2020");
+            // entity.put("_id", "oxmtuw8bSnGwlEC-IZGs7ftrvFaM@ll2020");
+
+
+            //  entity.put("_id", "oxmtuw5BSnGwlEC-IZGs7ftrvFaM@ll2020");
             entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
 
-            //  entity.put("name", "鱼香Rose");
-            entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u20\ud83d\udcad");
+            // entity.put("name", "鱼香Rose");
+            entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u28\ud83d\udcad");
+            //  entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u20\ud83d\udcad");
             //     entity.put("name", "鱼香Rose");
             entity.put("sex", "1");
             //  String value = RandomStringUtils.random(99999999, " ");
@@ -58,7 +62,7 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
 //                console.log("spreadid:", "eval(console.debug(GlobalData.openid))")
 
             //   entity.put("headurl", "eval(\"console.debug(GlobalData.openid)\")");
-            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIjZppNOmib9wIYQn2rmKIgtTZMBy12orfEyHhdmrkseE4xWPZVADdesbXziae3T7oFoCWoxctlAfMQ/132");
+            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A/132");
             entity.put("agentId", "454532");
             entity.put("formId", 3);
             entity.put("verison", "143");
