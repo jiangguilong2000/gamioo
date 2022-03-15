@@ -41,11 +41,11 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             // entity.put("_id", "oxmtuw8bSnGwlEC-IZGs7ftrvFaM@ll2020");
 
 
-            //  entity.put("_id", "oxmtuw5BSnGwlEC-IZGs7ftrvFaM@ll2020");
-            entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
+            entity.put("_id", "oxmtuw5BSnGwlEC-IZGs7ftrvFaM@ll2020");
+            //   entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
 
             // entity.put("name", "鱼香Rose");
-            entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u28\ud83d\udcad");
+            entity.put("name", "\\u20\u1be4\u2075\u1d4d\\u28\ud83d\udcad");
             //  entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u20\ud83d\udcad");
             //     entity.put("name", "鱼香Rose");
             entity.put("sex", "1");
@@ -63,18 +63,18 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
 
             //   entity.put("headurl", "eval(\"console.debug(GlobalData.openid)\")");
             entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A/132");
-            entity.put("agentId", "454532");
+            entity.put("agentId", "454533");
             entity.put("formId", 3);
             entity.put("verison", "143");
-            entity.put("ip", "::ffff:101.228.60.137");
+            entity.put("ip", "::ffff:101.228.60.136");
             entity.put("dis", 0);
             entity.put("smslogon", 0);
             entity.put("protocol", "https://");
             entity.put("hostname", "lele8k.game1617.com");
             entity.put("connectIP", "wsf.ydddf.top");
-            entity.put("passname", "31376101647185013681");
+            entity.put("passname", "31376101647185013682");
             entity.put("signname", this.signName);
-            entity.put("signData", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll202031376101647185013681");
+            entity.put("signData", "oxmtuw5BSnGwlEC-IZGs7ftrvFaM@ll202031376101647185013682");
             entity.put("wsId", 0);
             client.request("connector.entryHandler.login", entity.toString(), message -> {
                 LOGGER.debug("{}", message.getBodyJson());
