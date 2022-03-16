@@ -38,24 +38,24 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IOCFactoryTest {
     private static final Logger logger = LogManager.getLogger(IOCFactoryTest.class);
-    //private final Benchmark benchmark=new Benchmark(10000);
+    //private final Benchmark=new Benchmark(10000);
     private static ConfigApplicationContext context;
 
     @BeforeAll
-    public static void beforeAll() throws Exception {
+    public static void beforeAll() {
         //初始化......
-        context=new ConfigApplicationContext(IOCFactoryTest.class.getPackage().getName());
+        context = new ConfigApplicationContext(IOCFactoryTest.class.getPackage().getName());
 
     }
 
     @Test
     @Order(1)
     @DisplayName("容器扫描和获取")
-    public void test() throws Exception {
+    public void test() {
 //        //初始化完毕，获取想要的bean
-        RoleService roleService = context.getBean (RoleService.class);
+        RoleService roleService = context.getBean(RoleService.class);
         roleService.handleCommand("-- add rmb");
-        List<AbstractSkill>list=roleService.getSkillList();
+        List<AbstractSkill> list = roleService.getSkillList();
         logger.debug("array={}", list);
 
     }
@@ -63,8 +63,8 @@ public class IOCFactoryTest {
     @Test
     @Order(2)
     @DisplayName("配置文件读取")
-    public void handleConfig() throws Exception {
-        ServerConfig serverConfig = context.getBean (ServerConfig.class);
+    public void handleConfig() {
+        ServerConfig serverConfig = context.getBean(ServerConfig.class);
         logger.debug("serverConfig={}", serverConfig);
 
     }
@@ -72,7 +72,7 @@ public class IOCFactoryTest {
     @Test
     @Order(3)
     @DisplayName("指令读取")
-    public void handleControl() throws Exception {
+    public void handleControl() {
         Command command = context.getCommand(10001);
         logger.debug("command={}", command);
 
