@@ -20,6 +20,15 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
     private String openId;
 
     private OpenIdService service;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getOpenId() {
         return openId;
@@ -100,10 +109,10 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             //  entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIrj8pKz1TFag7p4jz5AB7eialLmxHLiaC4xv2jw05aDkJo5W6iarBnEahS0nBJt9DwI6F2dEicGsG2xA/132");
 
 
-            entity.put("agentId", "454531");//这个可以改
+            entity.put("agentId", "341168");//这个可以改
             entity.put("formId", 3);
             entity.put("verison", "151");//每次版本更新都要改
-            entity.put("ip", "::ffff:101.228.60.137");
+            entity.put("ip", ip);
             entity.put("dis", 0);
             entity.put("smslogon", 0);
             entity.put("protocol", "https://");
@@ -122,9 +131,13 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
                 JSONObject object = message.getBodyJson();
                 int code = object.getInt("code");
                 if (code == 200) {
-                    LOGGER.debug("破解成功 id={}", id);
-                    LOGGER.debug("{}", message.getBodyJson());
-                    gameClient.joinRoom(GameType.COMMON, 103954);
+                    LOGGER.debug("user={}", object);
+                    //  LOGGER.debug("破解成功 id={}", id);
+
+                    int userId = object.getJSONObject("data").getJSONObject("player").getInt("userId");
+
+                    LOGGER.debug("userId={}", userId);
+                    gameClient.joinRoom(GameType.COMMON, 621740);
                 } else {
                     LOGGER.debug("破解失败 id={}", id);
                 }

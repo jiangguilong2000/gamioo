@@ -88,15 +88,17 @@ public class GameClient {
                     }
                 }
 
-                //            if (list.size() == 0) {
-                //                  showEnemyCards();
-                executorService.scheduleAtFixedRate(() -> {
-                    chat();
-                }, 0, 18, TimeUnit.SECONDS);
+                if (list.size() == 0) {
+                    //      showEnemyCards();
+                    executorService.scheduleAtFixedRate(() -> {
+                        chat();
+                    }, 0, 18, TimeUnit.SECONDS);
 
 
-                //      seat(list.get(0));
-                //         }
+                    //      seat(list.get(0));
+                } else {
+                    LOGGER.warn("人没坐齐，先不说 num={}", list.size());
+                }
 
             } else {
                 LOGGER.debug("{}", object.get("msg") + ":" + roomId);
@@ -129,7 +131,9 @@ public class GameClient {
             if (code == 200) {
                 int chair = object.getInt("chairId");
                 LOGGER.debug("{}", chair);
-                // chat();
+                executorService.scheduleAtFixedRate(() -> {
+                    //    chat();
+                }, 0, 18, TimeUnit.SECONDS);
                 //    vChat(chair);
                 //      getRoleInfo();
 //                for (int i = 0; i < 10; i++) {
@@ -177,7 +181,12 @@ public class GameClient {
             entity.put("type", 2);//2是语音聊天 0是表情聊天   1 文本聊天
             //  entity.put("index", "https://www.ximalaya.com/");
             // entity.put("index", "VDEHjopP8zlbgDcLPUK6_sxNtMH5Fg9x2bDa6_Lkjgj3Eix8kO5vRYHXb63q_oh9");//叫声
-            entity.put("index", "2otWCR5Jn32D6QgNRRp-0Xj2VVaO_EB_DGPxqS8oCru6StvTXGTguDWIUvPVhNi_");//这里网警中队
+            // entity.put("index", "dD3RerMOX0fS9rdIJnE_9h7c8C5iV09RZ52eBuInZiRS9EQL7TgCxnzEi5Ted-3d");//这里网警中队
+            entity.put("index", "_Lp-hLAyspmRtW2sBEnvd-IBGU-szWunhJ3FqHPS7eJbmjno5vnKqNJFMw6F3HK2");//这里网警中队
+            //_Lp-hLAyspmRtW2sBEnvdwOth6vc9qG2GYFXRlzMufU-M2RFsWGsqjXdU2c9kPWm
+            //_Lp-hLAyspmRtW2sBEnvd-IBGU-szWunhJ3FqHPS7eJbmjno5vnKqNJFMw6F3HK2
+            //_Lp-hLAyspmRtW2sBEnvd2tDWg65sSWwdxZYJsXiky3PFVO91k6nU9GtGpGgc6vN
+
             entity.put("text_type", "voice");//wenben
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
