@@ -1,9 +1,8 @@
 package io.gamioo.pomelo;
 
-import com.zvidia.pomelo.protocol.PomeloMessage;
-import com.zvidia.pomelo.websocket.OnDataHandler;
 import com.zvidia.pomelo.websocket.OnHandshakeSuccessHandler;
 import com.zvidia.pomelo.websocket.PomeloClient;
+import io.gamioo.core.concurrent.NameableThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -15,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +27,17 @@ public class GameClient {
     private static final Logger LOGGER = LogManager.getLogger(GameClient.class);
     private PomeloClient connector;
     private boolean flag = false;
+    private boolean room;
+
+    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NameableThreadFactory("chat"));
+
+    public boolean isRoom() {
+        return room;
+    }
+
+    public void setRoom(boolean room) {
+        this.room = room;
+    }
 
     public boolean isFlag() {
         return flag;
@@ -42,37 +53,50 @@ public class GameClient {
         }, 5, 20, TimeUnit.SECONDS);
     }
 
-    public void joinRoom(int roomId) {
+    public void joinRoom(GameType type, int roomId) {
+
         JSONObject entity = new JSONObject();
         try {
             entity.put("gameSerId", roomId);
             entity.put("roomID", roomId);
             entity.put("spreadId", 0);
+            //  entity.put("spreadId", 369640);
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
         }
 
-        connector.request("game.fhbk.joinRoom", entity.toString(), message -> {
+        connector.request(type.getPrefix() + "joinRoom", entity.toString(), message -> {
             JSONObject object = message.getBodyJson();
             int code = object.getInt("code");
             if (code == 200) {
+                room = true;
+                LOGGER.info("进入房间成功 type={}, roomId={}", type.getName(), roomId);
                 List<Integer> list = new ArrayList<>();
                 for (int i = 0; i < 8; i++) {
                     list.add(i);
                 }
 
                 JSONArray array = object.getJSONObject("data").getJSONObject("table").getJSONArray("users");
+
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject obj = array.getJSONObject(i);
                     Integer chairId = obj.getInt("chairId");
-                    list.remove(chairId);
-                    LOGGER.debug("{}", chairId);
+                    Integer state = obj.getInt("state");
+                    if (state == 3) {
+                        list.remove(chairId);
+                        LOGGER.debug("{} 已有人", chairId);
+                    }
                 }
 
-                if (list.size() > 0) {
-                    // chat(list.get(0));
-                    seat(list.get(0));
-                }
+                //            if (list.size() == 0) {
+                //                  showEnemyCards();
+                executorService.scheduleAtFixedRate(() -> {
+                    chat();
+                }, 0, 18, TimeUnit.SECONDS);
+
+
+                //      seat(list.get(0));
+                //         }
 
             } else {
                 LOGGER.debug("{}", object.get("msg") + ":" + roomId);
@@ -105,8 +129,9 @@ public class GameClient {
             if (code == 200) {
                 int chair = object.getInt("chairId");
                 LOGGER.debug("{}", chair);
-                //   vChat(chair);
-                getRoleInfo();
+                // chat();
+                //    vChat(chair);
+                //      getRoleInfo();
 //                for (int i = 0; i < 10; i++) {
 //                    chat(chair);
 //                }
@@ -145,12 +170,14 @@ public class GameClient {
 
     }
 
-    public void chat(int chairId) {
+    public void chat() {
+        LOGGER.info("开始说话");
         JSONObject entity = new JSONObject();
         try {
             entity.put("type", 2);//2是语音聊天 0是表情聊天   1 文本聊天
             //  entity.put("index", "https://www.ximalaya.com/");
-            entity.put("index", "v-gFdNVaJEakrOwws5_9-cB4Y9aqtSnCD3kLDafrkcXzWI5w9tZaZmGVPBFFSnGp");
+            // entity.put("index", "VDEHjopP8zlbgDcLPUK6_sxNtMH5Fg9x2bDa6_Lkjgj3Eix8kO5vRYHXb63q_oh9");//叫声
+            entity.put("index", "2otWCR5Jn32D6QgNRRp-0Xj2VVaO_EB_DGPxqS8oCru6StvTXGTguDWIUvPVhNi_");//这里网警中队
             entity.put("text_type", "voice");//wenben
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
@@ -173,6 +200,24 @@ public class GameClient {
 
     }
 
+
+    public void showEnemyCards() {
+        LOGGER.info("showEnemyCards");
+        JSONObject entity = new JSONObject();
+        try {
+            entity.put("overTable", "");
+        } catch (JSONException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        connector.request("game.fhbk.showEnemyCards", entity.toString(), message -> {
+            LOGGER.debug("{}", message.getBodyJson());
+            //    flag = true;
+
+
+        });
+    }
+
     public void getRoleInfo() {
         JSONObject entity = new JSONObject();
         try {
@@ -190,23 +235,19 @@ public class GameClient {
     }
 
 
-    public void getUserInfo() {
+    public void getUserInfo(int userId) {
         JSONObject entity = new JSONObject();
         try {
-            entity.put("userId", "369640");
+            entity.put("userId", userId);
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
         }
 
-        connector.request("hall.hallHandler.getUserInfo", entity.toString(), new OnDataHandler() {
-
-            @Override
-            public void onData(PomeloMessage.Message message) {
-                LOGGER.debug("{}", message.getBodyJson());
-                //    flag = true;
+        connector.request("hall.hallHandler.getUserInfo", entity.toString(), message -> {
+            LOGGER.debug("{}", message.getBodyJson());
+            //    flag = true;
 
 
-            }
         });
     }
 
@@ -215,7 +256,7 @@ public class GameClient {
         handshakeSuccessHandler.init(this);
         errorHandler.init(this);
         try {
-            final PomeloClient client = new PomeloClient(new URI("wss://wsf.ydddf.top:9000"));
+            final PomeloClient client = new PomeloClient(new URI("wss://lele8k.game1617.com:9000"));
 //            List<Runnable> runs = new ArrayList<Runnable>();
 //            runs.add(client);
 //            PomeloClientTest.assertConcurrent("test websocket client", runs, 200);
@@ -225,8 +266,8 @@ public class GameClient {
                 client.request("gate.gateHandler.getConnector", json.toString(), message -> {
                     try {
                         JSONObject bodyJson = message.getBodyJson();
-                        String host = "wsf.ydddf.top";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_HOST_KEY);
-                        String port = "9002";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_PORT_KEY);
+                        String host = "lele8k.game1617.com";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_HOST_KEY);
+                        String port = "9011";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_PORT_KEY);
                         client.close();
                         connector = new PomeloClient(new URI("wss://" + host + ":" + port));
                         connector.setOnHandshakeSuccessHandler(handshakeSuccessHandler);

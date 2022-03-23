@@ -16,19 +16,24 @@ import java.util.Map;
 public class LeleMain {
     private static final Logger LOGGER = LogManager.getLogger(LeleMain.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         PlatformClient platformClient = new PlatformClient("https://lele8k.game1617.com", 16000);
         Map<String, Object> map = new HashMap<>();
         map.put("group", "game80");
-        map.put("url", "https://lele8k.game1617.com/?mo=80&n_vn=6873369640&nvilele8k=6805454532&d1lele8k=10");
-        JSONObject ret = platformClient.get4https("/newapi/getws.aspx", map);
+        map.put("playerid", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM");
+        map.put("formid", "3");
+        map.put("url", "https://lele8k.game1617.com/index.html?mo=80&n_vn=3005369640&nvilele8k=1198454532&d1lele8k=10");
+        JSONObject ret = platformClient.get4https("/newapiex/getws.aspx", map);
         LOGGER.info("ret={}", ret);
-        String signName = ret.getString("signname");
+        String signData = ret.getString("signdata");
 
         GameHandshakeSuccessHandler handshakeSuccessHandler = new GameHandshakeSuccessHandler();
-        handshakeSuccessHandler.setSignName(signName);
+        handshakeSuccessHandler.setSignData(signData);
         GameErrorHandler errorHandler = new GameErrorHandler();
+
         GameClient client = new GameClient();
         client.init(handshakeSuccessHandler, errorHandler);
+
+
     }
 }
