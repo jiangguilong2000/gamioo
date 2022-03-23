@@ -17,8 +17,17 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
     private static final Logger LOGGER = LogManager.getLogger(GameHandshakeSuccessHandler.class);
     private GameClient gameClient;
     private String signData;
+    private String openId;
 
     private OpenIdService service;
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
 
     public String getSignData() {
         return signData;
@@ -42,8 +51,8 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             JSONObject entity = new JSONObject();
             String id = service.generateId();
             //    entity.put("_id", id);
-            entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
-            //entity.put("_id", "oxmtuw7I2x6jrPcAJnJ18qaFeiUs@ll2020");
+            //   entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
+            entity.put("_id", openId + "@ll2020");
 
             //oR9cD1lM5cuXYI-P6nhEE0rFLz40
             //  entity.put("_id", "oxmtuw2bSnGwlEC-IZGs7ftrvFaM@ll2020");
@@ -56,8 +65,8 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             // entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
 
             // entity.put("name", "鱼香Rose");
-            entity.put("name", "\\u963f\\u9f99");
-            // entity.put("name", "\\u20\\u20\\u20\\u20\\u20");
+            //  entity.put("name", "\\u963f\\u9f99");
+            entity.put("name", "\\u20\\u20\\u20\\u20\\u20");//名字可以改
             //  entity.put("name", "\\u20\u1be4\u2075\u1d4d\\u28\ud83d\udcad");
             //  entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u20\ud83d\udcad");
             //     entity.put("name", "鱼香Rose");
@@ -87,11 +96,11 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             //   entity.put("headurl", "https://game.guanl.cn/router/common/exception.do?userId=0&detail=<script>xmlHttp = new XMLHttpRequest; xmlHttp.open('GET','https://game.guanl.cn/c.png',false); xmlHttp.send(); console.log(xmlHttp.responseText);</script>");
 
 
-            // entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A1/132");
-            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIrj8pKz1TFag7p4jz5AB7eialLmxHLiaC4xv2jw05aDkJo5W6iarBnEahS0nBJt9DwI6F2dEicGsG2xA/132");
+            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A1/132");
+            //  entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIrj8pKz1TFag7p4jz5AB7eialLmxHLiaC4xv2jw05aDkJo5W6iarBnEahS0nBJt9DwI6F2dEicGsG2xA/132");
 
 
-            entity.put("agentId", "454532");
+            entity.put("agentId", "454531");//这个可以改
             entity.put("formId", 3);
             entity.put("verison", "151");//每次版本更新都要改
             entity.put("ip", "::ffff:101.228.60.137");
