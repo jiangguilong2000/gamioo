@@ -18,7 +18,6 @@ public class User implements Comparable<User> {
     private int hit;
     private boolean online;
     private int rmb;
-
     @JSONField(serialize = false)
     private int area;
 

@@ -21,3 +21,12 @@ build
 /.idea
 /gamioo-beans/.project
 /gamioo-beans/.classpath
+/gamioo-pomelo/out/production/classes/com/zvidia/pomelo/exception/*.class
+/gamioo-pomelo/out/production/classes/com/zvidia/pomelo/protobuf/*.class
+/gamioo-pomelo/out/production/classes/com/zvidia/pomelo/protocol/*.class
+/gamioo-pomelo/out/production/classes/com/zvidia/pomelo/utils/*.class
+/gamioo-pomelo/out/production/classes/com/zvidia/pomelo/websocket/*.class
+/gamioo-pomelo/out/production/classes/io/gamioo/pomelo/*.class
+/gamioo-pomelo/out/production/classes/org/java_websocket/drafts/*.class
+/gamioo-pomelo/out/production/resources/log4j2.component.properties
+/gamioo-pomelo/out/production/resources/log4j2.xml

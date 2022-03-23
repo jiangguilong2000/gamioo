@@ -126,7 +126,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if (frame instanceof PingWebSocketFrame) {
             logger.debug("WebSocket Client received ping");
             frame.content().retain();
-            // ctx.write(new PingWebSocketFrame(frame.content().retain()));
+          //   ctx.write(new PingWebSocketFrame(frame.content().retain()));
             return;
         }
         if (frame instanceof PongWebSocketFrame) {
