@@ -333,6 +333,11 @@ public class Long2ObjectZSet<S> implements Iterable<Long2ObjectEntry<S>> {
         return dict.get(member);
     }
 
+    
+    public boolean contain(long member) {
+        return dict.containsKey(member);
+    }
+
     /**
      * 返回有序集中成员member的排名。
      * <p>
