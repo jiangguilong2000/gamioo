@@ -18,12 +18,10 @@ package io.gamioo.ioc.definition;
 
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
-import io.gamioo.core.exception.ServerBootstrapException;
 import io.gamioo.core.util.ClassUtils;
 import io.gamioo.core.util.FieldUtils;
 import io.gamioo.core.util.MethodUtils;
 import io.gamioo.core.util.StringUtils;
-import io.gamioo.ioc.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -130,17 +128,18 @@ public class GenericBeanDefinition implements BeanDefinition {
 
     @Override
     public List<FieldDefinition> getFieldDefinitionList(Class<? extends Annotation> clazz) {
-       return fieldStore.getOrDefault(clazz,new ArrayList<>());
+        return fieldStore.getOrDefault(clazz, new ArrayList<>());
     }
 
     @Override
-    public List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz){
-        return methodStore.getOrDefault(clazz,new ArrayList<>());
+    public List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz) {
+        return methodStore.getOrDefault(clazz, new ArrayList<>());
     }
 
     /**
      * 初始化的方法
      */
+    @Override
     public MethodDefinition getInitMethodDefinition() {
         MethodDefinition ret = null;
         List<MethodDefinition> list = methodStore.get(PostConstruct.class);
@@ -201,7 +200,7 @@ public class GenericBeanDefinition implements BeanDefinition {
      * 获取注解
      */
     @Override
-    public Annotation getAnnotation(){
+    public Annotation getAnnotation() {
         return this.annotation;
     }
 
@@ -213,6 +212,7 @@ public class GenericBeanDefinition implements BeanDefinition {
     public Class<? extends Annotation> getAnnotationType() {
         return this.getAnnotation().annotationType();
     }
+
     /**
      * 获取此方法的访问入口所对应的Index.
      *

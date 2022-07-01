@@ -13,9 +13,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * some description
@@ -30,6 +33,7 @@ public class GameClient {
     private boolean room;
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NameableThreadFactory("chat"));
+    private boolean go = true;
 
     public boolean isRoom() {
         return room;
@@ -261,11 +265,102 @@ public class GameClient {
     }
 
 
+    public void asyncCreateRoom(GameType type, String other) {
+        String[] array = new String[]{"18", "66", "20", "67", "46", "34", "22", "61"};
+        //   String[] array = new String[]{"62", "21", "49", "18"};
+        for (String groupId : array) {
+            go = true;
+            AtomicInteger num = new AtomicInteger();
+            for (int i = 0; i < 2000; i++) {
+                int finalI = i;
+                executorService.execute(() -> {
+                    boolean ret = createRoom(type, finalI, other, groupId);
+                    if (!ret) {
+                        num.getAndIncrement();
+                        if (num.get() == 3) {
+                            go = false;
+                        }
+                    } else {
+                        num.set(0);
+                    }
+                });
+            }
+
+        }
+
+    }
+
+    /**
+     * 创建房间
+     */
+    public boolean createRoom(GameType type, int index, String other, String groupId) {
+        if (!go) {
+            return true;
+        }
+        AtomicBoolean ret = new AtomicBoolean(true);
+        CountDownLatch latch = new CountDownLatch(1);
+        JSONObject entity = new JSONObject();
+        try {
+            entity.put("upId", "");
+            entity.put("agentId", other);
+            entity.put("type", 0);
+            entity.put("playerAllCount", 8);
+            entity.put("round", 3);
+            entity.put("other", "100101");
+            entity.put("kind", 2);
+            entity.put("gameKindTL", 2);
+            entity.put("gameSerId", groupId);//62,21
+            entity.put("dis", 0);
+        } catch (JSONException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        LOGGER.info("创建房间开始 groupId:{},index：{}", groupId, index);
+        connector.request(type.getPrefix() + "createRoom", entity.toString(), message -> {
+            //   LOGGER.debug("size={}", message.getBodyJson());
+            JSONObject object = message.getBodyJson();
+            int code = object.getInt("code");
+            if (code == 200) {
+                String roomId = object.getJSONObject("data").getJSONObject("table").getString("id");
+                this.leaveTable(type, index, roomId, latch);
+                LOGGER.info("创建房间成功 groupId:{},index：{}，roomId:{}", groupId, index, roomId);
+            } else {
+                ret.set(false);
+                latch.countDown();
+                LOGGER.warn("创建房间失败 groupId：{},index:{}", groupId, index);
+            }
+        });
+        try {
+            latch.await(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ret.get();
+    }
+
+    /**
+     * 创建房间
+     */
+    public void leaveTable(GameType type, int index, String roomId, CountDownLatch latch) {
+        JSONObject entity = new JSONObject();
+        connector.request(type.getPrefix() + "leaveTable", entity.toString(), message -> {
+            // LOGGER.debug("{}", message.getBodyJson());
+            JSONObject object = message.getBodyJson();
+            int code = object.getInt("code");
+            latch.countDown();
+            if (code == 200) {
+                LOGGER.info("离开房间成功 index：{}, roomId:{}", index, roomId);
+            } else {
+                LOGGER.warn("离开房间失败 index:{},obj:{}", index, object);
+            }
+        });
+    }
+
+
     public void init(GameHandshakeSuccessHandler handshakeSuccessHandler, GameErrorHandler errorHandler) {
         handshakeSuccessHandler.init(this);
         errorHandler.init(this);
         try {
-            final PomeloClient client = new PomeloClient(new URI("wss://lele8k.game1617.com:9000"));
+            final PomeloClient client = new PomeloClient(new URI("wss://01ws12119622768.game1617.com:9000"));
 //            List<Runnable> runs = new ArrayList<Runnable>();
 //            runs.add(client);
 //            PomeloClientTest.assertConcurrent("test websocket client", runs, 200);
@@ -275,8 +370,8 @@ public class GameClient {
                 client.request("gate.gateHandler.getConnector", json.toString(), message -> {
                     try {
                         JSONObject bodyJson = message.getBodyJson();
-                        String host = "lele8k.game1617.com";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_HOST_KEY);
-                        String port = "9011";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_PORT_KEY);
+                        String host = "01ws12119622768.game1617.com";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_HOST_KEY);
+                        String port = "9007";//bodyJson.getString(PomeloClient.HANDSHAKE_RES_PORT_KEY);
                         client.close();
                         connector = new PomeloClient(new URI("wss://" + host + ":" + port));
                         connector.setOnHandshakeSuccessHandler(handshakeSuccessHandler);

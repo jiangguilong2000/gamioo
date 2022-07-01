@@ -1,4 +1,9 @@
 dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'it.unimi.dsi:fastutil:8.3.0'
+    implementation project(':gamioo-game');
+    implementation project(':gamioo-core');
+    implementation 'redis.clients:jedis:3.3.0';
+    implementation 'com.alibaba:fastjson:1.2.74';
+    testImplementation project(':gamioo-benchmark');
 }

