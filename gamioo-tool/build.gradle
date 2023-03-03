@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(':gamioo-core');
+
+    implementation 'com.formdev:flatlaf:2.4';
+    implementation 'com.formdev:flatlaf-intellij-themes:2.4';
+    api files('lib/flatlaf-demo-2.4.jar');
+    implementation 'com.intellij:forms_rt:7.0.3';
+    //  testImplementation project(':gamioo-benchmark');
+}

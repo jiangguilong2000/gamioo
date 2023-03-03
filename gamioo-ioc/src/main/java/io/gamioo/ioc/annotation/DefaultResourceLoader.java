@@ -18,7 +18,10 @@ package io.gamioo.ioc.annotation;
 
 import io.gamioo.core.exception.ServerBootstrapException;
 import io.gamioo.core.util.ClassUtils;
-import io.gamioo.ioc.io.*;
+import io.gamioo.ioc.io.FileClassResource;
+import io.gamioo.ioc.io.JarClassResource;
+import io.gamioo.ioc.io.Resource;
+import io.gamioo.ioc.io.ResourceLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +55,7 @@ public class DefaultResourceLoader implements ResourceLoader {
     private static final String URL_PROTOCOL_JAR = "jar";
 
 
+    @Override
     public List<Resource> getResourceList(String basePackage) {
         List<Resource> ret = new ArrayList<>();
         // 处理一下包名到目录
@@ -63,7 +67,7 @@ public class DefaultResourceLoader implements ResourceLoader {
                 switch (url.getProtocol()) {
                     // "file"
                     case URL_PROTOCOL_FILE: {
-                        ret.addAll(this.doFindFileResources(basePackage,new File(url.getFile())));
+                        ret.addAll(this.doFindFileResources(basePackage, new File(url.getFile())));
                         break;
                     }
                     // "jar"
@@ -92,7 +96,7 @@ public class DefaultResourceLoader implements ResourceLoader {
      *
      * @param file 文件
      */
-    private List<Resource> doFindFileResources(String basePackage,File file) {
+    private List<Resource> doFindFileResources(String basePackage, File file) {
         List<Resource> ret = new ArrayList<>();
         String path = file.getAbsolutePath();
         // 这个目录不存在，忽略
@@ -105,7 +109,7 @@ public class DefaultResourceLoader implements ResourceLoader {
             logger.warn("the directory {} can't be read", path);
             return ret;
         }
-        ret = this.listFiles(basePackage,file);
+        ret = this.listFiles(basePackage, file);
         return ret;
     }
 
@@ -115,11 +119,11 @@ public class DefaultResourceLoader implements ResourceLoader {
      *
      * @param file 目录
      */
-    private List<Resource> listFiles(String basePackage,File file) {
+    private List<Resource> listFiles(String basePackage, File file) {
         List<Resource> ret = new ArrayList<>();
         if (file.isDirectory()) {
             File[] array = file.listFiles();
-            if(array!=null){
+            if (array != null) {
                 for (File e : array) {
                     if (e.isFile()) {
                         String fileName = file.getName();
@@ -132,16 +136,16 @@ public class DefaultResourceLoader implements ResourceLoader {
                             continue;
                         }
 
-                        Resource resource = getFile(basePackage,e);
+                        Resource resource = getFile(basePackage, e);
                         ret.add(resource);
                     } else if (e.isDirectory()) {
-                        List<Resource> list = listFiles(basePackage+ e.getName() + "/",e);
+                        List<Resource> list = listFiles(basePackage + e.getName() + "/", e);
                         ret.addAll(list);
                     }
                 }
             }
         } else if (file.isFile()) {
-            Resource resource = getFile(basePackage,file);
+            Resource resource = getFile(basePackage, file);
             ret.add(resource);
         }
         return ret;
@@ -153,8 +157,8 @@ public class DefaultResourceLoader implements ResourceLoader {
      * @param file 文件
      * @return ResourceCallback
      */
-    private Resource getFile(String basePackage,File file) {
-        return new FileClassResource(basePackage,file);
+    private Resource getFile(String basePackage, File file) {
+        return new FileClassResource(basePackage, file);
     }
 
 
