@@ -42,7 +42,8 @@ public class BalanceBusinessExecutorTest {
     public void jctoolsHash() throws Exception {
         Map<Integer, DeviationDTO> store = new HashMap<>();
         for (Long id : list) {
-            int h =System.identityHashCode(id);;
+            int h = System.identityHashCode(id);
+            ;
             int index = (int) (h & 7);
             DeviationDTO dto = store.get(index);
             if (dto == null) {
@@ -143,7 +144,7 @@ public class BalanceBusinessExecutorTest {
     @Test
     public void fibberTest1() throws Exception {
         ExecutorService scheduler = Executors.newFixedThreadPool(8);
-        ThreadFactory factory = Thread.builder().virtual(scheduler).daemon(true).name("test-fiber-runner").factory();
+        ThreadFactory factory = Thread.ofVirtual().scheduler(scheduler).name("test-fiber-runner").factory();
         List<Thread> threadList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Thread thread = factory.newThread(() -> {
@@ -171,7 +172,7 @@ public class BalanceBusinessExecutorTest {
     public void fibberTest2() throws Exception {
         int NTASKS = 10;
         List<Future<String>> futureList = new LinkedList<>();
-        ThreadFactory factory = Thread.builder().virtual().name("test-fiber-runner").factory();
+        ThreadFactory factory = Thread.ofVirtual().name("test-fiber-runner").factory();
         ExecutorService exec = Executors.newFixedThreadPool(NTASKS, factory);
         for (int i = 1; i <= NTASKS; i++) {
             String taskname = "task-" + i;
