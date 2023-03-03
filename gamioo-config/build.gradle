@@ -1,9 +1,8 @@
 dependencies {
-    implementation project(':gamioo-core');
+    implementation project(':core:gamioo-common');
     implementation project(':gamioo-log');
 
-    testImplementation project(':gamioo-benchmark');
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
-    implementation group: 'com.alibaba.nacos', name: 'nacos-client', version: '2.0.0';
+    implementation group: 'com.alibaba.nacos', name: 'nacos-client', version: '2.1.1';
 
 }

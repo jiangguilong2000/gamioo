@@ -1,8 +1,8 @@
 package io.gamioo.config;
 
 import com.alibaba.fastjson.JSON;
-import io.gamioo.core.lang.Cache;
-import io.gamioo.core.lang.Server;
+import io.gamioo.common.lang.Cache;
+import io.gamioo.common.lang.Server;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

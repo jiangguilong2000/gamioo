@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.factory;
 
-import io.gamioo.core.exception.BeansException;
+import io.gamioo.common.exception.BeansException;
 import io.gamioo.ioc.definition.BeanDefinition;
 
 import java.lang.annotation.Annotation;

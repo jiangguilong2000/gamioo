@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.stereotype;
 
-import io.gamioo.core.concurrent.Group;
+import io.gamioo.common.concurrent.Group;
 
 import java.lang.annotation.*;
 

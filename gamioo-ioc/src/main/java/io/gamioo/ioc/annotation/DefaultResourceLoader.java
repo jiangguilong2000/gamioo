@@ -16,8 +16,8 @@
 
 package io.gamioo.ioc.annotation;
 
-import io.gamioo.core.exception.ServerBootstrapException;
-import io.gamioo.core.util.ClassUtils;
+import io.gamioo.common.exception.ServerBootstrapException;
+import io.gamioo.common.util.ClassUtils;
 import io.gamioo.ioc.io.FileClassResource;
 import io.gamioo.ioc.io.JarClassResource;
 import io.gamioo.ioc.io.Resource;

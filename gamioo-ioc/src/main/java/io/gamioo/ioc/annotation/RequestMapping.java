@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.annotation;
 
-import io.gamioo.core.http.RequestMethod;
+import io.gamioo.common.http.RequestMethod;
 
 import java.lang.annotation.*;
 
@@ -34,6 +34,7 @@ public @interface RequestMapping {
     String name() default "";
 
     String value() default "";
+
     /**
      * The HTTP request methods to map to, narrowing the primary mapping:
      * GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE, TRACE.

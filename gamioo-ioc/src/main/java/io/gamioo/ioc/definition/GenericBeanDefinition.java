@@ -18,10 +18,10 @@ package io.gamioo.ioc.definition;
 
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
-import io.gamioo.core.util.ClassUtils;
-import io.gamioo.core.util.FieldUtils;
-import io.gamioo.core.util.MethodUtils;
-import io.gamioo.core.util.StringUtils;
+import io.gamioo.common.util.ClassUtils;
+import io.gamioo.common.util.FieldUtils;
+import io.gamioo.common.util.MethodUtils;
+import io.gamioo.common.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

@@ -16,14 +16,13 @@
 
 package io.gamioo.ioc.factory.support;
 
-import io.gamioo.core.exception.BeansException;
-import io.gamioo.core.exception.ServerBootstrapException;
-import io.gamioo.core.util.StringUtils;
+import io.gamioo.common.exception.BeansException;
+import io.gamioo.common.exception.ServerBootstrapException;
+import io.gamioo.common.util.StringUtils;
 import io.gamioo.ioc.definition.BeanDefinition;
 import io.gamioo.ioc.factory.BeanFactory;
 import io.gamioo.ioc.factory.ObjectFactory;
 import io.gamioo.ioc.stereotype.Component;
-import io.gamioo.ioc.wrapper.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

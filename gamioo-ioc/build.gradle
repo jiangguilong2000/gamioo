@@ -1,7 +1,5 @@
 dependencies {
-    testImplementation project(':gamioo-benchmark');
-    implementation project(':gamioo-log');
-    implementation project(':gamioo-core');
+    implementation project(':core:gamioo-common');
     //  implementation group: 'org.jenkins-ci.plugins', name: 'plugin', version: '4.33'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
 }

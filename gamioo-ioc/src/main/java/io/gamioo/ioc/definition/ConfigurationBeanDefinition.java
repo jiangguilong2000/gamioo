@@ -1,10 +1,9 @@
 package io.gamioo.ioc.definition;
 
 import com.alibaba.fastjson.JSONObject;
-import io.gamioo.core.util.JSONUtils;
-import io.gamioo.core.util.StringUtils;
+import io.gamioo.common.util.JSONUtils;
+import io.gamioo.common.util.StringUtils;
 import io.gamioo.ioc.annotation.Configuration;
-import io.gamioo.ioc.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;

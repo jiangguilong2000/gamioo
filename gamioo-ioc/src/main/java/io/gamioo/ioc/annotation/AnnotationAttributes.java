@@ -16,7 +16,8 @@
 
 package io.gamioo.ioc.annotation;
 
-import io.gamioo.core.util.Assert;
+
+import io.gamioo.common.util.Assert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -28,7 +29,7 @@ import java.util.LinkedHashMap;
  * @author Allen Jiang
  * @since 1.0.0
  */
-public class AnnotationAttributes  extends LinkedHashMap<String, Object> {
+public class AnnotationAttributes extends LinkedHashMap<String, Object> {
     private final Class<? extends Annotation> annotationType;
 
     private final String displayName;
@@ -45,8 +46,9 @@ public class AnnotationAttributes  extends LinkedHashMap<String, Object> {
     /**
      * Create a new, empty {@link AnnotationAttributes} instance for the
      * specified {@code annotationType}.
+     *
      * @param annotationType the type of annotation represented by this
-     * {@code AnnotationAttributes} instance; never {@code null}
+     *                       {@code AnnotationAttributes} instance; never {@code null}
      * @since 4.2
      */
     public AnnotationAttributes(Class<? extends Annotation> annotationType) {
@@ -58,6 +60,7 @@ public class AnnotationAttributes  extends LinkedHashMap<String, Object> {
     /**
      * Get the type of annotation represented by this
      * {@code AnnotationAttributes} instance.
+     *
      * @return the annotation type, or {@code null} if unknown
      * @since 4.2
      */
@@ -68,15 +71,17 @@ public class AnnotationAttributes  extends LinkedHashMap<String, Object> {
     /**
      * Get the value stored under the specified {@code attributeName} as a
      * string.
+     *
      * @param attributeName the name of the attribute to get; never
-     * {@code null} or empty
+     *                      {@code null} or empty
      * @return the value
      * @throws IllegalArgumentException if the attribute does not exist or
-     * if it is not of the expected type
+     *                                  if it is not of the expected type
      */
     public String getString(String attributeName) {
         return getRequiredAttribute(attributeName, String.class);
     }
+
     /**
      * Get the value stored under the specified {@code attributeName},
      * ensuring that the value is of the {@code expectedType}.
@@ -85,12 +90,13 @@ public class AnnotationAttributes  extends LinkedHashMap<String, Object> {
      * component type of the expected array type, the single element will be
      * wrapped in a single-element array of the appropriate type before
      * returning it.
+     *
      * @param attributeName the name of the attribute to get; never
-     * {@code null} or empty
-     * @param expectedType the expected type; never {@code null}
+     *                      {@code null} or empty
+     * @param expectedType  the expected type; never {@code null}
      * @return the value
      * @throws IllegalArgumentException if the attribute does not exist or
-     * if it is not of the expected type
+     *                                  if it is not of the expected type
      */
     @SuppressWarnings("unchecked")
     private <T> T getRequiredAttribute(String attributeName, Class<T> expectedType) {

@@ -16,9 +16,9 @@
 
 package io.gamioo.ioc.context;
 
-import io.gamioo.core.util.AnnotationUtils;
-import io.gamioo.core.util.Assert;
-import io.gamioo.core.util.ClassUtils;
+import io.gamioo.common.util.AnnotationUtils;
+import io.gamioo.common.util.Assert;
+import io.gamioo.common.util.ClassUtils;
 import io.gamioo.ioc.annotation.Configuration;
 import io.gamioo.ioc.annotation.DefaultResourceLoader;
 import io.gamioo.ioc.definition.ConfigurationBeanDefinition;

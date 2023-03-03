@@ -1,8 +1,10 @@
 rootProject.name = 'gamioo';
 
 // 基础模块
-include "gamioo-cache", "gamioo-core", 'gamioo-config', "gamioo-protocol", "gamioo-network", "gamioo-asm", "gamioo-event", "gamioo-orm", "gamioo-pomelo", "gamioo-ioc", "gamioo-redis", "gamioo-benchmark", "gamioo-xml", "gamioo-compress", "gamioo-log";
+include 'core:gamioo-common'
+
+include "gamioo-cache", 'gamioo-config', "gamioo-protocol", "gamioo-network", "gamioo-event", "gamioo-orm", "gamioo-ioc", "gamioo-redis", "gamioo-xml", "gamioo-compress", "gamioo-log";
 
 // 游戏服务器
-include "gamioo-game", "gamioo-robot", "gamioo-robot", "gamioo-poker", 'gamioo-sandbox', "gamioo-lele", "gamioo-tool", "gamioo-ball";
+include "gamioo-game";
 

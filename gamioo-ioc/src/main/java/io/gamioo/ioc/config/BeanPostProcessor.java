@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.config;
 
-import io.gamioo.core.exception.BeansException;
+import io.gamioo.common.exception.BeansException;
 
 /**
  * some description

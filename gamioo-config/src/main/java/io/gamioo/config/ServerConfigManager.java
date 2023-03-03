@@ -1,12 +1,12 @@
 package io.gamioo.config;
 
 
-import io.gamioo.core.exception.ServiceException;
-import io.gamioo.core.lang.Cache;
-import io.gamioo.core.lang.Server;
-import io.gamioo.core.util.FileUtils;
-import io.gamioo.core.util.IPUtil;
-import io.gamioo.core.util.JVMUtil;
+import io.gamioo.common.exception.ServiceException;
+import io.gamioo.common.lang.Cache;
+import io.gamioo.common.lang.Server;
+import io.gamioo.common.util.FileUtils;
+import io.gamioo.common.util.IPUtil;
+import io.gamioo.common.util.JVMUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +15,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 

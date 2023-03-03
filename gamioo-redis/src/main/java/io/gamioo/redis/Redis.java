@@ -1,7 +1,7 @@
 package io.gamioo.redis;
 
 
-import io.gamioo.core.exception.ServiceException;
+import io.gamioo.common.exception.ServiceException;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

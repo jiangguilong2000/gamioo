@@ -16,7 +16,7 @@
 
 package io.gamioo.ioc.definition;
 
-import io.gamioo.core.util.FieldUtils;
+import io.gamioo.common.util.FieldUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

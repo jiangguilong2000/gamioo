@@ -1,9 +1,8 @@
 dependencies {
-	implementation project(':gamioo-core');
-    implementation group: 'com.github.luben', name: 'zstd-jni', version: '1.4.5-6';
-    testImplementation group: 'org.apache.commons', name: 'commons-compress', version: '1.20';
-    testImplementation group: 'commons-io', name: 'commons-io', version: '2.7';
-    testImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4';
-    testImplementation project(':gamioo-benchmark');
-    
+    api project(':core:gamioo-common');
+    api group: 'com.github.luben', name: 'zstd-jni', version: '1.4.5-6';
+    api group: 'org.apache.commons', name: 'commons-compress', version: '1.21';
+    api group: 'commons-io', name: 'commons-io', version: '2.7';
+    api group: 'org.apache.commons', name: 'commons-collections4', version: '4.4';
+
 }

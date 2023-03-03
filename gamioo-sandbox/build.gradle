@@ -1,9 +1,0 @@
-dependencies {
-    implementation project(':gamioo-core');
-    implementation group: 'org.jctools', name: 'jctools-core', version: '3.3.0';
-    implementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.11.0';
-    implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.8.+';
-
-
-    //  testImplementation project(':gamioo-benchmark');
-}
