@@ -1,2 +1,2 @@
 # gamioo
-这是一款支持负载均衡，集群部署，动态扩展和伸缩的游戏服务器框架，基于此框架，你可以快速实现一个高性能、高并发、高可用的游戏服务器，让开发者专注于业务逻辑的开发。 目前计划中实现了配置映射，协议映射，模板加载，数据存储，异步事件，延迟任务，内部指令等功能模块。 在业务层将会实现服务降级，幂等性设计，智能监控，数据分析，智能推荐，防网络攻击等功能。 在产品层具有热加载，热部署，热修复以及反破解等功能。 能完全满足休闲游戏，IO对战游戏，卡牌游戏，SLG游戏，ARPG游戏的服务器框架快速搭建。
+Game server framework, based on this framework, you can quickly implement a highly available, easy to maintain, stable and high-performance game server.
