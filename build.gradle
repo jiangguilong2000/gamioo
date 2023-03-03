@@ -94,8 +94,8 @@ subprojects {
                         }
 
                         credentials {
-                            username = "${NEXUS_USERNAME}";
-                            password = "${NEXUS_PASSWORD}";
+                            username = System.getenv("NEXUS_USERNAME");
+                            password = System.getenv("NEXUS_PASSWORD");
                         }
                     }
                 }
@@ -175,10 +175,8 @@ allprojects {
 
 
     repositories {
-        //阿里云的国内镜像
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' };
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' };
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' };
+        //腾讯云的国内镜像
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
     }
 
 }

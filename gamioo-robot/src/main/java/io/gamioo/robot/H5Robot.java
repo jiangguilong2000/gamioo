@@ -133,7 +133,6 @@ public class H5Robot {
         robot.setTarget(target);
         robot.init();
         //redisManager.updateTarget(target);
-
         robot.handle();
         robot.end();
         logger.info("end working");

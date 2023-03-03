@@ -82,7 +82,7 @@ public class Redis {
     public void ping() {
         try (Jedis j = pool.getResource()) {
             String ret = j.ping();
-            if (ret.equals("PONG")) {
+            if ("PONG".equals(ret)) {//yes
                 logger.info("Redis server connected ok");
             } else {
                 logger.info("Redis server connected failed");
