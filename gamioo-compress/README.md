@@ -13,14 +13,85 @@
     * zstandard
     * zlib
 
+压缩文本的样本(1038 bytes)如下:
+
+```bash
+{code {
+  flag: 1
+  id: 1
+}
+tableId: 936940
+ownerId: 143566
+createId: 143566
+roomTemplateId: 4
+configTemplateId: 1101
+entryDTO {
+  key: 1
+  value: 3
+}
+entryDTO {
+  key: 201
+  value: 0
+}
+entryDTO {
+  key: 202
+  value: 0
+}
+entryDTO {
+  key: 204
+  value: 1
+}
+entryDTO {
+  key: 4
+  value: 6
+}
+entryDTO {
+  key: 203
+  value: 0
+}
+playerDTO {
+  playerDTO {
+    id: 143566
+    name: "King\345\274\272"
+    gender: 1
+    icon: "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLLMzUbUh9ic7fQlhibCCLnibAIAP838Xge2cmFcStdEaWLL4UdLrgzhZsxrcsYxgJLsDR39vPsfjLibw/132"
+    city: "\345\256\201\346\263\242\345\270\202"
+    ip: "39.188.248.167"
+    longitude: "0.0"
+    latitude: "0.0"
+    position: 0
+    ready: false
+    online: true
+    totalPoint: 0.0
+    lastEnterTime: 1595855143603
+    win: 0
+    lose: 0
+    type: 1
+  }
+  sitDownPosition: 0
+  remain: 0
+  score: 0
+  daoNum: 0.0
+  totalDaoNum: 0.0
+  rank: 0
+}
+clubId: 0
+status: 0
+sitDownPosition: 0
+kingBormPokerDTO {
+  id: 143566
+}
+}
+```
+
 #### 📄 性能测试结果如下：
 
 ```bash
-Benchmark                               Mode  Cnt          Score          Error  Units
-CompressBenchMark.zlibCompress         thrpt   10      88715.804 ±     7722.750  ops/s
-CompressBenchMark.zlibDecompress       thrpt   10  469560721.886 ± 12731671.970  ops/s
-CompressBenchMark.zstandardCompress    thrpt   10     192338.673 ±    19923.725  ops/s
-CompressBenchMark.zstandardDecompress  thrpt   10  477850633.433 ±  3949541.241  ops/s
+Benchmark                               Mode  Cnt           Score          Error  Units
+CompressBenchMark.zlibCompress         thrpt   10       42671.817 ±     2112.154  ops/s
+CompressBenchMark.zlibDecompress       thrpt   10  2366646909.611 ± 43144539.607  ops/s
+CompressBenchMark.zstandardCompress    thrpt   10      126078.294 ±    10863.591  ops/s
+CompressBenchMark.zstandardDecompress  thrpt   10  2133946821.515 ± 96154271.597  ops/s
 ```
 
 在Windows下(4核8线程 Intel Core i7),很明显，
