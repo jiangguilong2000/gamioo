@@ -22,6 +22,7 @@ subprojects {
     apply plugin: 'java-library';
     apply plugin: 'maven-publish';
     apply plugin: 'signing';
+    apply plugin: 'jacoco';
 
     group = 'io.gamioo';
     version = '1.0.1';
@@ -45,15 +46,16 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
-    /**
-     * 定义资源集
-     * main源码包
-     * test单测包
-     * jmh基准测试包*/
+/**
+ * 定义资源集
+ * main源码包
+ * test单测包
+ * jmh基准测试包
+ */
     sourceSets {
-        jmh
         main
         test
+        jmh
     }
 
     /**创建java和resource目录*/
@@ -207,9 +209,40 @@ subprojects {
     }
 
     test {
-        useJUnitPlatform();
+        useJUnitPlatform()
+        maxParallelForks(1)
+        ignoreFailures(false)
+        failFast(true)
+
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+        reports.html.enabled = false
+        reports.junitXml.enabled = false
     }
 
+    task coverage(type: JacocoReport) {
+        executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+        sourceSets sourceSets.main, sourceSets.jmh
+    }
+
+    coverage.dependsOn {
+        project.test
+    }
+    
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
+    }
+
+    check.dependsOn jacocoTestReport
 }
 
 
