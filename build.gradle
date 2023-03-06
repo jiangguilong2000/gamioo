@@ -122,10 +122,10 @@ subprojects {
                         if (project.version.endsWith('-SNAPSHOT')) {
                             //快照版本的nexus仓库地址
                             name 'snapshots';
-                            url 'https://oss.sonatype.org/content/repositories/snapshots/';
+                            url 'https://s01.oss.sonatype.org/content/repositories/snapshots/';
                         } else {
                             name 'releases';
-                            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/';
+                            url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/';
 
                         }
                         credentials {
@@ -188,10 +188,13 @@ subprojects {
         }
 
     }
+    ext."signing.keyId" = System.getenv('SIGNING_KEYID')
+    ext."signing.password" = System.getenv('SIGNING_PASSWORD')
+    ext."signing.secretKeyRingFile" = System.getenv('SIGNING_SECRETKEYRINGFILE')
 
     signing {
-        //sign configurations.archives;
-        sign publishing.publications.mavenJava;
+        sign configurations.archives;
+        //sign publishing.publications.mavenJava;
     }
 
 
@@ -234,7 +237,7 @@ subprojects {
     coverage.dependsOn {
         project.test
     }
-    
+
     jacocoTestReport {
         reports {
             xml.enabled true

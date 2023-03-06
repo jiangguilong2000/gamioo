@@ -1,5 +1,5 @@
 dependencies {
-    api project(':core:gamioo-common');
+    api project(':gamioo-common');
     api('com.github.silencesu:Easy3dNav:1.1.0') {
         exclude group: "ch.qos.logback", module: "logback-classic"
     }

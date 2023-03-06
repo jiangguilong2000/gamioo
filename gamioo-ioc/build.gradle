@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(':core:gamioo-common');
+    implementation project(':gamioo-common');
     //  implementation group: 'org.jenkins-ci.plugins', name: 'plugin', version: '4.33'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
 }

@@ -1,5 +1,5 @@
 dependencies {
-    // implementation project(':core:gamioo-common');
+    // implementation project(':gamioo-common');
 
     implementation 'com.alibaba:fastjson:1.2.74';
     api group: 'io.netty', name: 'netty-all', version: '4.1.52.Final';
