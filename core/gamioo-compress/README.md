@@ -48,7 +48,6 @@ group: 'com.github.luben', name: 'zstd-jni', version: '1.5.4-2'
 <details>
 <summary>展开查看</summary>
 <pre><code>
-```json
 {code {
   flag: 1
   id: 1
@@ -115,7 +114,6 @@ kingBormPokerDTO {
   id: 143566
 }
 }
-```
 </code></pre>
 </details>
 
