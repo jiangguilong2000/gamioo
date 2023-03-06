@@ -13,9 +13,42 @@
     * zstandard
     * zlib
 
-压缩文本的样本(1038 bytes)如下:
+#### 📄 性能测试结果如下：
 
 ```bash
+Benchmark                               Mode  Cnt           Score          Error  Units
+CompressBenchMark.zlibCompress         thrpt   10       42671.817 ±     2112.154  ops/s
+CompressBenchMark.zlibDecompress       thrpt   10  2366646909.611 ± 43144539.607  ops/s
+CompressBenchMark.zstandardCompress    thrpt   10      126078.294 ±    10863.591  ops/s
+CompressBenchMark.zstandardDecompress  thrpt   10  2133946821.515 ± 96154271.597  ops/s
+```
+
+在Windows下(4核8线程 Intel Core i7),很明显，
+
+- 压缩API,zstandard比zlib性能达到了 216.8%;
+- 解压缩API,zstandard比zlib性能达到了101.8%;
+
+### 依赖&参考
+
+dependncy :
+jdk:
+
+```bash
+OpenJDK Runtime Environment (Tencent Kona 8.0.12) (build 1.8.0_352-b1)
+OpenJDK 64-Bit Server VM (Tencent Kona 8.0.12) (build 25.352-b1, mixed mode, sharing)
+```
+
+lib:
+
+```bash
+group: 'com.github.luben', name: 'zstd-jni', version: '1.5.4-2'
+```
+
+压缩文本的样本(1038 bytes)如下:
+<details>
+<summary>展开查看</summary>
+<pre><code>
+```json
 {code {
   flag: 1
   id: 1
@@ -83,23 +116,8 @@ kingBormPokerDTO {
 }
 }
 ```
-
-#### 📄 性能测试结果如下：
-
-```bash
-Benchmark                               Mode  Cnt           Score          Error  Units
-CompressBenchMark.zlibCompress         thrpt   10       42671.817 ±     2112.154  ops/s
-CompressBenchMark.zlibDecompress       thrpt   10  2366646909.611 ± 43144539.607  ops/s
-CompressBenchMark.zstandardCompress    thrpt   10      126078.294 ±    10863.591  ops/s
-CompressBenchMark.zstandardDecompress  thrpt   10  2133946821.515 ± 96154271.597  ops/s
-```
-
-在Windows下(4核8线程 Intel Core i7),很明显，
-
-- 压缩API,zstandard比zlib性能达到了 216.8%;
-- 解压缩API,zstandard比zlib性能达到了101.8%;
-
-### 依赖&参考
+</code></pre>
+</details>
 
 ## TODO list
 

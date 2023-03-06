@@ -30,5 +30,13 @@ CacheBenchMark.guavaPut     thrpt   10    411722.523 ±  531660.440  ops/s
 
 ### 依赖&参考
 
+dependncy :
+jdk:
+
+```bash
+OpenJDK Runtime Environment (Tencent Kona 8.0.12) (build 1.8.0_352-b1)
+OpenJDK 64-Bit Server VM (Tencent Kona 8.0.12) (build 25.352-b1, mixed mode, sharing)
+```
+
 ## TODO list
 
