@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ThreadUtils {
     private static final Logger logger = LogManager.getLogger(ThreadUtils.class);
+
     /**
      * 暂停执行.
      * <p>
@@ -37,7 +38,7 @@ public class ThreadUtils {
      */
     public static void sleep(long millis) {
         try {
-            if(millis>0){
+            if (millis > 0) {
                 Thread.sleep(millis);
             }
         } catch (InterruptedException e) {
@@ -63,16 +64,15 @@ public class ThreadUtils {
 
     /**
      * 输出当前线程正在运行的堆栈信息.
-     * @return 当前线程正在运行的堆栈信息
+     * 当前线程正在运行的堆栈信息
      */
     public static void printStackTrace() {
 
-        try{
+        try {
             throw new Exception();
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
-
 
 
     }

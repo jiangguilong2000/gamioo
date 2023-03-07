@@ -86,8 +86,8 @@ public class JsonXmlUtil {
     /**
      * xml转json
      *
-     * @param element
-     * @param json
+     * @param element 元素
+     * @param json    json
      */
     public static void xml2Json(Element element, JSONObject json) {
         //如果是属性
@@ -139,7 +139,6 @@ public class JsonXmlUtil {
      *
      * @param store Map类型数据
      * @return XML格式的字符串
-     * @throws Exception
      */
     public static String mapToXml(Map<String, Object> store) {
         try {
@@ -180,7 +179,6 @@ public class JsonXmlUtil {
      *
      * @param strXML XML字符串
      * @return XML数据转换后的Map
-     * @throws Exception
      */
     public static Map<String, String> xmlToMap(String strXML) {
         try {

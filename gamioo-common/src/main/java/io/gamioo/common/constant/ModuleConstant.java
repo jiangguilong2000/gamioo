@@ -24,6 +24,8 @@ public class ModuleConstant {
 
     /**
      * 获取模块列表
+     *
+     * @return 返回模块列表
      */
     public static List<String> getModuleList() {
         if (CollectionUtils.isEmpty(moduleList)) {

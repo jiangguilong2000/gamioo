@@ -90,6 +90,9 @@ public class SystemConstant {
 
     /**
      * 服务器类型转化
+     *
+     * @param type 服务器类型
+     * @return 返回服务器数字类型
      */
     public static int getServerType(String type) {
         switch (type) {

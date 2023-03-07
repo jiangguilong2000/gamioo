@@ -31,11 +31,15 @@ public class TelnetUtils {
 
     /**
      * 模拟Telnet 连接
-     * @param ip 地址
-     * @param port 端口
      *
-     * 检测是否能连上 */
-    public static boolean isConnected(int checkNum,String ip, int port) {
+     * @param checkNum 验证几个
+     * @param ip       地址
+     * @param port     端口
+     * @return 返回是否连接成功
+     * <p>
+     * 检测是否能连上
+     */
+    public static boolean isConnected(int checkNum, String ip, int port) {
         boolean ret = false;
         for (int i = 0; i < checkNum; i++) {
             try {
@@ -61,21 +65,21 @@ public class TelnetUtils {
 
     public static boolean isConnected(String ip, int port) {
         boolean ret = false;
-            try {
-                TelnetClient telnet = new TelnetClient();
-                telnet.setConnectTimeout(5000);//连接超时时间
-              //  TelnetClient telnetClient = new TelnetClient("vt200");  //指明Telnet终端类型，否则会返回来的数据中文会乱码
-              //  telnet.setDefaultTimeout(5000);//打开端口的超时时间
-                telnet.connect(ip, port);
-                ret = telnet.isConnected();
-                if(ret){
-                    logger.info("该连接可以用 {}:{}",ip,port);
-                    telnet.disconnect();
-                }
-            } catch (Exception e) {
-               // logger.warn("该连接无法使用 {}:{}",ip,port);
-            //    logger.error(e.getMessage(), e);
+        try {
+            TelnetClient telnet = new TelnetClient();
+            telnet.setConnectTimeout(5000);//连接超时时间
+            //  TelnetClient telnetClient = new TelnetClient("vt200");  //指明Telnet终端类型，否则会返回来的数据中文会乱码
+            //  telnet.setDefaultTimeout(5000);//打开端口的超时时间
+            telnet.connect(ip, port);
+            ret = telnet.isConnected();
+            if (ret) {
+                logger.info("该连接可以用 {}:{}", ip, port);
+                telnet.disconnect();
             }
-            return ret;
+        } catch (Exception e) {
+            // logger.warn("该连接无法使用 {}:{}",ip,port);
+            //    logger.error(e.getMessage(), e);
+        }
+        return ret;
     }
 }

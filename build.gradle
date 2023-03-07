@@ -25,7 +25,7 @@ subprojects {
     apply plugin: 'jacoco';
 
     group = 'io.gamioo';
-    version = '1.0.1';
+    version = '0.2.10';
 //	version = '0.0.1-SNAPSHOT';
     ext {
         releaseRoot = '../../dist'
@@ -122,10 +122,10 @@ subprojects {
                         if (project.version.endsWith('-SNAPSHOT')) {
                             //快照版本的nexus仓库地址
                             name 'snapshots';
-                            url 'https://s01.oss.sonatype.org/content/repositories/snapshots/';
+                            url 'https://oss.sonatype.org/content/repositories/snapshots/';
                         } else {
                             name 'releases';
-                            url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/';
+                            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/';
 
                         }
                         credentials {
@@ -193,8 +193,8 @@ subprojects {
     ext."signing.secretKeyRingFile" = System.getenv('SIGNING_SECRETKEYRINGFILE')
 
     signing {
-        sign configurations.archives;
-        //sign publishing.publications.mavenJava;
+        //sign configurations.archives;
+        sign publishing.publications.mavenJava;
     }
 
 
@@ -246,12 +246,20 @@ subprojects {
     }
 
     check.dependsOn jacocoTestReport
+
+
 }
 
 
 allprojects {
 
-
+//    task printSigning {
+//        println(project.findProperty('signing.secretKeyRingFile'))
+//    }
+//
+//    task currentDir {
+//        println file('.')
+//    }
     repositories {
         //腾讯云的国内镜像
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
