@@ -30,11 +30,20 @@ public interface Definition {
 
     String getName();
 
-    /**获取注解*/
-    <T extends Annotation> T  getAnnotation();
+    /**
+     * 获取注解
+     *
+     * @return 返回注解
+     */
+    <T extends Annotation> T getAnnotation();
 
-    /**获取注解*/
+    /**
+     * 获取注解
+     *
+     * @return 返回注解类型
+     */
     Class<? extends Annotation> getAnnotationType();
+
     /**
      * 获取此方法的访问入口所对应的Index.
      *

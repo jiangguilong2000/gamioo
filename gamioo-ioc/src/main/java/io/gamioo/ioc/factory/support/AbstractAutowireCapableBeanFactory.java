@@ -64,6 +64,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     /**
      * 初始化BEAN
+     *
+     * @param beanDefinition bean定义
+     * @return 返回对象
      */
     protected Object instantiateBean(BeanDefinition beanDefinition) {
         return beanDefinition.newInstance();

@@ -178,7 +178,7 @@ public class Redis {
      *
      * @param pattern 模式
      * @return Key集合
-     * @warning KEYS 命令被用于处理一个大的数据库时，它们可能会阻塞服务器达数秒之久。
+     * warning KEYS 命令被用于处理一个大的数据库时，它们可能会阻塞服务器达数秒之久。
      */
     public Set<String> keys(String pattern) {
         try (Jedis j = pool.getResource()) {
@@ -704,7 +704,7 @@ public class Redis {
      * 时间复杂度为o(1)<br>
      * 如果Key不存在，会创建一个新的Hash集并与之关联。<br>
      * 如果指定字段不存在，则字段的值在该操作执行前被设计为0<br>
-     * <b>注意：此命令支持的值范围限定在64位 有符号整数<b>
+     * 注意：此命令支持的值范围限定在64位 有符号整数
      *
      * @param key   Key值
      * @param field 指定字段
@@ -944,7 +944,7 @@ public class Redis {
      *
      * @param key KEY值
      * @return Set集中的所有元素
-     * @warning SMEMBERS 命令被用于处理一个大的集合键时， 它们可能会阻塞服务器达数秒之久。
+     * warning SMEMBERS 命令被用于处理一个大的集合键时， 它们可能会阻塞服务器达数秒之久。
      */
     public Set<String> smembers(String key) {
         Set<String> ret = null;
@@ -1294,7 +1294,7 @@ public class Redis {
     /**
      * 返回key对应的Set集合中指定分数区间成员的个数。
      * <p>
-     * 注意： min <= 此分数值 <= max
+     * 注意： min &lt;= 此分数值 &lt;= max
      *
      * @param key KEY值
      * @param min 分数值下限
@@ -1407,7 +1407,7 @@ public class Redis {
      * 执行脚本
      *
      * @param script
-     * @return
+     * @return 返回结果
      */
     public Object eval(String script) {
         try (Jedis j = pool.getResource()) {
@@ -1422,9 +1422,8 @@ public class Redis {
 
     /**
      * 将信息 message 发送到指定的频道 channel 。
-     *
-     * @return 接收到信息 message 的订阅者数量。
-     * @version >= 2.0.0 时间复杂度： O(N+M)，其中 N 是频道channel 的订阅者数量，而 M
+     * <p>
+     * version=2.0.0 时间复杂度： O(N+M)，其中 N 是频道channel 的订阅者数量，而 M
      * 则是使用模式订阅(subscribed patterns)的客户端的数量。
      */
     public long publish(String channel, String message) {
@@ -1438,9 +1437,8 @@ public class Redis {
 
     /**
      * 订阅给定的一个或多个频道的信息。
-     *
-     * @return 接收到的信息(请参见下面的代码说明)。
-     * @version >= 2.0.0 时间复杂度： O(N)，其中 N 是订阅的频道的数量。
+     * <p>
+     * version=2.0.0 时间复杂度： O(N)，其中 N 是订阅的频道的数量。
      */
     public void subscribe(JedisPubSub jedisPubSub, String... channel) {
         try (Jedis j = pool.getResource()) {
@@ -1455,9 +1453,8 @@ public class Redis {
      * <p>
      * 每个模式以 * 作为匹配符，比如 it* 匹配所有以 it 开头的频道( it.news 、 it.blog 、 it.tweets 等等)，
      * news.* 匹配所有以 news. 开头的频道( news.it 、 news.global.today 等等)，诸如此类。
-     *
-     * @return 接收到的信息
-     * @version >= 2.0.0 时间复杂度： O(N)， N 是订阅的模式的数量。
+     * <p>
+     * version=2.0.0 时间复杂度： O(N)， N 是订阅的模式的数量。
      */
     public void psubscribe(JedisPubSub jedisPubSub, String... channel) {
         try (Jedis j = pool.getResource()) {
@@ -1513,7 +1510,7 @@ public class Redis {
     }
 
     /**
-     * 可用版本： >= 2.6.0 时间复杂度： 这个命令在源实例上实际执行 DUMP 命令和 DEL 命令，在目标实例执行 RESTORE
+     * 可用版本：=2.6.0 时间复杂度： 这个命令在源实例上实际执行 DUMP 命令和 DEL 命令，在目标实例执行 RESTORE
      * 命令，查看以上命令的文档可以看到详细的复杂度说明。 key 数据在两个实例之间传输的复杂度为 O(N) 。
      */
     public String migrate(String host, int port, String key, int destinationDb, int timeout) {

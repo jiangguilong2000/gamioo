@@ -137,14 +137,16 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return ret;
     }
 
-    /**通过注解类型获得对象集合*/
+    /**
+     * 通过注解类型获得对象集合
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> getBeanListOfAnnotation(Class<? extends Annotation> annotation) {
         List<T> ret = new ArrayList<>();
         Collection<BeanDefinition> list = beanDefinitionMap.values();
         for (BeanDefinition e : list) {
-            if(e.getAnnotationType()==annotation){
+            if (e.getAnnotationType() == annotation) {
                 T instance = (T) this.getBean(e.getName());
                 ret.add(instance);
             }
@@ -162,7 +164,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
         return (T) bean;
     }
-
 
 
 //    public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
@@ -209,6 +210,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
     /**
      * 获取单例
+     *
+     * @param beanName bean名称
+     * @return 返回单例对象
      */
     protected Object getSingleton(String beanName) {
         Object singletonObject = this.singletonObjects.get(beanName);
@@ -265,10 +269,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     /**
-     * Return whether the specified singleton bean is currently in creation
-     * (within the entire factory).
-     *
      * @param beanName the name of the bean
+     * @return Return whether the specified singleton bean is currently in creation(within the entire factory).
      */
     public boolean isSingletonCurrentlyInCreation(String beanName) {
         return this.singletonsCurrentlyInCreation.contains(beanName);

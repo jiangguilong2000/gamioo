@@ -25,7 +25,7 @@ subprojects {
     apply plugin: 'jacoco';
 
     group = 'io.gamioo';
-    version = '0.2.10';
+    version = '0.2.11';
 //	version = '0.0.1-SNAPSHOT';
     ext {
         releaseRoot = '../../dist'
@@ -59,14 +59,10 @@ subprojects {
     }
 
     /**创建java和resource目录*/
-    def ignoreArray = ["core", "support"]
     task createDirs {
-
-        if (ignoreArray.every { element -> element != project.name }) {
-            //     println project.name + ":createDirs"
-            sourceSets*.java.srcDirs*.each { it.mkdirs() }
-            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-        }
+        //     println project.name + ":createDirs"
+        sourceSets*.java.srcDirs*.each { it.mkdirs() }
+        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
     }
 
     jar {

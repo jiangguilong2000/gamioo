@@ -29,7 +29,7 @@ public interface BeanDefinition extends Definition {
 
     List<FieldDefinition> getFieldDefinitionList(Class<? extends Annotation> clazz);
 
-     List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz);
+    List<MethodDefinition> getMethodDefinitionList(Class<? extends Annotation> clazz);
     //  List<FieldDefinition> getValueFieldDefinition();
 
     Object newInstance();
@@ -44,7 +44,11 @@ public interface BeanDefinition extends Definition {
      */
     void analysisFieldList();
 
-    /**解析实体对象*/
+    /**
+     * 解析实体对象
+     *
+     * @param instance 对象
+     */
     void analysisBean(Object instance);
 
 //    /**
