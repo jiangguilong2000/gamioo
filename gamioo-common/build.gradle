@@ -1,6 +1,6 @@
 dependencies {
     api project(':gamioo-log');
-
+    api group: 'com.google.guava', name: 'guava', version: '31.1-jre';
     api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3';
     api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3';
     api group: 'com.esotericsoftware', name: 'reflectasm', version: '1.11.9';

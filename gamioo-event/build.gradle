@@ -1,6 +1,4 @@
 dependencies {
-    implementation project(':gamioo-log');
-    
-    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11';
-    implementation group: 'com.google.guava', name: 'guava', version: '28.+';
+    implementation project(':gamioo-common');
+
 }

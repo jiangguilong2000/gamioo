@@ -13,6 +13,12 @@
     * zstandard
     * zlib
 
+* 如何使用
+
+```bash
+implementation group: 'io.gamioo', name: 'gamioo-compress', version: '0.2.11'
+```
+
 #### 📄 性能测试结果如下：
 
 ```bash
