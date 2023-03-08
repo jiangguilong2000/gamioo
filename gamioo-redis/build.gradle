@@ -2,4 +2,5 @@ dependencies {
     implementation project(':gamioo-common');
     implementation 'it.unimi.dsi:fastutil:8.3.0'
     implementation 'redis.clients:jedis:3.3.0';
+    implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.2.3.RELEASE';
 }
