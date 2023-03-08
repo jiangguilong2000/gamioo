@@ -2,7 +2,7 @@ dependencies {
     // implementation project(':gamioo-common');
 
     implementation 'com.alibaba:fastjson:1.2.74';
-    api group: 'io.netty', name: 'netty-all', version: '4.1.52.Final';
+    api group: 'io.netty', name: 'netty-all', version: '4.1.86.Final';
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.6.0';
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4';
     implementation group: 'org.jctools', name: 'jctools-core', version: '3.3.0';
