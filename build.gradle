@@ -25,7 +25,7 @@ subprojects {
     apply plugin: 'jacoco';
 
     group = 'io.gamioo';
-    version = '0.2.12';
+    version = '0.2.13';
 //	version = '0.0.1-SNAPSHOT';
     ext {
         releaseRoot = '../../dist'
