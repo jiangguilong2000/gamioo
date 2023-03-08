@@ -1,32 +1,30 @@
 package io.gamioo.config;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.ConfigType;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.shaded.com.google.protobuf.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.PostConstruct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class NacosUtil {
     private static final Logger logger = LogManager.getLogger(NacosUtil.class);
 
-    public static void main(String[] args) throws ServiceException {
-        NacosUtil util=new NacosUtil();
+    public static void main(String[] args) {
+        NacosUtil util = new NacosUtil();
         util.initNacos();
     }
-    public void initNacos() throws ServiceException {
+
+    public void initNacos() {
         logger.info("[nacos]:nacosbutton equals 1L");
         ServerConfigManager serverConfigManager = new ServerConfigManager();
-        serverConfigManager.load("game","game-config.yml");
-        ServerConfig config=serverConfigManager.getServerConfig();
+        serverConfigManager.load("game", "game-config.yml");
+        ServerConfig config = serverConfigManager.getServerConfig();
         //指定连接到的服务器地址，可以是本地也可以是其他服务器
         String serverAddr = "1.15.9.113";
         //自己指定的组
@@ -48,7 +46,6 @@ public class NacosUtil {
             logger.debug("status={}", status);
 
             configService.publishConfig(dataId, group, config.getContent(), ConfigType.YAML.getType());
-
 
 
             //监听器，一旦nacos中相应值改变，则进行相应开关状态改变

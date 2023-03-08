@@ -5,8 +5,8 @@ import io.gamioo.common.exception.ServiceException;
 import io.gamioo.common.lang.Cache;
 import io.gamioo.common.lang.Server;
 import io.gamioo.common.util.FileUtils;
-import io.gamioo.common.util.IPUtil;
 import io.gamioo.common.util.JVMUtil;
+import io.gamioo.network.util.IPUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +40,7 @@ public class ServerConfigManager {
         Yaml yaml = new Yaml();
         try {
             root = yaml.load(new FileInputStream(file));
-            String content=FileUtils.readFileToString(file);
+            String content = FileUtils.readFileToString(file);
             config.setContent(content);
             //   config.setRoot(root);
             //    config.setContent( JSON.toJSONString(root));

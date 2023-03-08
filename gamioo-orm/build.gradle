@@ -1,6 +1,3 @@
 dependencies {
     implementation project(':gamioo-common');
-    implementation 'com.alibaba:fastjson:1.2.74';
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4';
-    testImplementation 'com.vdurmont:emoji-java:5.1.1';
 }

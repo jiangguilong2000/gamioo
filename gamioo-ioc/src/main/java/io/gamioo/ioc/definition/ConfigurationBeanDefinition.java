@@ -1,6 +1,6 @@
 package io.gamioo.ioc.definition;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import io.gamioo.common.util.JSONUtils;
 import io.gamioo.common.util.StringUtils;
 import io.gamioo.ioc.annotation.Configuration;
@@ -36,7 +36,7 @@ public class ConfigurationBeanDefinition implements BeanDefinition {
     public Object newInstance() {
         String fileName = this.annotation.value();
         JSONObject object = JSONUtils.loadFromXMLFile(fileName);
-        return object.toJavaObject(this.beanClass);
+        return object.to(this.beanClass);
     }
 
 
@@ -89,7 +89,7 @@ public class ConfigurationBeanDefinition implements BeanDefinition {
     @Override
     public MethodDefinition getInitMethodDefinition() {
         MethodDefinition ret = null;
-        List<MethodDefinition> list =  this.getMethodDefinitionList(PostConstruct.class);
+        List<MethodDefinition> list = this.getMethodDefinitionList(PostConstruct.class);
         if (list != null && list.size() > 0) {
             ret = list.get(0);
         }

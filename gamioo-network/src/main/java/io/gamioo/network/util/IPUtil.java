@@ -1,4 +1,4 @@
-package io.gamioo.common.util;
+package io.gamioo.network.util;
 
 
 import io.gamioo.common.exception.ServiceException;

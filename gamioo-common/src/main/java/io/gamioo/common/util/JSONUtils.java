@@ -1,6 +1,6 @@
 package io.gamioo.common.util;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import io.gamioo.common.exception.ServiceException;
 import org.dom4j.Document;
 import org.dom4j.Element;

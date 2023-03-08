@@ -1,6 +1,6 @@
 package io.gamioo;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import io.gamioo.common.util.JsonXmlUtil;
 import io.gamioo.common.util.XMLUtil;
 import org.apache.logging.log4j.LogManager;
