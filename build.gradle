@@ -203,7 +203,7 @@ subprojects {
         jmhImplementation project
         jmhImplementation 'org.openjdk.jmh:jmh-core:1.24'
         jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.24'
-        compileOnly group: 'org.apache.skywalking', name: 'apm-agent-core', version: '8.11.0'
+        //  compileOnly group: 'org.apache.skywalking', name: 'apm-agent-core', version: '8.11.0'
         implementation group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
     }
 

@@ -11,7 +11,7 @@ dependencies {
     api group: 'com.alibaba.fastjson2', name: 'fastjson2', version: '2.0.11';
     api group: 'org.apache.commons', name: 'commons-collections4', version: '4.4';
     api group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1';
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.14.2'
+    // api group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.14.2'
     //任务调度
     api group: 'it.sauronsoftware.cron4j', name: 'cron4j', version: '2.2.5';
     // api group: 'com.jfinal', name: 'jfinal', version: '5.0.8';
