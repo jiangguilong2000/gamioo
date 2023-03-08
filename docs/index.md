@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://img-blog.csdnimg.cn/0a3678d0638342039887166f68c8d995.png" width="100">
+</p>
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/jiangguilong2000/gamioo/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
@@ -12,7 +15,9 @@ Markdown is a lightweight and easy-to-use syntax for styling your writing. It in
 Syntax highlighted code block
 
 # Header 1
+
 ## Header 2
+
 ### Header 3
 
 - Bulleted
@@ -30,7 +35,8 @@ For more details see [GitHub Flavored Markdown](https://guides.github.com/featur
 
 ### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jiangguilong2000/gamioo/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jiangguilong2000/gamioo/settings). The name of this theme is
+saved in the Jekyll `_config.yml` configuration file.
 
 ### Support or Contact
 
