@@ -1,5 +1,5 @@
 dependencies {
     implementation project(':gamioo-common');
     implementation project(':gamioo-protocol');
-    api group: 'io.netty', name: 'netty-all', version: '4.1.86.Final';
+    api group: 'io.netty', name: 'netty-all', version: '4.1.89.Final';
 }
