@@ -20,6 +20,7 @@ import java.util.Optional;
  */
 public class FileUtils {
     private static final Logger logger = LogManager.getLogger(FileUtils.class);
+    private static final String URL_PROTOCOL_JAR = "jar";
     /**
      * 可读大小的单位
      */
@@ -35,10 +36,12 @@ public class FileUtils {
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
             return Optional.ofNullable(StringUtils.readString(is));
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
         // 文件不存在等其他情况返回null
         return Optional.empty();
     }
+
 
     /**
      * 读取指定名称文件中的文本.
@@ -294,4 +297,68 @@ public class FileUtils {
     public static String readFileToString(final File file, final String charsetName) throws IOException {
         return readFileToString(file, Charsets.toCharset(charsetName));
     }
+
+    /**
+     * 读取指定名称文件中的文本.
+     * 获取jar包内的资源
+     *
+     * @param fileName 文件名称
+     * @return 返回文件中的文本
+     */
+    public static String getStringFromJar(String fileName) throws IOException {
+        // 通过url获取File的绝对路径
+        InputStream input = FileUtils.class.getResourceAsStream(fileName);
+        if (input != null) {
+            return StringUtils.readString(input);
+        } else {
+            throw new IOException(fileName + " not exist");
+        }
+    }
+
+    /**
+     * 读取指定名称文件中的文本.
+     * 获取jar包内的资源
+     *
+     * @param fileName 文件名称
+     * @return 返回文件中的文本
+     */
+    public static byte[] getByteArrayFromJar(String fileName) throws IOException {
+        // 通过url获取File的绝对路径
+        //  InputStream input = FileUtils.class.getResourceAsStream(fileName);
+        InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+        if (input != null) {
+            return IOUtils.toByteArray(input);
+        } else {
+            throw new IOException(fileName + " not exist");
+        }
+
+
+    }
+
+
+    /**
+     * 加载类路径下指定名称文件中的文本. 包括jar 里的还是在jar外的resource
+     *
+     * @param fileName 文件名称
+     * @return 返回文件中的文本
+     */
+    public static byte[] getByteArrayFromFile(String fileName) throws IOException {
+        byte[] ret;
+        URL url = ClassUtils.getDefaultClassLoader().getResource(fileName);
+        File file = null;
+        if (url != null && StringUtils.equals(url.getProtocol(), URL_PROTOCOL_JAR)) {
+            // file = new File(url.getFile());
+            ret = getByteArrayFromJar(fileName);
+        } else {
+            file = getFile(fileName);
+            ret = FileUtils.readFileToByteArray(file);
+
+        }
+
+
+        return ret;
+
+    }
+
+
 }

@@ -11,7 +11,6 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,8 +29,7 @@ public class CompressBenchMark {
     @Setup(Level.Trial)
     public void init() {
         try {
-            File file = FileUtils.getFile("message.txt");
-            array = FileUtils.readFileToByteArray(file);
+            array = FileUtils.getByteArrayFromFile("message.txt");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
