@@ -2,7 +2,7 @@ package io.gamioo.compress;
 
 
 import com.github.luben.zstd.Zstd;
-import org.apache.commons.io.FileUtils;
+import io.gamioo.common.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.*;
@@ -12,7 +12,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.File;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,14 +30,8 @@ public class CompressBenchMark {
     @Setup(Level.Trial)
     public void init() {
         try {
-            // 获取URL
-            URL url = CompressBenchMark.class.getClassLoader().getResource("message.txt");
-            // 通过url获取File的绝对路径
-            if (url != null) {
-                File file = new File(url.getFile());
-                array = FileUtils.readFileToByteArray(file);
-                logger.info("data size={}", array.length);
-            }
+            File file = FileUtils.getFile("message.txt");
+            array = FileUtils.readFileToByteArray(file);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
