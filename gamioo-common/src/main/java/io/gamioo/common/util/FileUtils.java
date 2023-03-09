@@ -1,27 +1,14 @@
-/*
- * Copyright 2015-2020 Gamioo Authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.gamioo.common.util;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
@@ -30,9 +17,9 @@ import java.util.Optional;
  * 文件操作工具类.
  *
  * @author Allen Jiang
- * @since 1.0.0
  */
 public class FileUtils {
+    private static final Logger logger = LogManager.getLogger(FileUtils.class);
     /**
      * 可读大小的单位
      */
@@ -69,14 +56,38 @@ public class FileUtils {
 
     /**
      * 读取指定名称文件中的文本.
+     * TODO(fix): 当fileName不存在的情况下，会导致空指针异常。
      *
      * @param fileName 文件名称
      * @return 返回文件中的文本
      */
     public static File getFile(String fileName) {
-            URL url =Thread.currentThread().getContextClassLoader().getResource(fileName);
-            // 通过url获取File的绝对路径
+        // 通过url获取File的绝对路径
+        URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+        if (url != null) {
             return new File(url.getFile());
+        } else {
+            return null;
+        }
+
+
+    }
+
+    /**
+     * 读取指定名称文件中的文本.
+     * 获取jar包内的资源
+     *
+     * @param fileName 文件名称
+     * @return 返回文件中的文本
+     */
+    public static File getFileFromJar(String fileName) {
+        // 通过url获取File的绝对路径
+        URL url = FileUtils.class.getResource(fileName);
+        if (url != null) {
+            return new File(url.getFile());
+        } else {
+            return null;
+        }
     }
 
 
@@ -87,7 +98,7 @@ public class FileUtils {
      * @return 返回文件中的文本
      */
     public static InputStream getInputStream(String fileName) {
-       return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
 
     /**
@@ -114,7 +125,7 @@ public class FileUtils {
      * @throws IOException If an I/O error occurs
      */
     public static void writeFileText(String fileName, boolean append, String content) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(fileName, append); OutputStreamWriter osw = new OutputStreamWriter(fos, CharsetUtils.CHARSET_UTF_8);) {
+        try (FileOutputStream fos = new FileOutputStream(fileName, append); OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
             osw.write(content);
             osw.flush();
         }
@@ -177,7 +188,7 @@ public class FileUtils {
      * Reads the contents of a file line by line to a List of Strings.
      * The file is always closed.
      *
-     * @param file     the file to read, must not be {@code null}
+     * @param file    the file to read, must not be {@code null}
      * @param charset the charset to use, {@code null} means platform default
      * @return the list of Strings representing each line in the file, never {@code null}
      * @throws IOException in case of an I/O error
@@ -188,6 +199,7 @@ public class FileUtils {
             return IOUtils.readLines(in, Charsets.toCharset(charset));
         }
     }
+
     /**
      * Opens a {@link FileInputStream} for the specified file, providing better
      * error messages than simply calling <code>new FileInputStream(file)</code>.
@@ -213,7 +225,7 @@ public class FileUtils {
             if (file.isDirectory()) {
                 throw new IOException("File '" + file + "' exists but is a directory");
             }
-            if (file.canRead() == false) {
+            if (!file.canRead()) {
                 throw new IOException("File '" + file + "' cannot be read");
             }
         } else {
@@ -239,7 +251,7 @@ public class FileUtils {
      * Reads the contents of a file into a String.
      * The file is always closed.
      *
-     * @param file     the file to read, must not be {@code null}
+     * @param file        the file to read, must not be {@code null}
      * @param charsetName the name of the requested charset, {@code null} means platform default
      * @return the file contents, never {@code null}
      * @throws IOException in case of an I/O error
@@ -247,24 +259,39 @@ public class FileUtils {
      */
     public static String readFileToString(final File file, final Charset charsetName) throws IOException {
         try (InputStream in = openInputStream(file)) {
+
             return IOUtils.toString(in, Charsets.toCharset(charsetName));
         }
     }
 
 
     /**
+     * Reads the contents of a file into a String.
+     * The file is always closed.
+     *
+     * @param file the file to read, must not be {@code null}
+     * @return the file contents, never {@code null}
+     * @throws IOException in case of an I/O error
+     * @since 2.3
+     */
+    public static byte[] readFileToByteArray(final File file) throws IOException {
+        try (InputStream in = openInputStream(file)) {
+            return IOUtils.toByteArray(in);
+        }
+    }
+
+    /**
      * Reads the contents of a file into a String. The file is always closed.
      *
-     * @param file     the file to read, must not be {@code null}
+     * @param file        the file to read, must not be {@code null}
      * @param charsetName the name of the requested charset, {@code null} means platform default
      * @return the file contents, never {@code null}
-     * @throws IOException                 in case of an I/O error
+     * @throws IOException                                  in case of an I/O error
      * @throws java.nio.charset.UnsupportedCharsetException thrown instead of {@link java.io
-     * .UnsupportedEncodingException} in version 2.2 if the encoding is not supported.
+     *                                                      .UnsupportedEncodingException} in version 2.2 if the encoding is not supported.
      * @since 2.3
      */
     public static String readFileToString(final File file, final String charsetName) throws IOException {
         return readFileToString(file, Charsets.toCharset(charsetName));
     }
-
 }

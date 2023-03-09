@@ -1,7 +1,7 @@
-package io.gamioo.nav.shape;
+package io.gamioo.common.shape;
 
-import io.gamioo.nav.util.MathUtils;
-import io.gamioo.nav.vector.Vector2f;
+import io.gamioo.common.util.MathUtils;
+import io.gamioo.common.vector.Vector2f;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.ArrayList;

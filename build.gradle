@@ -17,12 +17,24 @@ ext {
     properties["release"] = String.valueOf(times);
     properties.store(propertyFile.newDataOutputStream(), "version info");
 }
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+    }
+    dependencies {
+        classpath("me.champeau.jmh:jmh-gradle-plugin:0.6.8")
+    }
+}
 
 subprojects {
+
     apply plugin: 'java-library';
     apply plugin: 'maven-publish';
     apply plugin: 'signing';
     apply plugin: 'jacoco';
+    apply plugin: "me.champeau.jmh";
 
     group = 'io.gamioo';
     version = '0.2.14';
@@ -201,10 +213,15 @@ subprojects {
 
         // 保证jmh目录下java代码能顺利import其他main目录下等代码
         jmhImplementation project
-        jmhImplementation 'org.openjdk.jmh:jmh-core:1.24'
-        jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.24'
+        jmhImplementation 'org.openjdk.jmh:jmh-core:1.36'
+        jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.36'
         //  compileOnly group: 'org.apache.skywalking', name: 'apm-agent-core', version: '8.11.0'
         implementation group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
+    }
+
+    jmh {
+        humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt") // human-readable output file
+        resultsFile = project.file("${project.buildDir}/reports/jmh/results.txt") // results file
     }
 
     test {
@@ -248,6 +265,7 @@ subprojects {
 
 
 allprojects {
+
 
 //    task printSigning {
 //        println(project.findProperty('signing.secretKeyRingFile'))

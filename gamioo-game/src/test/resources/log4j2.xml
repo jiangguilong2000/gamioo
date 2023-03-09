@@ -5,7 +5,7 @@
         <property name="SERVER_ID">1</property>
         <property name="SERVER_NAME">game</property>
         <property name="LOG_HOME">/data/log/${SERVER_NAME}/${SERVER_ID}</property>
-        <property name="YORHA_HOME">/data/stat/yorha/${SERVER_NAME}/${SERVER_ID}</property>
+        <property name="GAMIOO_HOME">/data/stat/gamioo/${SERVER_NAME}/${SERVER_ID}</property>
     </properties>
     <appenders>
         <!-- 定义控制台输出-->
@@ -21,9 +21,9 @@
             </Policies>
         </RollingRandomAccessFile>
         <!-- 游戏产品数据分析日志 -->
-        <RollingRandomAccessFile name="yorha"
-                                 fileName="${YORHA_HOME}/${SERVER_NAME}"
-                                 filePattern="${YORHA_HOME}/${SERVER_NAME}.%d{yyyy-MM-dd-HH-mm}.log">
+        <RollingRandomAccessFile name="gamioo"
+                                 fileName="${GAMIOO_HOME}/${SERVER_NAME}"
+                                 filePattern="${GAMIOO_HOME}/${SERVER_NAME}.%d{yyyy-MM-dd-HH-mm}.log">
             <PatternLayout pattern="%msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="5" modulate="true"/>
@@ -49,8 +49,8 @@
         <Logger name="java.sql" level="warn">
         </Logger>
         <!-- Game Stat  logger -->
-        <Logger name="yorha" level="info" additivity="false">
-            <appender-ref ref="yorha"/>
+        <Logger name="gamioo" level="info" additivity="false">
+            <appender-ref ref="gamioo"/>
         </Logger>
         <!-- Root Logger -->
         <Root level="DEBUG" includeLocation="true">

@@ -1,6 +1,6 @@
 package io.gamioo.nav;
 
-import io.gamioo.nav.vector.Vector3f;
+import io.gamioo.common.vector.Vector3f;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public interface INav {
 
     List<Vector3f> find(Vector3f start, Vector3f end);
 
-   
+
     /**
      * 光线照射发，寻找可以支线通过的hit点，如果可通过则返回hit
      *

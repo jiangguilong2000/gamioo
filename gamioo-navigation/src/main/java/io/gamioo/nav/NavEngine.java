@@ -1,8 +1,8 @@
 package io.gamioo.nav;
 
-import io.gamioo.nav.util.FileUtils;
-import io.gamioo.nav.util.NativeUtils;
-import io.gamioo.nav.vector.Vector3f;
+import io.gamioo.common.util.FileUtils;
+import io.gamioo.common.util.NativeUtils;
+import io.gamioo.common.vector.Vector3f;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

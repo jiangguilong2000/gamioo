@@ -15,12 +15,12 @@
  */
 package io.gamioo.common.util;
 
-import io.gamioo.common.lang.Point;
-
+import io.gamioo.common.shape.Point;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -248,6 +248,48 @@ public class MathUtils {
         return (int) Math.round(a);
     }
 
+
+    public static int min(List<Integer> array) {
+        int ret = Integer.MAX_VALUE;
+        for (int e : array) {
+            if (e < ret) {
+                ret = e;
+            }
+        }
+        return ret;
+    }
+
+
+    public static int min(int... array) {
+        int ret = Integer.MAX_VALUE;
+        for (int e : array) {
+            if (e < ret) {
+                ret = e;
+            }
+        }
+        return ret;
+    }
+
+    public static int max(int... array) {
+        int ret = Integer.MIN_VALUE;
+        for (int e : array) {
+            if (e > ret) {
+                ret = e;
+            }
+        }
+        return ret;
+    }
+
+    public static int max(List<Integer> array) {
+        int ret = Integer.MIN_VALUE;
+        for (int e : array) {
+            if (e > ret) {
+                ret = e;
+            }
+        }
+        return ret;
+    }
+
     /**
      * 4舍5入取整，并返回long值.
      *
@@ -346,7 +388,7 @@ public class MathUtils {
 
                 // 比例+小步长随便，让抢出来的资源效果更好些...
                 long selfStep = step * ratio.getOrDefault(e.getKey(), 1) + RandomUtils.nextLong(step);
-                long temp = selfStep > total ? total : selfStep;
+                long temp = Math.min(selfStep, total);
 
                 // 如果资源不足，就以当前有的抢光就好了...
                 if (e.getValue() < temp) {
@@ -357,7 +399,7 @@ public class MathUtils {
                 final long value = temp;
                 e.setValue(e.getValue() - value);
                 total -= temp;
-                result.compute(e.getKey(), (k, v) -> v == null ? value : v.longValue() + value);
+                result.compute(e.getKey(), (k, v) -> v == null ? value : v + value);
 
                 // 抢满了就退出啦...
                 if (total <= 0) {

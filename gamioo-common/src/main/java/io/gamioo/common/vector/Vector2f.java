@@ -1,6 +1,6 @@
-package io.gamioo.nav.vector;
+package io.gamioo.common.vector;
 
-import io.gamioo.nav.shape.Point;
+import io.gamioo.common.shape.Point;
 
 
 /**

@@ -1,4 +1,4 @@
-package io.gamioo.nav.vector;
+package io.gamioo.common.vector;
 
 /**
  * 向量

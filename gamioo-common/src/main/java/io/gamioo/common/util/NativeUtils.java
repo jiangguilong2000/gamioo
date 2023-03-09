@@ -1,4 +1,4 @@
-package io.gamioo.nav.util;
+package io.gamioo.common.util;
 
 
 import org.apache.commons.lang3.SystemUtils;
@@ -7,7 +7,6 @@ import java.io.*;
 
 /**
  * 用于加载native dll的工具类
- *
  */
 public class NativeUtils {
     public static void loadLibrary(String name) throws IOException {

@@ -1,7 +1,7 @@
 package io.gamioo.nav;
 
 import com.github.silencesu.Easy3dNav.Easy3dNav;
-import io.gamioo.nav.util.FileUtils;
+import io.gamioo.common.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;

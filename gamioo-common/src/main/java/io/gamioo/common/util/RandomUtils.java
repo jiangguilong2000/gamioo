@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 Gamioo Authors.
+ * Copyright 2015-2020 gamioo Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,6 +93,15 @@ public class RandomUtils {
      */
     public static long nextLong(long origin, long bound) {
         return ThreadLocalRandom.current().nextLong(origin, bound);
+    }
+
+    /**
+     * 返回一个随机Double值.
+     *
+     * @return 随机Double值
+     */
+    public static double nextDouble() {
+        return ThreadLocalRandom.current().nextDouble();
     }
 
     /**
@@ -300,5 +309,34 @@ public class RandomUtils {
             }
         }
         return result;
+    }
+
+    /**
+     * 区间随机
+     */
+    public static int randomBetween(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
+    }
+
+
+    /**
+     * 以 numerator/denominator的概率随机触发
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @return 是否触发
+     * @throws IllegalArgumentException 分母为0时抛出异常，无法判断此时期望的return
+     */
+    public static boolean trigger(int numerator, int denominator) {
+        if (denominator <= 0) {
+            throw new IllegalArgumentException("denominator=" + denominator);
+        }
+        if (numerator <= 0) {
+            return false;
+        }
+        if (numerator > denominator) {
+            return true;
+        }
+        return nextInt(0, denominator) < numerator;
     }
 }

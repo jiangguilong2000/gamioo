@@ -1,7 +1,7 @@
-package io.gamioo.nav.shape;
+package io.gamioo.common.shape;
 
 
-import io.gamioo.nav.vector.Vector2f;
+import io.gamioo.common.vector.Vector2f;
 
 public class Point implements Shape {
 

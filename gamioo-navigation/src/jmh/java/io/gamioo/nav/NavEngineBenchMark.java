@@ -2,7 +2,7 @@ package io.gamioo.nav;
 
 
 import com.github.silencesu.Easy3dNav.Easy3dNav;
-import io.gamioo.nav.util.FileUtils;
+import io.gamioo.common.util.FileUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;

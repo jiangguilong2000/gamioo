@@ -1,4 +1,4 @@
-package io.gamioo.nav.shape;
+package io.gamioo.common.shape;
 
 /**
  * @author Allen Jiang
