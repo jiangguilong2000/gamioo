@@ -104,6 +104,22 @@ public class FileUtils {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
 
+
+    public static InputStream getInputStreamFromAll(String fileName) throws IOException {
+        InputStream ret;
+        URL url = ClassUtils.getDefaultClassLoader().getResource(fileName);
+     
+        File file = null;
+        if (url != null && StringUtils.equals(url.getProtocol(), URL_PROTOCOL_JAR)) {
+            ret = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+        } else {
+
+            file = new File(url.getFile());
+            ret = openInputStream(file);
+        }
+        return ret;
+    }
+
     /**
      * 写入指定文本到文件中.
      * <p>

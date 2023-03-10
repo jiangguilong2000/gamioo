@@ -1,15 +1,12 @@
 package io.gamioo.nav;
 
 
-import com.github.silencesu.Easy3dNav.Easy3dNav;
-import io.gamioo.common.util.FileUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -50,9 +47,7 @@ public class NavEngineBenchMark {
         //默认为false，查看需要设置为true
         easyNav.setPrintMeshInfo(false);
         easyNav.setExtents(extents);
-        File file = FileUtils.getFile(navFilePath);
-        assert file != null;
-        easyNav.init(file.getAbsolutePath());
+        easyNav.init(navFilePath);
     }
 
 

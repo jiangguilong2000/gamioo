@@ -6,7 +6,6 @@ import io.gamioo.common.vector.Vector3f;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +34,12 @@ public class NavEngine implements INav {
 
 
     public void init(int id, String filePath) throws IOException {
-        File file = FileUtils.getFile(filePath);
-        byte[] content = FileUtils.readFileToByteArray(file);
-        this.id = this.load(id, content, content.length);
+        try {
+            byte[] content = FileUtils.getByteArrayFromFile(filePath);
+            this.id = this.load(id, content, content.length);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
         if (this.id < 0) {
             throw new IOException("load map failed,mapId" + id);
         }
