@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 3d游戏服务端寻路组件
  *
- * @author SilenceSu
- * @Email Silence.Sx@Gmail.com
- * Created by Silence on 2018/5/3.
+ * @author Allen Jiang
  */
 public class Easy3dNav implements EasyNavFunc {
 
