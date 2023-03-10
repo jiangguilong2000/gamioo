@@ -47,12 +47,6 @@ implementation group: 'io.gamioo', name: 'gamioo-cache', version: '0.2.11'
 #### 📄 性能测试结果如下：
 
 ```log
-Benchmark                    Mode  Cnt         Score         Error  Units
-CacheBenchMark.caffeineGet  thrpt   10  33895330.174 ± 2404744.750  ops/s
-CacheBenchMark.caffeinePut  thrpt   10    754213.850 ±  930595.062  ops/s
-CacheBenchMark.guavaGet     thrpt   10  26574517.316 ±  958336.930  ops/s
-CacheBenchMark.guavaPut     thrpt   10    411722.523 ±  531660.440  ops/s
-
 Benchmark                   (type)   Mode  Cnt         Score          Error  Units
 CacheBenchMark.cache         guava  thrpt    5   8797574.523 ± 11079456.005  ops/s
 CacheBenchMark.cache:get     guava  thrpt    5   7884606.600 ± 10841319.317  ops/s
