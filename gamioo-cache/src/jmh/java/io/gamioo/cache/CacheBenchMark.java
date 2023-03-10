@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 @State(Scope.Group)
 @BenchmarkMode({Mode.Throughput})
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
 @Fork(value = 1)

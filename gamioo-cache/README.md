@@ -52,12 +52,20 @@ CacheBenchMark.caffeineGet  thrpt   10  33895330.174 ± 2404744.750  ops/s
 CacheBenchMark.caffeinePut  thrpt   10    754213.850 ±  930595.062  ops/s
 CacheBenchMark.guavaGet     thrpt   10  26574517.316 ±  958336.930  ops/s
 CacheBenchMark.guavaPut     thrpt   10    411722.523 ±  531660.440  ops/s
+
+Benchmark                   (type)   Mode  Cnt         Score          Error  Units
+CacheBenchMark.cache         guava  thrpt    5   8797574.523 ± 11079456.005  ops/s
+CacheBenchMark.cache:get     guava  thrpt    5   7884606.600 ± 10841319.317  ops/s
+CacheBenchMark.cache:put     guava  thrpt    5    912967.923 ±  1076468.236  ops/s
+CacheBenchMark.cache      caffeine  thrpt    5  12313264.433 ± 24041374.853  ops/s
+CacheBenchMark.cache:get  caffeine  thrpt    5   9645145.413 ± 17628648.683  ops/s
+CacheBenchMark.cache:put  caffeine  thrpt    5   2668119.020 ±  7444828.382  ops/s
 ```
 
-在Windows下(4核8线程 Intel Core i7),很明显，
+在Windows下(4核8线程 Intel Core i7),5根线程读操作，5根线程写操作，很明显，
 
-- 存入API,caffeine 比 guava 性能达到了 183.2%;
-- 获取API,caffeine 比 guava 性能达到了 127.6%;
+- 存入API,caffeine 比 guava 性能达到了 292.2%;
+- 获取API,caffeine 比 guava 性能达到了 122.3%;
 
 ### 依赖&参考
 
