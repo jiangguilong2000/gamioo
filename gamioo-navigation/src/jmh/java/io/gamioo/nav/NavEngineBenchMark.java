@@ -15,6 +15,10 @@ import java.util.concurrent.TimeUnit;
  * @author Allen Jiang
  */
 @State(Scope.Benchmark)
+@BenchmarkMode({Mode.Throughput})
+@OutputTimeUnit(TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 5, time = 1)
 @Fork(value = 1)
 public class NavEngineBenchMark {
     /**
@@ -52,55 +56,31 @@ public class NavEngineBenchMark {
 
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public List<float[]> nativeFind() {
         return nav.find(src, end);
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public float[] nativeRaycast() {
         return nav.raycast(src, end);
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public float[] nativeFindNearest() {
         return nav.findNearest(target);
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public List<float[]> javaFind() {
         return easyNav.find(src, end);
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public float[] javaRaycast() {
         return easyNav.raycast(src, end);
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput})
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 10, time = 2)
     public float[] javaFindNearest() {
         return easyNav.findNearest(target);
     }
@@ -108,8 +88,7 @@ public class NavEngineBenchMark {
 
     public static void main(String[] args) {
         Options opt = new OptionsBuilder()
-                .include(NavEngineBenchMark.class.getSimpleName())
-                .build();
+                .include(NavEngineBenchMark.class.getSimpleName()).build();
 
         try {
             new Runner(opt).run();
