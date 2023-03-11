@@ -67,6 +67,8 @@ class Main {
 
 #### 📄 性能测试结果如下：
 
+在Windows 11 下(4核8线程 Intel(R) Core(TM)i7-10510U CPU @ 1.80GHz)
+
 ```bash
 Benchmark                              Mode  Cnt        Score        Error  Units
 NavEngineBenchMark.javaFind           thrpt   10    23907.038 ±   3651.774  ops/s
@@ -77,12 +79,25 @@ NavEngineBenchMark.nativeFindNearest  thrpt   10  1016350.479 ± 201328.309  ops
 NavEngineBenchMark.nativeRaycast      thrpt   10   692069.731 ± 237797.318  ops/s
 ```
 
-在Windows下(4核8线程 Intel Core i7),很明显，
-
 - 寻路API,性能达到了原先的206%;
 - 光线照反射API，性能达到了原先的224.5%;
 - 寻找最近可通点API,性能达到了原先的276%
--
+
+在CentOS Linux 7 (8核16线程 Intel(R) Xeon(R) Platinum 8372C CPU model 106 @ 3.20GHz)
+
+```bash
+Benchmark                              Mode  Cnt       Score     Error  Units
+NavEngineBenchMark.javaFind           thrpt   10   38372.243 ±  80.293  ops/s
+NavEngineBenchMark.javaFindNearest    thrpt   10  518859.216 ± 767.435  ops/s
+NavEngineBenchMark.javaRaycast        thrpt   10  442360.257 ± 287.334  ops/s
+NavEngineBenchMark.nativeFind         thrpt   10   26796.756 ±  49.669  ops/s
+NavEngineBenchMark.nativeFindNearest  thrpt   10  393484.307 ± 844.553  ops/s
+NavEngineBenchMark.nativeRaycast      thrpt   10  305434.422 ± 851.248  ops/s
+```
+
+- 寻路API,性能降到了原先的69.83%;
+- 光线照反射API，性能降到了原先的69.05%;
+- 寻找最近可通点API,性能降到了原先的 75.84%
 
 ### 依赖&参考
 
