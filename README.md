@@ -31,7 +31,10 @@
 		<img src="https://img.shields.io/github/stars/jiangguilong2000/gamioo.svg?style=social" alt="github star"></img>
 	</a>
 </p>
-📌 简介
+
+##### 语言： 中文 | [English](README.en-US.md)
+
+## 📌 简介
 
 Game server framework, based on this framework, you can quickly implement a highly available, easy to maintain, stable and high-performance game server.
 
