@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- status=debug 可 以查看log4j的装配过程级别有8个  ALL,TRACE, DEBUG, INFO, WARN, ERROR ,FATAL,OFF,如果monitorInterval设置为0或负数,不会对配置变更进行监测-->
-<configuration status="warn" monitorInterval="120" shutdownHook="disable"  >
+<configuration status="warn" monitorInterval="120" shutdownHook="disable">
     <properties>
-        <property name="SERVER_NAME">path</property>
-        <property name="LOG_HOME">log</property>
+        <property name="SERVER_NAME" value="${sys:project.name:-unknown}"/>
+        <property name="LOG_HOME" value="../log/${sys:project.name:-unknown}"/>
     </properties>
     <appenders>
         <!-- 定义控制台输出-->
         <Console name="Console" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n"/>
         </Console>
         <!-- 程序员调试日志 -->
         <RollingRandomAccessFile name="DevLog" fileName="${LOG_HOME}/${SERVER_NAME}"
-                                 filePattern="${LOG_HOME}/${SERVER_NAME}.%d{yyyy-MM-dd-HH}.log" immediateFlush="false" >
-            <PatternLayout pattern="%msg%n" />
+                                 filePattern="${LOG_HOME}/${SERVER_NAME}.%d{yyyy-MM-dd-HH}.log" immediateFlush="true">
+            <PatternLayout pattern="%msg%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
         </RollingRandomAccessFile>
     </appenders>
@@ -35,7 +35,7 @@
         </Logger>
         <!-- Root Logger -->
         <Root level="debug" includeLocation="true">
-            <appender-ref ref="DevLog" />
+            <appender-ref ref="DevLog"/>
             <appender-ref ref="Console"/>
         </Root>
     </loggers>
