@@ -58,6 +58,12 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
+
+    tasks.withType(Test) {
+        systemProperty "project.name", project.name;
+    }
+
+
 /**
  * 定义资源集
  * main源码包
