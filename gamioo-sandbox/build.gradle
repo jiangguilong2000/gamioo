@@ -1,4 +1,6 @@
 dependencies {
     implementation project(':gamioo-common');
+    testImplementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.2'
+
 
 }
