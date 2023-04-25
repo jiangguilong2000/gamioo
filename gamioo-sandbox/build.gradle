@@ -1,6 +1,8 @@
 dependencies {
     implementation project(':gamioo-common');
     testImplementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.2'
-
+    testImplementation('com.github.woostju:ansible-client:1.0.0-RELEASE') {
+        exclude group: "ch.qos.logback", module: "logback-classic"
+    }
 
 }
