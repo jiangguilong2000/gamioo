@@ -19,6 +19,7 @@ import io.gamioo.common.shape.Point;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -451,5 +452,15 @@ public class MathUtils {
      */
     public static double percentage(long value) {
         return MathUtils.longToDouble(value, MathUtils.HUNDRED);
+    }
+
+    /**格式化乘百分比
+     * @param value 待格式化的数值
+     * @return 格式化后的字符串*/
+
+    public static String prettyPercentage(double value){
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(2);
+        return nf.format(value);
     }
 }

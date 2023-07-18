@@ -26,8 +26,8 @@ public class CryptoTest {
     @Test
     @Order(1)
     public void bCrypt() {
-        String password = "opm8M6Aw";
-        String encodedPwd = "$2y$08$/p3W60znwXe7BLWB19NzXOMnFBO6QqWFj6E4w4XxFJ6TEX1qRPCY.";
+        String password = "neil";
+        String encodedPwd = "$apr1$PjLB3DLO$J1zN2Bbit2A9e8FQdALjb0";
         //密码加密
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //加密

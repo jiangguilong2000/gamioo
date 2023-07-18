@@ -1,6 +1,12 @@
 dependencies {
     implementation project(':gamioo-common');
+    implementation 'org.furyio:fury-core:0.1.0-SNAPSHOT'
+    implementation group: 'io.protostuff', name: 'protostuff-core', version: '1.8.0'
+    implementation group: 'io.protostuff', name: 'protostuff-runtime', version: '1.8.0'
+    implementation group: 'com.carrotsearch', name: 'java-sizeof', version: '0.0.5'
     testImplementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.8.2'
+    testImplementation 'org.tmatesoft.svnkit:svnkit:1.10.11'
+    implementation 'com.github.houbb:data-factory-core:1.2.0'
     testImplementation('com.github.woostju:ansible-client:1.0.0-RELEASE') {
         exclude group: "ch.qos.logback", module: "logback-classic"
     }

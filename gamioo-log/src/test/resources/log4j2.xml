@@ -31,6 +31,8 @@
         </Logger>
         <Logger name="com.mchange.v2" level="warn">
         </Logger>
+        <Logger name="io.fury" level="error"  includeLocation="true">
+        </Logger>
         <Logger name="java.sql" level="warn">
         </Logger>
         <!-- Root Logger -->

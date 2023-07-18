@@ -33,6 +33,8 @@
         </Logger>
         <Logger name="java.sql" level="warn">
         </Logger>
+        <Logger name="io.fury" level="error"  includeLocation="true">
+        </Logger>
         <!-- Root Logger -->
         <Root level="debug" includeLocation="true">
             <appender-ref ref="DevLog"/>

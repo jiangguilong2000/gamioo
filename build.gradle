@@ -43,8 +43,8 @@ subprojects {
         releaseRoot = '../../dist'
     }
 
-    sourceCompatibility = 1.8;
-    targetCompatibility = 1.8;
+    sourceCompatibility = 11;
+    targetCompatibility = 11;
     compileJava {
         options.encoding = 'UTF-8'
         options.compilerArgs << '-XDignore.symbol.file'
@@ -213,9 +213,12 @@ subprojects {
 
 
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-        testImplementation 'org.jmockit:jmockit:1.49'
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.4.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.4.0'
+
+
 
         // 保证jmh目录下java代码能顺利import其他main目录下等代码
         jmhImplementation project
@@ -288,6 +291,7 @@ allprojects {
     repositories {
         //腾讯云的国内镜像
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 
 }
