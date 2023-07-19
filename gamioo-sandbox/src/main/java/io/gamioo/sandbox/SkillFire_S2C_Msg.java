@@ -5,7 +5,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 技能回包
@@ -17,8 +19,20 @@ public class SkillFire_S2C_Msg {
     private SkillCategory skillCategory;//技能类型(大类)
     @DataFactory(min = 0, max = 100)
     private int index;//设置连招索引
+    @DataFactory(min = 0, max = 5)
     private List<HarmDTO> harmList=new ArrayList<>();
+    @DataFactory(min = 0, max = 5)
     private List<Long> param1=new ArrayList<>();
+
+//    private Map<String, String> store=new HashMap<>();
+
+//    public Map<String, String> getStore() {
+//        return store;
+//    }
+//
+//    public void setStore(Map<String, String> store) {
+//        this.store = store;
+//    }
 
     public Long getAttackerId() {
         return attackerId;

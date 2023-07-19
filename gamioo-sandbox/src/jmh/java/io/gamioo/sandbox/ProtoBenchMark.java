@@ -1,9 +1,14 @@
 package io.gamioo.sandbox;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONB;
+import com.alibaba.fastjson2.JSONReader;
+import com.alibaba.fastjson2.JSONWriter;
 import com.carrotsearch.sizeof.RamUsageEstimator;
 import com.github.houbb.data.factory.core.util.DataUtil;
 import io.fury.Fury;
 import io.fury.Language;
+import io.gamioo.common.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.*;
@@ -21,13 +26,13 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Fork(1)
 @BenchmarkMode(Mode.Throughput)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
+@Warmup(iterations = 5, time = 2)
+@Measurement(iterations = 5, time = 2)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class ProtoBenchMark {
     private static final Logger logger = LogManager.getLogger(ProtoBenchMark.class);
-    private SkillFire_S2C_Msg skillFire_s2C_msg;
+    private SkillFire_S2C_Msg  skillFire_s2C_msg = DataUtil.build(SkillFire_S2C_Msg.class);
     private Fury fury;
 
     private Fury furyX;
@@ -38,10 +43,20 @@ public class ProtoBenchMark {
 
     private byte[] protoArray;
 
+    private byte[] jsonArray;
+    private byte[] jsonArrayWithBeanToArray;
+
 
     @Setup
     public void init() {
-        skillFire_s2C_msg = DataUtil.build(SkillFire_S2C_Msg.class);
+        try {
+          byte[]  array = FileUtils.getByteArrayFromFile("message.txt");
+            skillFire_s2C_msg= JSON.parseObject(array,SkillFire_S2C_Msg.class);
+            logger.info(skillFire_s2C_msg);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
         fury = Fury.builder().withLanguage(Language.JAVA)
                 .withRefTracking(true).requireClassRegistration(false).build();
 
@@ -53,46 +68,77 @@ public class ProtoBenchMark {
 
 
         furyArray = fury.serializeJavaObject(skillFire_s2C_msg);
-        furyArrayX=furyX.serializeJavaObject(skillFire_s2C_msg);
+        furyArrayX = furyX.serializeJavaObject(skillFire_s2C_msg);
         protoArray = SerializingUtil.serialize(skillFire_s2C_msg);
-        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.sizeOf(skillFire_s2C_msg));
-        logger.debug("size:{}", size);
+        jsonArray = JSONB.toBytes(skillFire_s2C_msg);
+        jsonArrayWithBeanToArray =JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
+        ;
+       // String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.sizeOf(skillFire_s2C_msg));
+        logger.debug("size:{}", RamUsageEstimator.sizeOf(skillFire_s2C_msg));
     }
-
-    // @Group("fury")
     @Benchmark
     public byte[] furySerialize() {
         return fury.serialize(skillFire_s2C_msg);
     }
-
-    //@Group("fury")
-    @Benchmark
-    public SkillFire_S2C_Msg furyDeserialize() {
-        return fury.deserializeJavaObject(furyArray, SkillFire_S2C_Msg.class);
-    }
-
     @Benchmark
     public byte[] furySerializeEnhance() {
         return furyX.serialize(skillFire_s2C_msg);
     }
-
-    //@Group("fury")
-    @Benchmark
-    public SkillFire_S2C_Msg furyDeserializeEnhance() {
-        return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
-    }
-
-    //  @Group("protostuff")
+//    @Benchmark
+//    public byte[] jsonSerialize() {
+//        return JSONB.toBytes(skillFire_s2C_msg);
+//    }
+//
+//
+//
+//    @Benchmark
+//    public byte[] jsonSerializeWithBeanToArray() {
+//        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
+//    }
+//
+//    @Benchmark
+//    public byte[] jsonSerializeWithBeanToArrayAndFieldBase() {
+//        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray,JSONWriter.Feature.FieldBased);
+//    }
     @Benchmark
     public byte[] protostuffSerialize() {
         return SerializingUtil.serialize(skillFire_s2C_msg);
     }
 
-    //  @Group("protostuff")
-    @Benchmark
-    public SkillFire_S2C_Msg protostuffDeserialize() {
-        return SerializingUtil.deserialize(protoArray, SkillFire_S2C_Msg.class);
-    }
+
+
+
+
+//    @Benchmark
+//    public SkillFire_S2C_Msg furyDeserialize() {
+//        return fury.deserializeJavaObject(furyArray, SkillFire_S2C_Msg.class);
+//    }
+
+//    @Benchmark
+//    public SkillFire_S2C_Msg jsonDeserialize() {
+//        return JSONB.parseObject(jsonArray, SkillFire_S2C_Msg.class);
+//    }
+//
+//    @Benchmark
+//    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArray() {
+//        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean);
+//    }
+//
+//
+//    @Benchmark
+//    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArrayAndFieldBase() {
+//        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean,JSONReader.Feature.FieldBased);
+//    }
+
+//    @Benchmark
+//    public SkillFire_S2C_Msg furyDeserializeEnhance() {
+//        return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
+//    }
+
+//    @Benchmark
+//    public SkillFire_S2C_Msg protostuffDeserialize() {
+//        return SerializingUtil.deserialize(protoArray, SkillFire_S2C_Msg.class);
+//    }
 
 
     public static void main(String[] args) throws RunnerException {

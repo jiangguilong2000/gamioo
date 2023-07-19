@@ -1,5 +1,9 @@
 package io.gamioo.sandbox;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONB;
+import com.alibaba.fastjson2.JSONReader;
+import com.alibaba.fastjson2.JSONWriter;
 import com.carrotsearch.sizeof.RamUsageEstimator;
 import com.github.houbb.data.factory.core.util.DataUtil;
 import com.github.houbb.heaven.util.lang.MathUtil;
@@ -27,7 +31,7 @@ public class ProtoTest {
     @BeforeAll
     public static void beforeAll() throws IOException {
         skillFire_s2C_msg= DataUtil.build(SkillFire_S2C_Msg.class);
-        logger.info(skillFire_s2C_msg);
+        logger.info(JSON.toJSONString(skillFire_s2C_msg));
          fury = Fury.builder().withLanguage(Language.JAVA)
                 .withRefTracking(true).requireClassRegistration(false).withNumberCompressed(false).build();
         long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
@@ -39,9 +43,43 @@ public class ProtoTest {
 
     }
 
-    @DisplayName("Fury Serializable")
+    @DisplayName("Json2 Serializable")
     @Test
     @Order(1)
+    public void handleJson2Serialize() {
+        bytes = JSONB.toBytes(skillFire_s2C_msg);
+        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
+        //   logger. info(bytes.length);
+        // String size2 = RamUsageEstimator.humanReadableUnits(size);
+        logger. info( "Json2 Serializable "+MathUtils.prettyPercentage((double)bytes.length/size));
+    }
+
+    @DisplayName("Json2 Serializable with BeanToArray")
+    @Test
+    @Order(2)
+    public void handleJson2WithBeanToArraySerialize() {
+        bytes = JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
+        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
+        //   logger. info(bytes.length);
+        // String size2 = RamUsageEstimator.humanReadableUnits(size);
+        logger. info( "Json2 Serializable  with BeanToArray "+MathUtils.prettyPercentage((double)bytes.length/size));
+    }
+//    @DisplayName("Json2 Serializable with beanToArray and fieldBased")
+//    @Test
+//    @Order(2)
+//    public void handleJson2WithBeanToArrayAndFieldBasedSerialize() {
+//        bytes = JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray, JSONWriter.Feature.FieldBased);
+//        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
+//        //   logger. info(bytes.length);
+//        // String size2 = RamUsageEstimator.humanReadableUnits(size);
+//        logger. info( "Json2 Serializable  with beanToArray and fieldBased "+MathUtils.prettyPercentage((double)bytes.length/size));
+//    }
+
+
+
+    @DisplayName("Fury Serializable")
+    @Test
+    @Order(3)
     public void handleFurySerialize() {
        bytes = fury.serializeJavaObject(skillFire_s2C_msg);
         long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
@@ -52,7 +90,7 @@ public class ProtoTest {
 
     @DisplayName("Fury Serializable with Number Compress")
     @Test
-    @Order(2)
+    @Order(4)
     public void handleFurySerializeWithCompress() {
         fury = Fury.builder().withLanguage(Language.JAVA)
                 .withRefTracking(true).requireClassRegistration(false).withNumberCompressed(true).build();
@@ -66,7 +104,7 @@ public class ProtoTest {
 
     @DisplayName("Fury Serializable with Number Compress and RefTracking close")
     @Test
-    @Order(3)
+    @Order(5)
     public void handleFurySerializeWithCompressAndRefTrackingClose() {
 
         fury = Fury.builder().withLanguage(Language.JAVA)
@@ -80,7 +118,7 @@ public class ProtoTest {
 
     @DisplayName("Fury Serializable with Number Compress and RefTracking close and class register")
     @Test
-    @Order(3)
+    @Order(6)
     public void handleFurySerializeWithCompressAndRefTrackingCloseAndRegister() {
 
         fury = Fury.builder().withLanguage(Language.JAVA)
@@ -97,7 +135,7 @@ public class ProtoTest {
 
     @DisplayName("Fury Serializable with Number Compress and class register")
     @Test
-    @Order(3)
+    @Order(7)
     public void handleFurySerializeWithCompressAndRegister() {
 
         fury = Fury.builder().withLanguage(Language.JAVA)
@@ -113,15 +151,15 @@ public class ProtoTest {
     }
     @DisplayName("Fury Deserialize")
     @Test
-    @Disabled
+
     @Order(8)
     public void handleFuryDeserialize() {
-        logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
+     //   logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
     }
 
     @DisplayName("Protostuff Serializable")
     @Test
-    @Order(5)
+    @Order(100)
     public void handleProtostuffSerialize() {
         bytes = SerializingUtil.serialize(skillFire_s2C_msg);
         long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
@@ -132,7 +170,7 @@ public class ProtoTest {
     @DisplayName("Protostuff Deserialize")
     @Test
     @Disabled
-    @Order(6)
+    @Order(101)
     public void handleProtostuffDeserialize() {
         logger. info(SerializingUtil.deserialize(bytes, SkillFire_S2C_Msg.class));
     }

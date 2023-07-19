@@ -30,3 +30,4 @@ build
 /gamioo-pomelo/out/production/classes/org/java_websocket/drafts/*.class
 /gamioo-pomelo/out/production/resources/log4j2.component.properties
 /gamioo-pomelo/out/production/resources/log4j2.xml
+/gamioo-sandbox/src/jmh/generated
