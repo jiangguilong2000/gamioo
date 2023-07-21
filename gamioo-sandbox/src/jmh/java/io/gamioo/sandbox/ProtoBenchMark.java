@@ -25,9 +25,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Allen Jiang
  */
 @Fork(1)
-@BenchmarkMode(Mode.Throughput)
-@Warmup(iterations = 5, time = 2)
-@Measurement(iterations = 5, time = 2)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 5, time = 1)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class ProtoBenchMark {
@@ -84,22 +83,22 @@ public class ProtoBenchMark {
     public byte[] furySerializeEnhance() {
         return furyX.serialize(skillFire_s2C_msg);
     }
-//    @Benchmark
-//    public byte[] jsonSerialize() {
-//        return JSONB.toBytes(skillFire_s2C_msg);
-//    }
-//
-//
-//
-//    @Benchmark
-//    public byte[] jsonSerializeWithBeanToArray() {
-//        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
-//    }
-//
-//    @Benchmark
-//    public byte[] jsonSerializeWithBeanToArrayAndFieldBase() {
-//        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray,JSONWriter.Feature.FieldBased);
-//    }
+    @Benchmark
+    public byte[] jsonSerialize() {
+        return JSONB.toBytes(skillFire_s2C_msg);
+    }
+
+
+
+    @Benchmark
+    public byte[] jsonSerializeWithBeanToArray() {
+        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
+    }
+
+    @Benchmark
+    public byte[] jsonSerializeWithBeanToArrayAndFieldBase() {
+        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray,JSONWriter.Feature.FieldBased);
+    }
     @Benchmark
     public byte[] protostuffSerialize() {
         return SerializingUtil.serialize(skillFire_s2C_msg);
@@ -113,7 +112,7 @@ public class ProtoBenchMark {
 //    public SkillFire_S2C_Msg furyDeserialize() {
 //        return fury.deserializeJavaObject(furyArray, SkillFire_S2C_Msg.class);
 //    }
-
+//
 //    @Benchmark
 //    public SkillFire_S2C_Msg jsonDeserialize() {
 //        return JSONB.parseObject(jsonArray, SkillFire_S2C_Msg.class);
@@ -129,12 +128,12 @@ public class ProtoBenchMark {
 //    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArrayAndFieldBase() {
 //        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean,JSONReader.Feature.FieldBased);
 //    }
-
+//
 //    @Benchmark
 //    public SkillFire_S2C_Msg furyDeserializeEnhance() {
 //        return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
 //    }
-
+//
 //    @Benchmark
 //    public SkillFire_S2C_Msg protostuffDeserialize() {
 //        return SerializingUtil.deserialize(protoArray, SkillFire_S2C_Msg.class);

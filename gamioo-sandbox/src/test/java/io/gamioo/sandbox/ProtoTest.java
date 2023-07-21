@@ -30,6 +30,7 @@ public class ProtoTest {
     private static byte[] bytes;
     @BeforeAll
     public static void beforeAll() throws IOException {
+
         skillFire_s2C_msg= DataUtil.build(SkillFire_S2C_Msg.class);
         logger.info(JSON.toJSONString(skillFire_s2C_msg));
          fury = Fury.builder().withLanguage(Language.JAVA)

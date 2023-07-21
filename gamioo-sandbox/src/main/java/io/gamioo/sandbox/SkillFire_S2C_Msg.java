@@ -21,7 +21,7 @@ public class SkillFire_S2C_Msg {
     private int index;//设置连招索引
     @DataFactory(min = 0, max = 5)
     private List<HarmDTO> harmList=new ArrayList<>();
-    @DataFactory(min = 0, max = 5)
+
     private List<Long> param1=new ArrayList<>();
 
 //    private Map<String, String> store=new HashMap<>();
