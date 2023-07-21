@@ -9,7 +9,9 @@ import com.github.houbb.data.factory.core.util.DataUtil;
 import com.github.houbb.heaven.util.lang.MathUtil;
 import io.fury.Fury;
 import io.fury.Language;
+import io.fury.ThreadLocalFury;
 import io.fury.resolver.MetaContext;
+import io.gamioo.common.util.FileUtils;
 import io.gamioo.common.util.MathUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,9 +32,16 @@ public class ProtoTest {
     private static byte[] bytes;
     @BeforeAll
     public static void beforeAll() throws IOException {
+        try {
+            byte[]  array = FileUtils.getByteArrayFromFile("message.txt");
+            skillFire_s2C_msg= JSON.parseObject(array,SkillFire_S2C_Msg.class);
+            logger.info(skillFire_s2C_msg);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
-        skillFire_s2C_msg= DataUtil.build(SkillFire_S2C_Msg.class);
-        logger.info(JSON.toJSONString(skillFire_s2C_msg));
+       // skillFire_s2C_msg= DataUtil.build(SkillFire_S2C_Msg.class);
+      //  logger.info(JSON.toJSONString(skillFire_s2C_msg));
          fury = Fury.builder().withLanguage(Language.JAVA)
                 .withRefTracking(true).requireClassRegistration(false).withNumberCompressed(false).build();
         long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
@@ -78,15 +87,40 @@ public class ProtoTest {
 
 
 
+//    @DisplayName("ThreadLocalFury Serializable")
+//    @Test
+//    @Order(3)
+//    public void handleThreadLocalFurySerialize() {
+//        ThreadLocalFury  fury = Fury.builder().withLanguage(Language.JAVA)
+//                .withRefTracking(true).requireClassRegistration(false).withNumberCompressed(false).buildThreadLocalFury();
+//       bytes = fury.serialize(skillFire_s2C_msg);
+//        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
+//     //   logger. info(bytes.length);
+//     // String size2 = RamUsageEstimator.humanReadableUnits(size);
+//     logger. info( "Fury Serializable "+MathUtils.prettyPercentage((double)bytes.length/size));
+//    }
+//
+//    @DisplayName("Fury Deserialize")
+//    @Order(8)
+//    public void handleThreadLocalFuryDeserialize() {
+//        ThreadLocalFury  fury2 = Fury.builder().withLanguage(Language.JAVA)
+//                .withRefTracking(true).requireClassRegistration(false).withNumberCompressed(false).buildThreadLocalFury();
+//
+//        logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
+//
+//        logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
+//    }
+
     @DisplayName("Fury Serializable")
     @Test
     @Order(3)
     public void handleFurySerialize() {
-       bytes = fury.serializeJavaObject(skillFire_s2C_msg);
+        bytes = fury.serializeJavaObject(skillFire_s2C_msg);
+
         long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
-     //   logger. info(bytes.length);
-     // String size2 = RamUsageEstimator.humanReadableUnits(size);
-     logger. info( "Fury Serializable "+MathUtils.prettyPercentage((double)bytes.length/size));
+        //   logger. info(bytes.length);
+        // String size2 = RamUsageEstimator.humanReadableUnits(size);
+        logger. info( "Fury Serializable "+MathUtils.prettyPercentage((double)bytes.length/size));
     }
 
     @DisplayName("Fury Serializable with Number Compress")
@@ -150,12 +184,13 @@ public class ProtoTest {
         // String size2 = RamUsageEstimator.humanReadableUnits(size);
         logger. info("Fury Serializable with Number Compress and class register "+MathUtils.prettyPercentage((double)bytes.length/size));
     }
+
+
     @DisplayName("Fury Deserialize")
     @Test
-
     @Order(8)
     public void handleFuryDeserialize() {
-     //   logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
+       // logger. info( fury.deserializeJavaObject(bytes,SkillFire_S2C_Msg.class));
     }
 
     @DisplayName("Protostuff Serializable")
