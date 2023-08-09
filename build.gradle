@@ -295,7 +295,7 @@ allprojects {
     repositories {
         //腾讯云的国内镜像
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
-        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
+    //  maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 
 }
