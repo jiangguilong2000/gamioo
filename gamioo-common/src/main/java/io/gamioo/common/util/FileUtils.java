@@ -320,6 +320,7 @@ public class FileUtils {
      *
      * @param fileName 文件名称
      * @return 返回文件中的文本
+     * @throws IOException 文件不存在
      */
     public static String getStringFromJar(String fileName) throws IOException {
         // 通过url获取File的绝对路径
@@ -337,6 +338,7 @@ public class FileUtils {
      *
      * @param fileName 文件名称
      * @return 返回文件中的文本
+     * @throws IOException 文件不存在
      */
     public static byte[] getByteArrayFromJar(String fileName) throws IOException {
         // 通过url获取File的绝对路径
@@ -357,6 +359,7 @@ public class FileUtils {
      *
      * @param fileName 文件名称
      * @return 返回文件中的文本
+     * @throws IOException 文件不存在
      */
     public static byte[] getByteArrayFromFile(String fileName) throws IOException {
         byte[] ret;

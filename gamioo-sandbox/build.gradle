@@ -1,6 +1,6 @@
 dependencies {
     implementation project(':gamioo-common');
-    implementation 'org.furyio:fury-core:0.1.0-SNAPSHOT'
+    implementation 'org.furyio:fury-core:0.1.0'
     implementation group: 'io.protostuff', name: 'protostuff-core', version: '1.8.0'
     implementation group: 'io.protostuff', name: 'protostuff-runtime', version: '1.8.0'
     implementation group: 'com.carrotsearch', name: 'java-sizeof', version: '0.0.5'

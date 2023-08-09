@@ -67,6 +67,9 @@ public class Vector2f {
 
     /**
      * 单位化
+     *
+     * @param a 向量
+     * @return 调整后的向量
      */
     public static Vector2f unitization(Vector2f a) {
         float len = (float) a.getLength();
@@ -79,6 +82,9 @@ public class Vector2f {
 
     /**
      * 调整长度
+     *
+     * @param newLength 新长度
+     * @return 调整后的向量
      */
     public Vector2f resizeLength(float newLength) {
         float len = (float) getLength();
@@ -107,6 +113,10 @@ public class Vector2f {
 
     /**
      * 绕着point 旋转 radian弧度后得到的点
+     *
+     * @param point   点
+     * @param radians 弧度
+     * @return 旋转后的向量
      */
     public Vector2f rotate(Vector2f point, double radians) {
         double sin = Math.sin(radians);
@@ -126,6 +136,10 @@ public class Vector2f {
 
     /**
      * 向量点乘
+     *
+     * @param a 向量1
+     * @param b 向量2
+     * @return 返回结果
      */
     public static float dotProduct(Vector2f a, Vector2f b) {
         return a.getX() * b.getX() + a.getY() * b.getY();
@@ -133,6 +147,10 @@ public class Vector2f {
 
     /**
      * 向量叉乘
+     *
+     * @param a 向量1
+     * @param b 向量2
+     * @return 返回结果
      */
     public static float crossProduct(Vector2f a, Vector2f b) {
         return a.getX() * b.getY() - a.getY() * b.getX();
@@ -141,6 +159,8 @@ public class Vector2f {
     /**
      * 获取两个向量的夹角
      *
+     * @param a 向量1
+     * @param b 向量2
      * @return 返回值 [0 - 180]
      */
     public static float getIntersectionAngle(Vector2f a, Vector2f b) {
@@ -154,6 +174,8 @@ public class Vector2f {
      * 获取两个向量的夹角
      * 以a为基准，顺时针计算到b的夹角
      *
+     * @param a 向量1
+     * @param b 向量2
      * @return 返回值 [0 - 360]
      */
     public static float getIntersectionAngle2(Vector2f a, Vector2f b) {

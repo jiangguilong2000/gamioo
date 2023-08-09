@@ -164,6 +164,7 @@ public class Easy3dNav implements EasyNavFunc {
      * 设置是否使用critterAI导出的数据
      *
      * @param useU3dData
+     *
      */
     public void setUseU3dData(boolean useU3dData) {
         this.useU3dData = useU3dData;

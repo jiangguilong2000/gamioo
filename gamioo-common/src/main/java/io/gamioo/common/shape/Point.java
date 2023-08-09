@@ -32,6 +32,9 @@ public class Point implements Shape {
 
     /**
      * 获取两点的距离 单位 厘米
+     * @param a 第一个点
+     * @param b 第二个点
+     * @return 距离
      */
     public static double calDisBetweenTwoPoint(Point a, Point b) {
         long xDis = a.x - b.x;
@@ -41,6 +44,9 @@ public class Point implements Shape {
 
     /**
      * 绕着point 旋转 radian弧度后得到的点
+     * @param point 旋转中心点
+     * @param radians 旋转角度
+     * @return 旋转后的点
      */
     public Point rotate(Point point, double radians) {
         double sin = Math.sin(radians);
@@ -52,6 +58,11 @@ public class Point implements Shape {
 
     /**
      * 线性插值计算线段中的点
+     * @param a 开始点
+     * @param b 结束点
+     * @param t 解
+     *          @return 插值后的点
+     *
      */
     public static Point lerpPoint(Point a, Point b, float t) {
         int ax = a.getX();
@@ -63,6 +74,10 @@ public class Point implements Shape {
 
     /**
      * 获取a点到b点 距离b点 指定距离的点
+     * @param a 开始点
+     * @param b 结束点
+     * @param dis 距离
+     * @return 指定距离的点
      */
     public static Point getPointWithDisToEndPoint(Point a, Point b, int dis) {
         int ax = a.getX();
@@ -79,6 +94,10 @@ public class Point implements Shape {
 
     /**
      * 获取a点到b点 距离a点 指定距离的点
+     * @param a 开始点
+     * @param b 结束点
+     * @param dis 距离
+     * @return 指定距离的点
      */
     public static Point getPointWithDisToSrcPoint(Point a, Point b, float dis) {
         long ax = a.getX();
@@ -94,12 +113,21 @@ public class Point implements Shape {
 
     /**
      * 通过起点、向量、距离获取终点
+     * @param vector 向量
+     * @param dis 距离
+     * @return 终点
      */
     public Point getPointWithVectorAndDis(Vector2f vector, float dis) {
         Vector2f newVector = vector.resizeLength(dis);
         return Point.valueOf(x + (int) newVector.getX(), y + (int) newVector.getY());
     }
 
+    /**
+
+     * @param x 点x
+     * @param y 点y
+
+     * */
     @Override
     public boolean containsPoint(long x, long y) {
         return this.x == x && this.y == y;
@@ -132,6 +160,9 @@ public class Point implements Shape {
 
     /**
      * 大体上相同 允许精度误差
+     * @param point 要比较的点
+     * @param accuracyErrorSize 精度误差
+     * @return 相同返回true 不同返回false
      */
     public boolean roughlyEquals(Point point, final int accuracyErrorSize) {
         if (this == point) {

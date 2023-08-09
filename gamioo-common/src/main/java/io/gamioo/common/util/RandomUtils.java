@@ -313,6 +313,12 @@ public class RandomUtils {
 
     /**
      * 区间随机
+     * <p>
+     * max - min
+     *
+     * @param min 起始值
+     * @param max 结束值
+     * @return 随机数
      */
     public static int randomBetween(int min, int max) {
         return ThreadLocalRandom.current().nextInt(max - min + 1) + min;

@@ -20,4 +20,9 @@ dependencies {
     api group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14';
     api group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.14';
 
+    api group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: '1.3.5';
+    api group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '4.0.4';
+    api group: 'org.reflections', name: 'reflections', version: '0.10.2';
+    api group: 'cn.hutool', name: 'hutool-core', version: '5.8.18';
+
 }

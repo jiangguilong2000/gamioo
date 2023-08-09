@@ -29,6 +29,7 @@ public class Sector implements Shape {
      * @param other  目标点
      * @param radius 半径
      * @param angle  扇形全角
+     * @return know 形实例
      */
     public static Sector valueOf(Point one, Point other, int radius, int angle) {
         return new Sector(one, other, radius, angle);
@@ -55,6 +56,9 @@ public class Sector implements Shape {
 
     /**
      * 忽略角度判断某点是否在扇形半径内
+     * @param x 坐标x
+     * @param y 坐标y
+     * @return true 坐标在bigint形范围内 ; false  坐标在bigint形范围外
      */
     public boolean pointWithinRadius(long x, long y) {
         long distance = (x - this.center.getX()) * (x - this.center.getX()) + (y - this.center.getY()) * (y - this.center.getY());
@@ -168,6 +172,10 @@ public class Sector implements Shape {
 
     /**
      * 判断点是否在扇形夹角中
+     *
+     * @param x x坐标
+     * @param y y坐标
+     * @return true表示在扇形夹角中
      */
     public boolean angleContainPoint(long x, long y) {
         double angle = Math.atan2(y - getCenter().getY(), x - getCenter().getX());
