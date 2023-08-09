@@ -229,13 +229,17 @@ subprojects {
     }
 
     jmh {
+
         // zip64 = false;
         jvmArgs = ['-Dfile.encoding=UTF-8'];
        humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt");
+
 //
 //        //  humanOutputFile.encoding = utf - 8;
 //        // human-readable output file
-       resultsFile = project.file("${project.buildDir}/reports/jmh/results.txt") // results file
+       resultsFile = project.file("${project.buildDir}/reports/jmh/results.json") // results file
+        resultFormat="JSON";
+
     }
 
     test {

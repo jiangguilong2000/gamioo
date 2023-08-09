@@ -19,18 +19,17 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Allen Jiang
  */
 @Fork(1)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
+@Warmup(iterations = 1, time = 1)
+@Measurement(iterations = 1, time = 1)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class ProtoBenchMark {
-    private static final Logger logger = LogManager.getLogger(ProtoBenchMark.class);
+public class ProtoDeserializeBenchMark {
+    private static final Logger logger = LogManager.getLogger(ProtoDeserializeBenchMark.class);
     private SkillFire_S2C_Msg  skillFire_s2C_msg = DataUtil.build(SkillFire_S2C_Msg.class);
     private Fury fury;
 
@@ -71,78 +70,44 @@ public class ProtoBenchMark {
         protoArray = SerializingUtil.serialize(skillFire_s2C_msg);
         jsonArray = JSONB.toBytes(skillFire_s2C_msg);
         jsonArrayWithBeanToArray =JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
-        ;
        // String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.sizeOf(skillFire_s2C_msg));
         logger.debug("size:{}", RamUsageEstimator.sizeOf(skillFire_s2C_msg));
     }
     @Benchmark
-    public byte[] furySerialize() {
-        return fury.serialize(skillFire_s2C_msg);
-    }
-    @Benchmark
-    public byte[] furySerializeEnhance() {
-        return furyX.serialize(skillFire_s2C_msg);
-    }
-    @Benchmark
-    public byte[] jsonSerialize() {
-        return JSONB.toBytes(skillFire_s2C_msg);
-    }
-
-
-
-    @Benchmark
-    public byte[] jsonSerializeWithBeanToArray() {
-        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray);
+    public SkillFire_S2C_Msg furyDeserialize() {
+        return fury.deserializeJavaObject(furyArray, SkillFire_S2C_Msg.class);
     }
 
     @Benchmark
-    public byte[] jsonSerializeWithBeanToArrayAndFieldBase() {
-        return JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray,JSONWriter.Feature.FieldBased);
+    public SkillFire_S2C_Msg jsonDeserialize() {
+        return JSONB.parseObject(jsonArray, SkillFire_S2C_Msg.class);
     }
+
     @Benchmark
-    public byte[] protostuffSerialize() {
-        return SerializingUtil.serialize(skillFire_s2C_msg);
+    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArray() {
+        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean);
     }
 
 
+    @Benchmark
+    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArrayAndFieldBase() {
+        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean,JSONReader.Feature.FieldBased);
+    }
 
+    @Benchmark
+    public SkillFire_S2C_Msg furyDeserializeEnhance() {
+        return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
+    }
 
-
-//    @Benchmark
-//    public SkillFire_S2C_Msg furyDeserialize() {
-//        return fury.deserializeJavaObject(furyArray, SkillFire_S2C_Msg.class);
-//    }
-//
-//    @Benchmark
-//    public SkillFire_S2C_Msg jsonDeserialize() {
-//        return JSONB.parseObject(jsonArray, SkillFire_S2C_Msg.class);
-//    }
-//
-//    @Benchmark
-//    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArray() {
-//        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean);
-//    }
-//
-//
-//    @Benchmark
-//    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArrayAndFieldBase() {
-//        return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean,JSONReader.Feature.FieldBased);
-//    }
-//
-//    @Benchmark
-//    public SkillFire_S2C_Msg furyDeserializeEnhance() {
-//        return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
-//    }
-//
-//    @Benchmark
-//    public SkillFire_S2C_Msg protostuffDeserialize() {
-//        return SerializingUtil.deserialize(protoArray, SkillFire_S2C_Msg.class);
-//    }
+    @Benchmark
+    public SkillFire_S2C_Msg protostuffDeserialize() {
+        return SerializingUtil.deserialize(protoArray, SkillFire_S2C_Msg.class);
+    }
 
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(ProtoBenchMark.class.getSimpleName()).result("result.json")
+                .include(ProtoDeserializeBenchMark.class.getSimpleName()).result("result.json")
                 .resultFormat(ResultFormatType.JSON)
                 .build();
         new Runner(opt).run();

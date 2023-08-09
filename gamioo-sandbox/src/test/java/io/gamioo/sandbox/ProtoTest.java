@@ -74,16 +74,16 @@ public class ProtoTest {
         // String size2 = RamUsageEstimator.humanReadableUnits(size);
         logger. info( "Json2 Serializable  with BeanToArray "+MathUtils.prettyPercentage((double)bytes.length/size));
     }
-//    @DisplayName("Json2 Serializable with beanToArray and fieldBased")
-//    @Test
-//    @Order(2)
-//    public void handleJson2WithBeanToArrayAndFieldBasedSerialize() {
-//        bytes = JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray, JSONWriter.Feature.FieldBased);
-//        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
-//        //   logger. info(bytes.length);
-//        // String size2 = RamUsageEstimator.humanReadableUnits(size);
-//        logger. info( "Json2 Serializable  with beanToArray and fieldBased "+MathUtils.prettyPercentage((double)bytes.length/size));
-//    }
+    @DisplayName("Json2 Serializable with beanToArray and fieldBased")
+    @Test
+    @Order(2)
+    public void handleJson2WithBeanToArrayAndFieldBasedSerialize() {
+        bytes = JSONB.toBytes(skillFire_s2C_msg, JSONWriter.Feature.BeanToArray, JSONWriter.Feature.FieldBased);
+        long size = RamUsageEstimator.sizeOf(skillFire_s2C_msg);
+        //   logger. info(bytes.length);
+        // String size2 = RamUsageEstimator.humanReadableUnits(size);
+        logger. info( "Json2 Serializable  with beanToArray and fieldBased "+MathUtils.prettyPercentage((double)bytes.length/size));
+    }
 
 
 
@@ -172,7 +172,7 @@ public class ProtoTest {
     @Test
     @Order(7)
     public void handleFurySerializeWithCompressAndRegister() {
-
+//.withDeserializeUnExistClassEnabled(true)
         fury = Fury.builder().withLanguage(Language.JAVA)
                 .withRefTracking(true).requireClassRegistration(true).withNumberCompressed(true).build();
         fury.register(SkillFire_S2C_Msg.class);
