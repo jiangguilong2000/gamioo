@@ -12,11 +12,13 @@ import io.gamioo.common.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.profile.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +26,10 @@ import java.util.concurrent.TimeUnit;
  * @author Allen Jiang
  */
 @Fork(1)
-@Warmup(iterations = 1, time = 1)
-@Measurement(iterations = 1, time = 1)
+@Warmup(iterations = 10, time = 1)
+@Measurement(iterations = 10, time = 1)
 @OutputTimeUnit(TimeUnit.SECONDS)
+@BenchmarkMode({Mode.Throughput})
 @State(Scope.Benchmark)
 public class ProtoSerializeBenchMark {
     private static final Logger logger = LogManager.getLogger(ProtoSerializeBenchMark.class);
@@ -34,8 +37,6 @@ public class ProtoSerializeBenchMark {
     private Fury fury;
 
     private Fury furyX;
-
-
 
 
     @Setup
@@ -56,9 +57,6 @@ public class ProtoSerializeBenchMark {
         furyX.register(SkillFire_S2C_Msg.class);
         furyX.register(SkillCategory.class);
         furyX.register(HarmDTO.class);
-
-
-
        // String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.sizeOf(skillFire_s2C_msg));
         logger.debug("size:{}", RamUsageEstimator.sizeOf(skillFire_s2C_msg));
     }
@@ -67,7 +65,7 @@ public class ProtoSerializeBenchMark {
         return fury.serialize(skillFire_s2C_msg);
     }
     @Benchmark
-    public byte[] furySerializeEnhance() {
+    public byte[] furySerializeWithClassRegistrationAndNumberCompressed() {
         return furyX.serialize(skillFire_s2C_msg);
     }
     @Benchmark
@@ -98,6 +96,10 @@ public class ProtoSerializeBenchMark {
         Options opt = new OptionsBuilder()
                 .include(ProtoSerializeBenchMark.class.getSimpleName()).result("result.json")
                 .resultFormat(ResultFormatType.JSON)
+        //      .addProfiler(GCProfiler.class)
+//                .addProfiler(CompilerProfiler.class)
+//                .verbosity(VerboseMode.EXTRA)
+               // .addProfiler(JavaFlightRecorderProfiler.class)
                 .build();
         new Runner(opt).run();
     }

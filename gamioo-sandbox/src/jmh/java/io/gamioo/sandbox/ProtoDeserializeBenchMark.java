@@ -12,11 +12,14 @@ import io.gamioo.common.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.profile.CompilerProfiler;
+import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +27,10 @@ import java.util.concurrent.TimeUnit;
  * @author Allen Jiang
  */
 @Fork(1)
-@Warmup(iterations = 1, time = 1)
-@Measurement(iterations = 1, time = 1)
+@Warmup(iterations = 10, time = 1)
+@Measurement(iterations = 10, time = 1)
 @OutputTimeUnit(TimeUnit.SECONDS)
+@BenchmarkMode({Mode.Throughput})
 @State(Scope.Benchmark)
 public class ProtoDeserializeBenchMark {
     private static final Logger logger = LogManager.getLogger(ProtoDeserializeBenchMark.class);
@@ -84,18 +88,18 @@ public class ProtoDeserializeBenchMark {
     }
 
     @Benchmark
-    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArray() {
+    public SkillFire_S2C_Msg jsonDeserializeWithArrayToBean() {
         return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean);
     }
 
 
     @Benchmark
-    public SkillFire_S2C_Msg jsonDeserializeWithBeanToArrayAndFieldBase() {
+    public SkillFire_S2C_Msg jsonDeserializeWithArrayToBeanAndFieldBase() {
         return JSONB.parseObject(jsonArrayWithBeanToArray, SkillFire_S2C_Msg.class, JSONReader.Feature.SupportArrayToBean,JSONReader.Feature.FieldBased);
     }
 
     @Benchmark
-    public SkillFire_S2C_Msg furyDeserializeEnhance() {
+    public SkillFire_S2C_Msg furyDeserializeWithClassRegistrationAndNumberCompressed() {
         return furyX.deserializeJavaObject(furyArrayX, SkillFire_S2C_Msg.class);
     }
 
@@ -109,6 +113,9 @@ public class ProtoDeserializeBenchMark {
         Options opt = new OptionsBuilder()
                 .include(ProtoDeserializeBenchMark.class.getSimpleName()).result("result.json")
                 .resultFormat(ResultFormatType.JSON)
+                         //     .addProfiler(GCProfiler.class)
+//                .addProfiler(CompilerProfiler.class)
+//                .verbosity(VerboseMode.EXTRA)
                 .build();
         new Runner(opt).run();
     }
